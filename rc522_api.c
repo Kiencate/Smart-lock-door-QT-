@@ -24,7 +24,11 @@ void delay_ns(unsigned int ns)
 	ndelay(ns);
 }
 
-
+/**
+ * @brief request for a new card present
+ * @return MI_OK if there is a new card
+ * 		,MI_ERROR otherwise
+ */
 char PcdRequest(unsigned char req_code,unsigned char *pTagType)
 {
 	char status;  
@@ -50,7 +54,9 @@ char PcdRequest(unsigned char req_code,unsigned char *pTagType)
 	return status;
 }
 
-
+/**
+ * @brief check if more than 1 card detected, return card UID
+ */
 char PcdAnticoll(unsigned char *pSnr)
 {
 	char status;
@@ -83,8 +89,10 @@ char PcdAnticoll(unsigned char *pSnr)
 	return status;
 }
 
-
-char PcdSelect(unsigned char *pSnr)
+/**
+ * @brief select a single card by UID
+ */
+char PcdSelect(unsigned char *pSnr) // In: UID of PICC (RFID card) consist of 4 bytes
 {
 	char status;
 	unsigned char i;
@@ -113,7 +121,12 @@ char PcdSelect(unsigned char *pSnr)
 	return status;
 }
 
-
+/**
+ * @brief This command manages MIFARE authentication to enable a secure communication to
+any MIFARE Mini, MIFARE 1K and MIFARE 4K card. 
+ * @return MI_OK if authenticated
+		   MI_ERR if not authenticated
+ */
 char PcdAuthState(unsigned char auth_mode,unsigned char addr,unsigned char *pKey,unsigned char *pSnr)
 {
 	char status;
@@ -136,7 +149,9 @@ char PcdAuthState(unsigned char auth_mode,unsigned char addr,unsigned char *pKey
 	return status;
 }
 
-
+/**
+ * @brief read datafrom card
+ */
 char PcdRead(unsigned char addr,unsigned char *pData)
 {
 	char status;
@@ -160,39 +175,9 @@ char PcdRead(unsigned char addr,unsigned char *pData)
 	return status;
 }
 
-char PcdWrite(unsigned char addr,unsigned char *pData)
-{
-	char status;
-	unsigned int unLen;
-	unsigned char i,ucComMF522Buf[MAXRLEN]; 
-
-	ucComMF522Buf[0] = PICC_WRITE;
-	ucComMF522Buf[1] = addr;
-	CalulateCRC(ucComMF522Buf,2,&ucComMF522Buf[2]);
-
-	status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,4,ucComMF522Buf,&unLen);
-
-	if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
-	{   status = MI_ERR;   }
-
-	if (status == MI_OK)
-	{
-		//memcpy(ucComMF522Buf, pData, 16);
-		for (i=0; i<16; i++)
-		{    
-			ucComMF522Buf[i] = *(pData+i);   
-		}
-		CalulateCRC(ucComMF522Buf,16,&ucComMF522Buf[16]);
-
-		status = PcdComMF522(PCD_TRANSCEIVE,ucComMF522Buf,18,ucComMF522Buf,&unLen);
-		if ((status != MI_OK) || (unLen != 4) || ((ucComMF522Buf[0] & 0x0F) != 0x0A))
-		{   status = MI_ERR;   }
-	}
-
-	return status;
-}
-
-
+/**
+ * @brief turning card in sleep mode
+ */
 char PcdHalt(void)
 {
 	char status;
@@ -209,7 +194,12 @@ char PcdHalt(void)
 }
 
 
-void CalulateCRC(unsigned char *pIndata,unsigned char len,unsigned char *pOutData)
+/**
+ * @brief Use the CRC coprocessor in the MFRC522 to calculate a CRC_A.
+ */
+void CalulateCRC(unsigned char *pIndata,  // In: Pointer to the data to transfer to the FIFO for CRC calculation.
+				unsigned char len,		  // In: The number of bytes to transfer.
+				unsigned char *pOutData)  // Out: Pointer to result buffer. Result is written to result[0..1], low byte first.
 {
 	unsigned char i,n;
 	ClearBitMask(DivIrqReg,0x04);
@@ -230,9 +220,12 @@ void CalulateCRC(unsigned char *pIndata,unsigned char len,unsigned char *pOutDat
 }
 
 
+/**
+ * @brief Reconfig params of rc522 module
+ * @return 0
+ */
 char PcdReset(void)
 {
-	// printk("pcd reseting\n");
 	SET_RC522RST;
 	delay_ns(10);
 	CLR_RC522RST;
@@ -241,7 +234,6 @@ char PcdReset(void)
 	delay_ns(10);
 	WriteRawRC(CommandReg,PCD_RESETPHASE);
 	delay_ns(10);
-    // printk("pcd ok\n");
 	WriteRawRC(ModeReg,0x3D);            
 	WriteRawRC(TReloadRegL,30);           
 	WriteRawRC(TReloadRegH,0);
@@ -273,7 +265,12 @@ char M500PcdConfigISOType(unsigned char type)
 	return MI_OK;
 }
 
-unsigned char ReadRawRC(unsigned char Address)
+
+/**
+ * @brief Read data from register in RFID module
+ * @return 1 byte data 
+ */
+unsigned char ReadRawRC(unsigned char Address) // In: Address of register in RFID module											
 {
 	unsigned char msgAddr;
 	unsigned char msgResult=0;
@@ -282,35 +279,48 @@ unsigned char ReadRawRC(unsigned char Address)
 	return msgResult;
 }
 
-
-void WriteRawRC(unsigned char Address, unsigned char value)
+/**
+ * @brief Write data to register in RFID module
+ */
+void WriteRawRC(unsigned char Address, // In: Address of register in RFID module
+				unsigned char value)   // In: 1 byte data 
 {  
 	unsigned char msgAddr;
 	msgAddr = ((Address<<1)&0x7E); 
 	i2c_smbus_write_byte_data(client, msgAddr, value);
 }
 
-void SetBitMask(unsigned char reg,unsigned char mask)  
+/**
+ * @brief Set 1 or more bit of a register in RFID module
+ */
+void SetBitMask(unsigned char reg,  // In: Address of register in RFID module
+				unsigned char mask) // In: mask to choose the bit set
 {
 	char tmp = 0x0;
 	tmp = ReadRawRC(reg);
-	WriteRawRC(reg,tmp | mask);  // set bit mask
+	WriteRawRC(reg,tmp | mask);  
 }
 
-
-void ClearBitMask(unsigned char reg,unsigned char mask)  
+/**
+ * @brief Unset 1 or more bit of a register in RFID module
+ */
+void ClearBitMask(unsigned char reg, // In: Address of register in RFID module
+				unsigned char mask)  // In: mask to choose the bit unset
 {
 	char tmp = 0x0;
 	tmp = ReadRawRC(reg);
-	WriteRawRC(reg, tmp & ~mask);  // clear bit mask
+	WriteRawRC(reg, tmp & ~mask);  
 } 
 
-
-char PcdComMF522(unsigned char Command, 
-		unsigned char *pInData, 
-		unsigned char InLenByte,
-		unsigned char *pOutData, 
-		unsigned int *pOutLenBit)
+/**
+ * @brief Executes the Transceive command.
+ * @return MI_OK on success, MI_??? otherwise.
+ */
+char PcdComMF522(unsigned char Command, // Command type to execute
+		unsigned char *pInData, 		// Pointer to the data to transfer to the FIFO.
+		unsigned char InLenByte,		// Number of bytes to transfer to the FIFO.
+		unsigned char *pOutData, 		// Pointer to the data to read from the FIFO
+		unsigned int *pOutLenBit)		// Number of bits to read from the FIFO
 {
 	char status = MI_ERR;
 	unsigned char irqEn   = 0x00;
@@ -389,7 +399,9 @@ char PcdComMF522(unsigned char Command,
 	return status;
 }
 
-
+/**
+ * @brief Turns the antenna on by enabling pins TX1 and TX2.
+ */
 void PcdAntennaOn(void)
 {
 	unsigned char i;
@@ -400,7 +412,9 @@ void PcdAntennaOn(void)
 	}
 }
 
-
+/**
+ * @brief Turns the antenna off by disabling pins TX1 and TX2.
+ */
 void PcdAntennaOff(void)
 {
 	ClearBitMask(TxControlReg, 0x03);
