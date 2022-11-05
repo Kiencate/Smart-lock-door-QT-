@@ -15,15 +15,40 @@ Window {
     /* Using the Connections Object
      * Establish a connection with the application core object
      * */
+    property var button:[]
+    property var press: []
+    property var release: []
+    property var pass_icon: []
     Connections {
-        target: appCore // Specify the target to connect
+        target: backEnd // Specify the target to connect
         /* Declare and implement the function as a parameter
          * object and with a name similar to the name of the signal
          * The difference is that we add on at the beginning and then write
          * capitalized
          * */
-        function onSendToQml(count) {
-//            labelCount.text = count // Set the counter to the text label
+        function onSendToQml_button(type, button_id) {
+            if (type == 1)
+            {
+//                press[button_id]()
+                button[button_id].x+=5
+                button[button_id].y+=5
+                button[button_id].width = 50
+            }
+            else if (type == -1)
+            {
+                release[button_id]()
+            }
+        }
+        function onSendToQml_password(num)
+        {
+            for (var i=0;i<6;i++)
+            {
+                pass_icon[i].visible = false
+            }
+            for (var i=0;i<num;i++)
+            {
+                pass_icon[i].visible = true
+            }
         }
     }
 
@@ -34,22 +59,11 @@ Window {
            acceptedButtons: Qt.LeftButton | Qt.RightButton
            onPressed:
            {
-               appCore.receiveFromQml(mouseX);
-//               button_1_1.x = 110
-//               button_1_1.y = 110
-//               console.log("mouse pressed the area ",mouseX )
-//               button_1_1.width = 80
-//               button_1_1.height = 80
-//               button1.brightness = 0.3
+               backEnd.handle_touch_event(1,mouseX,mouseY);
            }
            onReleased:
            {
-//               button_1_1.x = 100
-//               button_1_1.y = 100
-//               button_1_1.width = 100
-//               button_1_1.height = 100
-//               button1.brightness=0
-//               console.log("mouse release the area ",button_1_1.width)
+               backEnd.handle_touch_event(-1,mouseX,mouseY);
            }
        }
 
@@ -64,14 +78,12 @@ Window {
             source: "qrc:/icon/password_bolder.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: false
+            visible: true
         }
-        BrightnessContrast {
-              id: password_bolder_color
-              anchors.fill: password_bolder_image
-              source: password_bolder_image
-              brightness: 0
-          }
+        function press(){
+
+            x+=20
+        }
      }
 
     Item {
@@ -92,7 +104,19 @@ Window {
               anchors.fill: button1_image
               source: button1_image
               brightness: 0
-          }
+        }
+        function press(){
+            x = 20
+            y = 105
+            width = 50
+            button1_color.brightness = 0.3
+        }
+        function release(){
+            x = 15
+            y = 100
+            width = 60
+            button1_color.brightness = 0
+        }
      }
 
     Item {
@@ -281,7 +305,19 @@ Window {
               anchors.fill: button_del_image
               source: button_del_image
               brightness: 0
-          }
+        }
+        function press(){
+            x = 15
+            y = 256
+            width = 62
+            button_del_color.brightness = 0.3
+        }
+        function release(){
+            x = 10
+            y = 251
+            width = 72
+            button_del_color.brightness = 0
+        }
      }
 
     Item {
@@ -325,7 +361,66 @@ Window {
               brightness: 0
           }
      }
-
-
+    Image {
+        x:5
+        y:16
+        id: pass1
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Image {
+        x:35
+        y:16
+        id: pass2
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Image {
+        x:65
+        y:16
+        id: pass3
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Image {
+        x:95
+        y:16
+        id: pass4
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Image {
+        x:125
+        y:16
+        id: pass5
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Image {
+        x:155
+        y:16
+        id: pass6
+        source: "qrc:/icon/password.png"
+        sourceSize: Qt.size(100,100)
+        smooth: true
+        visible: false
+    }
+    Component.onCompleted: {
+        press.push(button0.press, button1.press, button2.press, button3.press, button4.press, button5.press, button6.press, button7.press, button8.press, button9.press, button_del.press, button_ent.press)
+        release.push(button0.release, button1.release, button2.release, button3.release, button4.release, button5.release, button6.release, button7.release, button8.release, button9.release, button_del.release, button_ent.release)
+        pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
+        button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent)
+        console.log(pass_icon)
+    }
 
 }

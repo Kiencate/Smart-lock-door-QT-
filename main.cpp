@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "appcore.h"
+#include "backend.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    AppCore appCore;    // Create the application core with signals and slots
+    BackEnd backEnd;    // Create the application core with signals and slots
 
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     /* We load the object into the context to establish the connection,
      * and also define the name "appCore" by which the connection will occur
      * */
-    context->setContextProperty("appCore", &appCore);
+    context->setContextProperty("backEnd", &backEnd);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

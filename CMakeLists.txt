@@ -17,7 +17,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
 set(PROJECT_SOURCES
         main.cpp
         qml.qrc
-        appcore.h appcore.cpp
+        backend.cpp backend.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
