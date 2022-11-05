@@ -17,10 +17,9 @@ signals:
      -1 -> release
      */
     /*id:
-     10 -> del
-     11 -> ent
+     0 -> qrcode
+     1 -> bluetooth
      */
-    void sendToQml_password(int num); // send number of password * icon to qml
 
 public slots:
     void handle_touch_event(int type, int x, int y);
