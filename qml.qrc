@@ -2,5 +2,17 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>button.png</file>
+        <file>icon/button0.png</file>
+        <file>icon/button1.png</file>
+        <file>icon/button2.png</file>
+        <file>icon/button3.png</file>
+        <file>icon/button4.png</file>
+        <file>icon/button5.png</file>
+        <file>icon/button6.png</file>
+        <file>icon/button7.png</file>
+        <file>icon/button9.png</file>
+        <file>icon/button_del.png</file>
+        <file>icon/button_ent.png</file>
+        <file>icon/password_bolder.png</file>
     </qresource>
 </RCC>

@@ -2,7 +2,7 @@
 #define APPCORE_H
 
 #include <QObject>
-
+#include <QDebug>
 
 class AppCore : public QObject
 {
@@ -11,10 +11,10 @@ public:
     explicit AppCore(QObject *parent = nullptr);
 
 signals:
-    void sendToQml(int count1);
+    void sendToQml(int count);
 
 public slots:
-    void receiveFromQml();
+    void receiveFromQml(int i);
 
 private:
     int m_counter {0};
