@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         main.cpp
         qml.qrc
         backend.cpp backend.h
+        password.txt
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

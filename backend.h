@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QFile>
 
 class BackEnd : public QObject
 {
@@ -21,7 +22,11 @@ signals:
      11 -> ent
      */
     void sendToQml_password(int num); // send number of password * icon to qml
-
+    void sendNotify(int type);
+    /* type:
+     * 1 -> password short
+     * 2 -> wrong password
+     */
 public slots:
     void handle_touch_event(int type, int x, int y);
     /*type:
@@ -32,6 +37,7 @@ public slots:
 private:
     int pressing_button_id;
     QString _password;
+    QString _real_password;
 };
 
 #endif // BACKEND_H

@@ -16,8 +16,7 @@ Window {
      * Establish a connection with the application core object
      * */
     property var button:[]
-    property var press: []
-    property var release: []
+    property var button_color: []
     property var pass_icon: []
     Connections {
         target: backEnd // Specify the target to connect
@@ -31,12 +30,16 @@ Window {
             {
 //                press[button_id]()
                 button[button_id].x+=5
-                button[button_id].y+=5
+                button[button_id].y+=2
                 button[button_id].width = 50
+                button_color[button_id].brightness = 0.3
             }
             else if (type == -1)
             {
-                release[button_id]()
+                button[button_id].x-=5
+                button[button_id].y-=2
+                button[button_id].width = 60
+                button_color[button_id].brightness = 0
             }
         }
         function onSendToQml_password(num)
@@ -49,6 +52,12 @@ Window {
             {
                 pass_icon[i].visible = true
             }
+        }
+        function onSendNotify(type)
+        {
+            console.log(type)
+            if (type == 1) inotify.text = "Password is short!"
+            else if (type == 2) inotify.text = "Wrong password!"
         }
     }
 
@@ -66,10 +75,20 @@ Window {
                backEnd.handle_touch_event(-1,mouseX,mouseY);
            }
        }
+    Text {
+        x : 15
+        y : 5
+        id: inotify
+        text: ""
+        font.family: "Helvetica"
+        font.pointSize: 17
+        font.bold: true
+        color: "red"
+    }
 
     Item {
         x : 15
-        y : 30
+        y : 40
         id: password_bolder
         width: 210
         height: 100
@@ -253,7 +272,7 @@ Window {
         height: 100
         Image {
             id: button8_image
-            source: "qrc:/icon/button7.png"
+            source: "qrc:/icon/button8.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
             visible: false
@@ -288,10 +307,10 @@ Window {
      }
 
     Item {
-        x : 10
-        y : 251
+        x : 15
+        y : 250
         id: button_del
-        width: 72
+        width: 60
         height: 100
         Image {
             id: button_del_image
@@ -306,25 +325,13 @@ Window {
               source: button_del_image
               brightness: 0
         }
-        function press(){
-            x = 15
-            y = 256
-            width = 62
-            button_del_color.brightness = 0.3
-        }
-        function release(){
-            x = 10
-            y = 251
-            width = 72
-            button_del_color.brightness = 0
-        }
      }
 
     Item {
-        x : 160
-        y : 251
+        x : 165
+        y : 250
         id: button_ent
-        width: 72
+        width: 60
         height: 100
         Image {
             id: button_ent_image
@@ -363,7 +370,7 @@ Window {
      }
     Image {
         x:5
-        y:16
+        y:26
         id: pass1
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -372,7 +379,7 @@ Window {
     }
     Image {
         x:35
-        y:16
+        y:26
         id: pass2
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -381,7 +388,7 @@ Window {
     }
     Image {
         x:65
-        y:16
+        y:26
         id: pass3
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -390,7 +397,7 @@ Window {
     }
     Image {
         x:95
-        y:16
+        y:26
         id: pass4
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -399,7 +406,7 @@ Window {
     }
     Image {
         x:125
-        y:16
+        y:26
         id: pass5
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -408,7 +415,7 @@ Window {
     }
     Image {
         x:155
-        y:16
+        y:26
         id: pass6
         source: "qrc:/icon/password.png"
         sourceSize: Qt.size(100,100)
@@ -416,11 +423,10 @@ Window {
         visible: false
     }
     Component.onCompleted: {
-        press.push(button0.press, button1.press, button2.press, button3.press, button4.press, button5.press, button6.press, button7.press, button8.press, button9.press, button_del.press, button_ent.press)
-        release.push(button0.release, button1.release, button2.release, button3.release, button4.release, button5.release, button6.release, button7.release, button8.release, button9.release, button_del.release, button_ent.release)
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
         button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent)
-        console.log(pass_icon)
+        button_color.push(button0_color, button1_color, button2_color, button3_color, button4_color, button5_color, button6_color, button7_color, button8_color, button9_color, button_del_color, button_ent_color)
+
     }
 
 }

@@ -15,5 +15,6 @@
         <file>icon/button_ent.png</file>
         <file>icon/password_bolder.png</file>
         <file>icon/password.png</file>
+        <file>icon/button8.png</file>
     </qresource>
 </RCC>
