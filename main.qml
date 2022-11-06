@@ -55,7 +55,6 @@ Window {
         }
         function onSendNotify(type)
         {
-            console.log(type)
             if (type == 1) inotify.text = "Password is short!"
             else if (type == 2) inotify.text = "Wrong password!"
         }

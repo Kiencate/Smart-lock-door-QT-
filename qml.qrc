@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>button.png</file>
         <file>icon/button0.png</file>
         <file>icon/button1.png</file>
         <file>icon/button2.png</file>
