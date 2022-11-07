@@ -13,31 +13,40 @@ public:
 
 signals:
     void sendToQml_button(int type, int button_id);
-    /*type:
-     1 -> press
-     -1 -> release
+    /* signal for set button animation in frontend
+     * type:
+     *      1 -> press
+     *      -1 -> release
+     *
+     *id:
+     *      0-9 -> button 0-9
+     *      10 -> del
+     *      11 -> ent
      */
-    /*id:
-     10 -> del
-     11 -> ent
+    void sendToQml_password(int num);
+    /*signal for set icon * in frontend
+     * num: number of password character (0-6)
      */
-    void sendToQml_password(int num); // send number of password * icon to qml
     void sendNotify(int type);
-    /* type:
-     * 1 -> password short
-     * 2 -> wrong password
+    /* signal for send Notify to user in frontend
+     * type:
+     *      1 -> password short
+     *      2 -> wrong password
      */
 public slots:
     void handle_touch_event(int type, int x, int y);
-    /*type:
-     1 -> press
-     -1 -> release
+    /* slot handle event from ili9341
+     * type:
+     *      1 -> press
+     *      -1 -> release
+     * x,y:
+     *      x,y position of touch in ili9341
      */
 
 private:
     int pressing_button_id;
-    QString _password;
-    QString _real_password;
+    QString _password; //password user entered
+    QString _right_password; // right password
 };
 
 #endif // BACKEND_H

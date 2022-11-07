@@ -3,13 +3,13 @@
 BackEnd::BackEnd(QObject* parent) : QObject(parent)
 {
     pressing_button_id = -1;
+    // get right password from txt file
     QFile file("/home/kiencate/Documents/benzenx_job/Rfid_rc522_i2c_linux/password.txt");
     if(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
     QTextStream in(&file);
-    _real_password = in.readLine();
-    qDebug()<<_real_password;
+    _right_password = in.readLine();
 }
 
 void BackEnd::handle_touch_event(int type, int x, int y)
@@ -100,7 +100,15 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         else if (pressing_button_id == 11)
         {
             if (_password.size() < 6) emit sendNotify(1);
-            else if (_password != _real_password) emit sendNotify(2);
+            else if (_password != _right_password) emit sendNotify(2);
+            else
+            {
+                qDebug()<<"true password, end this process, start other process";
+                /*
+                 * code for start other process
+                 */
+                exit(0);
+            }
         }
         else if (pressing_button_id > -1 && pressing_button_id <10)
         {
