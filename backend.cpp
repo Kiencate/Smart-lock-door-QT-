@@ -28,7 +28,19 @@ void BackEnd::handle_touch_event(int type, int x, int y)
     }
     else if (type == -1)
     {
-        emit sendToQml_button(-1, pressing_button_id);
+        if (pressing_button_id!=-1) emit sendToQml_button(-1, pressing_button_id);
+        if (pressing_button_id == 0) //qrcode
+        {
+            qDebug()<<"start qrcode process";
+            //code for qrcode process
+            exit(0);
+        }
+        else if (pressing_button_id ==1) //bluetooth
+        {
+            qDebug()<<"start bluetooth process";
+            //code for bluetooth process
+            exit(0);
+        }
         pressing_button_id = -1;
 
         //code to start process qrcode or bluetooth
