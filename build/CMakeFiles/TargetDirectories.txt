@@ -1,0 +1,8 @@
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/install/strip.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/install/local.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/install.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/list_install_components.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/button.dir
+/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/button_autogen.dir

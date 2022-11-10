@@ -4,8 +4,6 @@ import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.3
 import QtGraphicalEffects 1.0
 
-
-
 Window {
     visible: true
     width: 240

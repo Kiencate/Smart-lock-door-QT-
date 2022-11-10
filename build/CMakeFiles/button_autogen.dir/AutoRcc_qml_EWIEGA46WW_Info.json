@@ -1,0 +1,24 @@
+{
+	"BUILD_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/button_autogen",
+	"CMAKE_BINARY_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux",
+	"CMAKE_SOURCE_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux",
+	"INCLUDE_DIR" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/button_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/main.qml",
+		"/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/icon/QRcode.png",
+		"/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/icon/Bluetooth.png"
+	],
+	"LOCK_FILE" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/button_autogen.dir/AutoRcc_qml_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "qml" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_qml.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt5/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/build/CMakeFiles/button_autogen.dir/AutoRcc_qml_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/ubuntu/Workspace/Kien/Rfid_rc522_i2c_linux/qml.qrc",
+	"VERBOSITY" : 0
+}
