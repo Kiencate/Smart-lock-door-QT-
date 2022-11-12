@@ -1,26 +1,16 @@
 #include "backend.h"
-#include <opencv2/objdetect.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
-#include <zbar.h>
+
 using namespace cv;
 using namespace std;
 using namespace zbar;
+
 BackEnd::BackEnd(QObject* parent) : QObject(parent)
 {
     pressing_button_id = -1;
 }
 
-int rgb_cam_index = 4;
-typedef struct
-{
-  string type;
-  string data;
-  vector <Point> location;
-} decodedObject;
 
+rgb_cam_index = 4;
 // decodedObject obj;
 // Find and decode barcodes and QR codes
 string decode(Mat &im, vector<decodedObject>&decodedObjects)

@@ -3,6 +3,16 @@
 
 #include <QObject>
 #include <QDebug>
+#include <opencv2/objdetect.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
+#include <zbar.h>
+
+using namespace cv;
+using namespace std;
+using namespace zbar;
 
 class BackEnd : public QObject
 {
@@ -32,5 +42,17 @@ private:
     int pressing_button_id;
     QString _password;
 };
+
+// variable and function for qr code
+typedef struct
+{
+  string type;
+  string data;
+  vector <Point> location;
+} decodedObject;
+
+string decode(Mat &im, vector<decodedObject>&decodedObjects);
+void display(Mat &im, vector<decodedObject>&decodedObjects);
+int rgb_cam_index;
 
 #endif // BACKEND_H
