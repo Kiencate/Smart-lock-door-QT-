@@ -15,5 +15,7 @@
         <file>icon/password_bolder.png</file>
         <file>icon/password.png</file>
         <file>icon/button8.png</file>
+        <file>icon/button_ok.png</file>
+        <file>icon/notify.png</file>
     </qresource>
 </RCC>

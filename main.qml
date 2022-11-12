@@ -15,9 +15,11 @@ Window {
     /* Using the Connections Object
      * Establish a connection with the application core object
      * */
+    property var password_num : 0
     property var button:[]
     property var button_color: []
     property var pass_icon: []
+
     Connections {
         target: backEnd // Specify the target to connect
         /* Declare and implement the function as a parameter
@@ -28,7 +30,6 @@ Window {
         function onSendToQml_button(type, button_id) {
             if (type == 1)
             {
-//                press[button_id]()
                 button[button_id].x+=5
                 button[button_id].y+=2
                 button[button_id].width = 50
@@ -44,6 +45,7 @@ Window {
         }
         function onSendToQml_password(num)
         {
+            password_num = num
             for (var i=0;i<6;i++)
             {
                 pass_icon[i].visible = false
@@ -53,10 +55,59 @@ Window {
                 pass_icon[i].visible = true
             }
         }
-        function onSendNotify(type)
+        function onSendChangeWindow(type, wrong_left)
         {
-            if (type == 1) inotify.text = "Password is short!"
-            else if (type == 2) inotify.text = "Wrong password!"
+            if (type == 0)
+            {
+                inotify_text_window.visible=false
+                notify_window.visible=false
+                inotify.text = ""
+                button_ok.visible=false
+            }
+            else if (type == 1)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.x = 40
+                inotify.y = 115
+                inotify.color = "red"
+                inotify.text = "Mật khẩu quá ngắn"
+                button_ok.visible = true
+            }
+            else if (type == 2)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                password_num=0
+                inotify.x = 65
+                inotify.y = 110
+                inotify.color = "red"
+                inotify.text = "Mật khẩu sai\nCòn "+wrong_left +" lần thử"
+                for (var i=0;i<6;i++)
+                {
+                    pass_icon[i].visible = false
+                }
+                button_ok.visible = true
+            }
+            else if (type ==3)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.x = 45
+                inotify.y = 110
+                inotify.color = "red"
+                inotify.text = "Bạn đã nhập sai\nquá 5 lần\nVui lòng liên hệ lễ\n tân để mở khóa"
+            }
+            else if (type ==4)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.x = 38
+                inotify.y = 110
+                inotify.color = "green"
+                inotify.text = "Mật khẩu chính xác!\n Đang mở cửa"
+                button_ok.visible = true
+            }
         }
     }
 
@@ -74,16 +125,7 @@ Window {
                backEnd.handle_touch_event(-1,mouseX,mouseY);
            }
        }
-    Text {
-        x : 15
-        y : 5
-        id: inotify
-        text: ""
-        font.family: "Helvetica"
-        font.pointSize: 17
-        font.bold: true
-        color: "red"
-    }
+
 
     Item {
         x : 15
@@ -367,6 +409,59 @@ Window {
               brightness: 0
           }
      }
+
+    Image {
+        x:10
+        y:30
+        id: notify_window
+        source: "qrc:/icon/notify.png"
+        sourceSize: Qt.size(220,250)
+        smooth: true
+        visible: false
+    }
+    Text {
+        x : 40
+        y : 110
+        id: inotify
+        text: ""
+        font.family: "Vietnamese"
+        font.pointSize: 11
+        font.bold: true
+        color: "red"
+        horizontalAlignment: Text.AlignHCenter
+    }
+    Text {
+        x : 100
+        y : 77
+        id: inotify_text_window
+        text: "Thông báo"
+        font.family: "Vietnamese"
+        font.pointSize: 13
+        font.bold: true
+        visible: false
+        color: "steelblue"
+    }
+    Item {
+        x : 90
+        y : 150
+        id: button_ok
+        width: 60
+        height: 100
+        visible: false
+        Image {
+            id: button_ok_image
+            source: "qrc:/icon/button_ok.png"
+            sourceSize: Qt.size(parent.width, parent.height)
+            smooth: true
+            visible: false
+        }
+        BrightnessContrast {
+              id: button_ok_color
+              anchors.fill: button_ok_image
+              source: button_ok_image
+              brightness: 0
+        }
+     }
     Image {
         x:5
         y:26
@@ -423,8 +518,8 @@ Window {
     }
     Component.onCompleted: {
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
-        button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent)
-        button_color.push(button0_color, button1_color, button2_color, button3_color, button4_color, button5_color, button6_color, button7_color, button8_color, button9_color, button_del_color, button_ent_color)
+        button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok)
+        button_color.push(button0_color, button1_color, button2_color, button3_color, button4_color, button5_color, button6_color, button7_color, button8_color, button9_color, button_del_color, button_ent_color,button_ok_color)
 
     }
 

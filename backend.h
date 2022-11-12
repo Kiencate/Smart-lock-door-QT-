@@ -27,11 +27,13 @@ signals:
     /*signal for set icon * in frontend
      * num: number of password character (0-6)
      */
-    void sendNotify(int type);
+    void sendChangeWindow(int type, int wrong_left);
     /* signal for send Notify to user in frontend
      * type:
      *      1 -> password short
      *      2 -> wrong password
+     * wrong_left:
+     *      so lan sai con lai(toi da 5)
      */
 public slots:
     void handle_touch_event(int type, int x, int y);
@@ -44,9 +46,17 @@ public slots:
      */
 
 private:
+    int window_type;
+    /* window_type
+     * 0 : password
+     * 1 : notify
+     */
+    int wrong_left; // so lan sai con lai (toi da 5 lan)
     int pressing_button_id;
+    bool is_right_password;
     QString _password; //password user entered
-    QString _right_password; // right password
+    QString _right_password1; // right password
+    QString _right_password2; // right password
 };
 
 #endif // BACKEND_H
