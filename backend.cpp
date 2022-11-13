@@ -10,7 +10,7 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
 }
 
 
-rgb_cam_index = 4;
+int rgb_cam_index = 0;
 // decodedObject obj;
 // Find and decode barcodes and QR codes
 string decode(Mat &im, vector<decodedObject>&decodedObjects)
@@ -134,12 +134,17 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             // Find and decode barcodes and QR codes
             string config_wifi = decode(inputImage, decodedObjects);
             cout << config_wifi << endl;
-
+            QFile file("../wpa_supplicant");
+            if (file.open(QIODevice::ReadWrite)) {
+                QTextStream stream(&file);
+                stream << QString::fromStdString(config_wifi) << endl;
+            }
+            if (config_wifi!="") exit(0);
             // Display location
             display(inputImage, decodedObjects);
             }
             //code for qrcode process
-            exit(0);
+
         }
         else if (pressing_button_id ==1) //bluetooth
         {

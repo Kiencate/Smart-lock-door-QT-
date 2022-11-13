@@ -14,7 +14,7 @@ add_compile_options(-fpermissive)
 
 find_package(OpenCV REQUIRED)
 
-set(INCLUDE_PATH "/home/ubuntu/Workspace/ncnn/build/install")
+set(INCLUDE_PATH "/home/kiencate/Documents/benzenx_job/ncnn/build/install")
 
 set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)

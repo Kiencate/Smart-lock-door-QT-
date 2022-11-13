@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QFile>
 #include <opencv2/objdetect.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -53,6 +54,6 @@ typedef struct
 
 string decode(Mat &im, vector<decodedObject>&decodedObjects);
 void display(Mat &im, vector<decodedObject>&decodedObjects);
-int rgb_cam_index;
+
 
 #endif // BACKEND_H
