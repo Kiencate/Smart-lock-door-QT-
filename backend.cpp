@@ -8,12 +8,13 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
     pressing_button_id = -1;
     // get right password from txt file
     QFile file("../password.txt");
-    if(!file.open(QIODevice::ReadOnly)) {
+    while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
     QTextStream in(&file);
     _right_password1 = in.readLine();
     _right_password2 = in.readLine();
+    file.close();
 //    qDebug()<<_right_password1<<_right_password2;
 }
 

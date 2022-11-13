@@ -442,7 +442,7 @@ Window {
         color: "steelblue"
     }
     Item {
-        x : 90
+        x : 95
         y : 150
         id: button_ok
         width: 60
