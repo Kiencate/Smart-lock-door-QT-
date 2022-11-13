@@ -84,6 +84,7 @@ void display(Mat &im, vector<decodedObject>&decodedObjects)
   imshow("Results", im);
   waitKey(1);
 
+
 }
 
 void BackEnd::handle_touch_event(int type, int x, int y)
@@ -115,7 +116,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         {
             qDebug()<<"start qrcode process";
             Mat inputImage;
-              //VideoCapture cap("test_qr.mp4");   //Movie
             VideoCapture cap(rgb_cam_index);
             cap.set(CAP_PROP_FRAME_WIDTH, 640);
             cap.set(CAP_PROP_FRAME_HEIGHT, 480);
@@ -124,26 +124,25 @@ void BackEnd::handle_touch_event(int type, int x, int y)
               return;
             }
             cout << "Start grabbing, press ESC on TLive window to terminate" << endl;
-
-            while(1){
-            cap >> inputImage;
-
-            // Variable for decoded objects
-            vector<decodedObject> decodedObjects;
-
-            // Find and decode barcodes and QR codes
-            string config_wifi = decode(inputImage, decodedObjects);
-            cout << config_wifi << endl;
+            string config_wifi ="";
             QFile file("../wpa_supplicant");
-            if (file.open(QIODevice::ReadWrite)) {
-                QTextStream stream(&file);
-                stream << QString::fromStdString(config_wifi) << endl;
-            }
-            if (config_wifi!="") exit(0);
-            // Display location
+
+            while(config_wifi=="" || !file.open(QIODevice::WriteOnly)){
+                cap >> inputImage;
+
+                // Variable for decoded objects
+                vector<decodedObject> decodedObjects;
+
+                // Find and decode barcodes and QR codes
+                config_wifi = decode(inputImage, decodedObjects);
+//                cout << config_wifi << endl;
             display(inputImage, decodedObjects);
             }
-            //code for qrcode process
+            QTextStream stream(&file);
+            stream << QString::fromStdString(config_wifi) << endl;
+            file.close();
+            destroyAllWindows();
+
 
         }
         else if (pressing_button_id ==1) //bluetooth
