@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>icon/Bluetooth.png</file>
-        <file>icon/QRcode.png</file>
-    </qresource>
-</RCC>
