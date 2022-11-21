@@ -16,6 +16,7 @@ class Agent : public QObject
 public:
     Agent();
     ~Agent();
+    QString getDeviceName();
 private:
     QDBusInterface *agentManager;
     QDBusInterface *agent;

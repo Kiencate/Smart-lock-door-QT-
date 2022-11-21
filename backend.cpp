@@ -162,8 +162,9 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 }
                 connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
                 connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
+
                 //code for bluetooth process
-                emit sendChangeWindow(1);
+                emit sendChangeWindow(1,agent->getDeviceName());
                 window_type = 1;
                 //exit(0);
             }
@@ -193,12 +194,12 @@ void BackEnd::handle_touch_event(int type, int x, int y)
 
 void BackEnd::onConectedBluetooth()
 {
-    emit sendChangeWindow(2);
+    emit sendChangeWindow(2,"");
     window_type = 2;
 }
 
 void BackEnd::onReceivedWifi()
 {
-    emit sendChangeWindow(3);
+    emit sendChangeWindow(3,"");
     window_type = 3;
 }

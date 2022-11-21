@@ -14,7 +14,7 @@ Window {
      * Establish a connection with the application core object
      * */
     property var button:[]
-    property var color: []
+    property var button_color: []
     Connections {
         target: backEnd // Specify the target to connect
         /* Declare and implement the function as a parameter
@@ -25,21 +25,44 @@ Window {
         function onSendToQml_button(type, button_id) {
             if (type == 1)
             {
-                button[button_id].x+=10
-                button[button_id].y+=5
-                button[button_id].width = 190
-                color[button_id].brightness = 0.3
+                if (button_id == 2)
+                {
+                    button[button_id].x+=5
+                    button[button_id].y+=2
+                    button[button_id].width = 50
+                    button_color[button_id].brightness = 0.3
+                }
+                else
+                {
+                    button[button_id].x+=10
+                    button[button_id].y+=5
+                    button[button_id].width = 190
+                    button_color[button_id].brightness = 0.3
+                }
+
+
             }
             else if (type == -1)
             {
-                button[button_id].x-=10
-                button[button_id].y-=5
-                button[button_id].width = 210
-                color[button_id].brightness = 0
+                if (button_id == 2)
+                {
+                    button[button_id].x-=5
+                    button[button_id].y-=2
+                    button[button_id].width = 60
+                    button_color[button_id].brightness = 0
+                }
+                else
+                {
+                    button[button_id].x-=10
+                    button[button_id].y-=5
+                    button[button_id].width =210
+                    button_color[button_id].brightness = 0
+                }
+
             }
         }
 
-        function onSendChangeWindow(type) {
+        function onSendChangeWindow(type, name_device) {
             if (type == 0)
             {
                 inotify_text_window.visible=false
@@ -52,7 +75,9 @@ Window {
             {
                 inotify_text_window.visible=true
                 notify_window.visible=true
-                inotify.text = "Đang kết nối"
+                inotify.x = 28
+                inotify.text = "Vui lòng kết nối\nvới thiết bị bluetooth \ncó tên '"+name_device+"'"
+                inotify.color= "steelblue"
                 button_ok.visible=false
                 loading_icon.visible = true
             }
@@ -60,7 +85,7 @@ Window {
             {
                 inotify_text_window.visible=true
                 notify_window.visible=true
-                inotify.text = "Kết nối thành công, đang nhận wifi"
+                inotify.text = "Kết nối thành công\n đang nhận wifi"
                 button_ok.visible=false
                 loading_icon.visible = true
             }
@@ -68,7 +93,9 @@ Window {
             {
                 inotify_text_window.visible=true
                 notify_window.visible=true
-                inotify.text = "Nhận wifi thành công"
+                inotify.x = 74
+                inotify.text = "Cài đặt Wifi \nthành công"
+                inotify.color= "Green"
                 button_ok.visible=true
                 loading_icon.visible = false
             }
@@ -150,7 +177,7 @@ Window {
         font.family: "Vietnamese"
         font.pointSize: 11
         font.bold: true
-        color: "red"
+        color: "steelblue"
         horizontalAlignment: Text.AlignHCenter
     }
     Text {
@@ -199,7 +226,7 @@ Window {
      }
     Component.onCompleted: {
         button.push(button_qrcode, button_bluetooth, button_ok)
-        color.push(button_qrcode_color, button_bluetooth_color, button_ok_color)
+        button_color.push(button_qrcode_color, button_bluetooth_color, button_ok_color)
     }
 
 }

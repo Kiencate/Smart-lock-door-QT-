@@ -35,7 +35,7 @@ signals:
      1 -> bluetooth
      2 -> button ok
      */
-    void sendChangeWindow(int type);
+    void sendChangeWindow(int type, QString name_device_bluetooth);
     /*type:
      * 0 -> main window
      * 1 -> connecting bluetooth
@@ -53,6 +53,7 @@ public slots:
     void onConectedBluetooth();
     void onReceivedWifi();
 private:
+    QString name_device_bluetooth;
     int window_type;
     int pressing_button_id;
     QString _password;

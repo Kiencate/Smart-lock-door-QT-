@@ -24,6 +24,13 @@ Agent::Agent() {
 
 
 }
+
+QString Agent::getDeviceName()
+{
+    agentManagerprops = new QDBusInterface("org.bluez","/org/bluez/hci0","org.bluez.Adapter1",QDBusConnection::systemBus(),this);
+    return agentManagerprops->property("Name").toString();
+}
+
 Agent::~Agent()
 {
     QDBusReply<void> reply;
