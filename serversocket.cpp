@@ -41,9 +41,14 @@ void ServerSocket::run()
     if( bytes_read > 0 ) {
         printf("received [%s]\n", buf);
     }
-    memcpy(buf,"pass cai cc",12);
-    int i = send(client,buf,12,MSG_CONFIRM);
-    if(i>0) printf("send success\n%d",i);
+    std::string config_wifi = buf;
+    QFile file("../wpa_supplicant");
+
+    while(!file.open(QIODevice::WriteOnly)){
+    }
+    QTextStream stream(&file);
+    stream << QString::fromStdString(config_wifi) << endl;
+    file.close();
 
     // close connection
     close(client);

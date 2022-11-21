@@ -162,8 +162,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 }
                 connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
                 connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
-
-                //code for bluetooth process
                 emit sendChangeWindow(1,agent->getDeviceName());
                 window_type = 1;
                 //exit(0);
