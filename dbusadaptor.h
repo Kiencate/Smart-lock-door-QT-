@@ -32,6 +32,7 @@ public: // PROPERTIES
 public Q_SLOTS: // METHODS
         void RequestConfirmation(const QDBusObjectPath &in0, quint32 passkey );
 private:
+        QDBusObjectPath device;
         QDBusInterface *deviceprop;
         QTimer *check_connect_timer;
 };
