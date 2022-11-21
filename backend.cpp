@@ -185,7 +185,12 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         else if (type == -1)
         {
             if (pressing_button_id!=-1) emit sendToQml_button(-1, pressing_button_id);
-            if (pressing_button_id == 2) exit(0);
+            if (pressing_button_id == 2)
+            {
+                delete myAdaptor;
+                delete agent;
+                exit(0);
+            }
         }
     }
 }

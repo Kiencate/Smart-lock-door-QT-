@@ -83,6 +83,7 @@ Window {
             }
             else if (type == 2)
             {
+                inotify.x = 40
                 inotify_text_window.visible=true
                 notify_window.visible=true
                 inotify.text = "Kết nối thành công\n đang nhận wifi"

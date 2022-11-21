@@ -33,6 +33,7 @@ QString Agent::getDeviceName()
 
 Agent::~Agent()
 {
+    qDebug()<<"ok";
     agentManagerprops = new QDBusInterface("org.bluez","/org/bluez/hci0","org.bluez.Adapter1",QDBusConnection::systemBus(),this);
     agentManagerprops->setProperty("Powered",false);
     QDBusReply<void> reply;
