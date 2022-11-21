@@ -7,6 +7,7 @@ using namespace zbar;
 BackEnd::BackEnd(QObject* parent) : QObject(parent)
 {
     pressing_button_id = -1;
+    window_type = 0;
 }
 
 
@@ -88,72 +89,116 @@ void display(Mat &im, vector<decodedObject>&decodedObjects)
 }
 
 void BackEnd::handle_touch_event(int type, int x, int y)
-{/*
-    qDebug()<<"x"<<x<<"y"<<y;*/
-    if (type == 1)
+{
+    qDebug()<<"x"<<x<<"y"<<y;
+    if (window_type == 0) // main window
     {
-        if (x > 20 && x <220)
+        if (type == 1)
         {
-            if (y > 55 && y<140)
+            if (x > 20 && x <220)
             {
-                pressing_button_id = 0;
-                emit sendToQml_button(1, 0);
+                if (y > 55 && y<140)
+                {
+                    pressing_button_id = 0;
+                    emit sendToQml_button(1, 0);
 
+                }
+
+                if (y > 162 && y<256)
+                {
+                    pressing_button_id = 1;
+                    emit sendToQml_button(1, 1);
+                }
             }
 
-            if (y > 162 && y<256)
-            {
-                pressing_button_id = 1;
-                emit sendToQml_button(1, 1);
-            }
         }
+        else if (type == -1)
+        {
+            if (pressing_button_id!=-1) emit sendToQml_button(-1, pressing_button_id);
+            if (pressing_button_id == 0) //qrcode
+            {
+                qDebug()<<"start qrcode process";
+                Mat inputImage;
+                VideoCapture cap(rgb_cam_index);
+                cap.set(CAP_PROP_FRAME_WIDTH, 640);
+                cap.set(CAP_PROP_FRAME_HEIGHT, 480);
+                if (!cap.isOpened()) {
+                  cerr << "ERROR: Unable to open the camera" << endl;
+                  return;
+                }
+                cout << "Start grabbing, press ESC on TLive window to terminate" << endl;
+                string config_wifi ="";
+                QFile file("../wpa_supplicant");
 
+                while(config_wifi=="" || !file.open(QIODevice::WriteOnly)){
+                    cap >> inputImage;
+
+                    // Variable for decoded objects
+                    vector<decodedObject> decodedObjects;
+
+                    // Find and decode barcodes and QR codes
+                    config_wifi = decode(inputImage, decodedObjects);
+    //                cout << config_wifi << endl;
+                display(inputImage, decodedObjects);
+                }
+                QTextStream stream(&file);
+                stream << QString::fromStdString(config_wifi) << endl;
+                file.close();
+                destroyAllWindows();
+                exit(0);
+
+            }
+            else if (pressing_button_id ==1) //bluetooth
+            {
+                qDebug()<<"start bluetooth process";
+                serversocket = new ServerSocket();
+                serversocket ->start();
+                agent = new Agent();
+                myAdaptor = new MyQDusAdaptor(agent);
+                if(QDBusConnection::systemBus().registerObject("/pairing/agent",agent)){
+                    qDebug() << "registerObject was Succesfull!";
+                } else {
+                    qDebug() << "registerObject was not Succesfull!";
+                }
+                connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
+                connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
+                //code for bluetooth process
+                emit sendChangeWindow(1);
+                window_type = 1;
+                //exit(0);
+            }
+            pressing_button_id = -1;
+
+        }
     }
-    else if (type == -1)
+    else if (window_type == 3)
     {
-        if (pressing_button_id!=-1) emit sendToQml_button(-1, pressing_button_id);
-        if (pressing_button_id == 0) //qrcode
+        if (type == 1)
         {
-            qDebug()<<"start qrcode process";
-            Mat inputImage;
-            VideoCapture cap(rgb_cam_index);
-            cap.set(CAP_PROP_FRAME_WIDTH, 640);
-            cap.set(CAP_PROP_FRAME_HEIGHT, 480);
-            if (!cap.isOpened()) {
-              cerr << "ERROR: Unable to open the camera" << endl;
-              return;
+            if (x > 95 && x <140 && y > 155 && y<200)
+            {
+
+                    pressing_button_id = 2;
+                    emit sendToQml_button(1, 2);
             }
-            cout << "Start grabbing, press ESC on TLive window to terminate" << endl;
-            string config_wifi ="";
-            QFile file("../wpa_supplicant");
-
-            while(config_wifi=="" || !file.open(QIODevice::WriteOnly)){
-                cap >> inputImage;
-
-                // Variable for decoded objects
-                vector<decodedObject> decodedObjects;
-
-                // Find and decode barcodes and QR codes
-                config_wifi = decode(inputImage, decodedObjects);
-//                cout << config_wifi << endl;
-            display(inputImage, decodedObjects);
-            }
-            QTextStream stream(&file);
-            stream << QString::fromStdString(config_wifi) << endl;
-            file.close();
-            destroyAllWindows();
-
 
         }
-        else if (pressing_button_id ==1) //bluetooth
+        else if (type == -1)
         {
-            qDebug()<<"start bluetooth process";   
-            //code for bluetooth process
-            //exit(0);
+            if (pressing_button_id!=-1) emit sendToQml_button(-1, pressing_button_id);
+            if (pressing_button_id == 2) exit(0);
         }
-        pressing_button_id = -1;
-
-        //code to start process qrcode or bluetooth
     }
+}
 
+void BackEnd::onConectedBluetooth()
+{
+    emit sendChangeWindow(2);
+    window_type = 2;
+}
+
+void BackEnd::onReceivedWifi()
+{
+    emit sendChangeWindow(3);
+    window_type = 3;
 }

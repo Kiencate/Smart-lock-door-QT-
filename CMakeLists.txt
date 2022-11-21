@@ -19,13 +19,16 @@ set(INCLUDE_PATH "/home/kiencate/Documents/benzenx_job/ncnn/build/install")
 set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
 add_link_options(-fopenmp -s -ldl -lpthread)
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick DBus)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick DBus)
 
 set(PROJECT_SOURCES
         main.cpp
         qml.qrc
         backend.cpp backend.h
+        agent.cpp agent.h
+        serversocket.cpp serversocket.h
+        dbusadaptor.cpp dbusadaptor.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -52,7 +55,7 @@ else()
 endif()
 
 target_link_libraries(button
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick ${EXTRA_LIBS} ${OpenCV_LIBS} -lzbar)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick ${EXTRA_LIBS} ${OpenCV_LIBS} -L/home/kiencate/Qt/5.15.2/gcc_64/lib -lzbar -lQt5DBus -lbluetooth )
 set_target_properties(button PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

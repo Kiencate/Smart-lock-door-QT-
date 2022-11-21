@@ -38,6 +38,41 @@ Window {
                 color[button_id].brightness = 0
             }
         }
+
+        function onSendChangeWindow(type) {
+            if (type == 0)
+            {
+                inotify_text_window.visible=false
+                notify_window.visible=false
+                inotify.text = ""
+                button_ok.visible=false
+                loading_icon.visible = false
+            }
+            else if (type == 1)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.text = "Đang kết nối"
+                button_ok.visible=false
+                loading_icon.visible = true
+            }
+            else if (type == 2)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.text = "Kết nối thành công, đang nhận wifi"
+                button_ok.visible=false
+                loading_icon.visible = true
+            }
+            else if (type == 3)
+            {
+                inotify_text_window.visible=true
+                notify_window.visible=true
+                inotify.text = "Nhận wifi thành công"
+                button_ok.visible=true
+                loading_icon.visible = false
+            }
+        }
     }
 
     MouseArea {
@@ -98,10 +133,73 @@ Window {
           }
      }
 
-
+    Image {
+        x:10
+        y:30
+        id: notify_window
+        source: "qrc:/icon/notify.png"
+        sourceSize: Qt.size(220,250)
+        smooth: true
+        visible: false
+    }
+    Text {
+        x : 40
+        y : 110
+        id: inotify
+        text: ""
+        font.family: "Vietnamese"
+        font.pointSize: 11
+        font.bold: true
+        color: "red"
+        horizontalAlignment: Text.AlignHCenter
+    }
+    Text {
+        x : 100
+        y : 77
+        id: inotify_text_window
+        text: "Thông báo"
+        font.family: "Vietnamese"
+        font.pointSize: 13
+        font.bold: true
+        visible: false
+        color: "steelblue"
+    }
+    Item {
+        x : 100
+        y : 160
+        id: loading_icon_item
+        width: 20
+        height: 20
+        AnimatedImage {
+            id: loading_icon
+            source: "qrc:/icon/loading.gif"
+            visible: false
+        }
+     }
+    Item {
+        x : 95
+        y : 150
+        id: button_ok
+        width: 60
+        height: 100
+        visible: false
+        Image {
+            id: button_ok_image
+            source: "qrc:/icon/button_ok.png"
+            sourceSize: Qt.size(parent.width, parent.height)
+            smooth: true
+            visible: true
+        }
+        BrightnessContrast {
+              id: button_ok_color
+              anchors.fill: button_ok_image
+              source: button_ok_image
+              brightness: 0
+        }
+     }
     Component.onCompleted: {
-        button.push(button_qrcode, button_bluetooth)
-        color.push(button_qrcode_color, button_bluetooth_color)
+        button.push(button_qrcode, button_bluetooth, button_ok)
+        color.push(button_qrcode_color, button_bluetooth_color, button_ok_color)
     }
 
 }

@@ -10,6 +10,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <zbar.h>
+#include "serversocket.h"
+#include "agent.h"
+#include "dbusadaptor.h"
 
 using namespace cv;
 using namespace std;
@@ -30,7 +33,16 @@ signals:
     /*id:
      0 -> qrcode
      1 -> bluetooth
+     2 -> button ok
      */
+    void sendChangeWindow(int type);
+    /*type:
+     * 0 -> main window
+     * 1 -> connecting bluetooth
+     * 2 -> connected bluetooh
+     * 3 -> received msg config wifi
+     */
+
 
 public slots:
     void handle_touch_event(int type, int x, int y);
@@ -38,10 +50,15 @@ public slots:
      1 -> press
      -1 -> release
      */
-
+    void onConectedBluetooth();
+    void onReceivedWifi();
 private:
+    int window_type;
     int pressing_button_id;
     QString _password;
+    ServerSocket *serversocket;
+    Agent *agent;
+    MyQDusAdaptor* myAdaptor;
 };
 
 // variable and function for qr code
