@@ -9,7 +9,7 @@ MyQDusAdaptor::MyQDusAdaptor(QObject* parent) : QDBusAbstractAdaptor(parent) {
 }
 
 MyQDusAdaptor::~MyQDusAdaptor() {
-
+    deviceprop->setProperty("Trusted",false);
 }
 void MyQDusAdaptor::RequestConfirmation(const QDBusObjectPath& in0 ,quint32 passkey)
 {

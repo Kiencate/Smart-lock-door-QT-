@@ -90,7 +90,6 @@ void display(Mat &im, vector<decodedObject>&decodedObjects)
 
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
-    qDebug()<<"x"<<x<<"y"<<y;
     if (window_type == 0) // main window
     {
         if (type == 1)
