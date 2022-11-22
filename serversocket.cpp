@@ -47,7 +47,7 @@ void ServerSocket::run()
     while(!file.open(QIODevice::WriteOnly)){
     }
     QTextStream stream(&file);
-    stream << QString::fromStdString(config_wifi) << endl;
+    stream << QString::fromStdString(config_wifi) << Qt::endl;
     file.close();
 
     // close connection

@@ -21,7 +21,7 @@ include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
 add_link_options(-fopenmp -s -ldl -lpthread)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick DBus)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick DBus)
-
+#-L/home/kiencate/Qt/5.15.2/gcc_64/lib -lQt5DBus
 set(PROJECT_SOURCES
         main.cpp
         qml.qrc
@@ -55,7 +55,7 @@ else()
 endif()
 
 target_link_libraries(button
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick ${EXTRA_LIBS} ${OpenCV_LIBS} -L/home/kiencate/Qt/5.15.2/gcc_64/lib -lzbar -lQt5DBus -lbluetooth )
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS}  -lzbar -lbluetooth )
 set_target_properties(button PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

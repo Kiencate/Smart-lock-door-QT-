@@ -141,7 +141,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 display(inputImage, decodedObjects);
                 }
                 QTextStream stream(&file);
-                stream << QString::fromStdString(config_wifi) << endl;
+                stream << QString::fromStdString(config_wifi) << Qt::endl;
                 file.close();
                 destroyAllWindows();
                 exit(0);
