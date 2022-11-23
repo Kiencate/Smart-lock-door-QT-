@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
+    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     QGuiApplication app(argc, argv);
 
     BackEnd backEnd;    // Create the application core with signals and slots
