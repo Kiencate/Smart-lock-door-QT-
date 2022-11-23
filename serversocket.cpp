@@ -1,5 +1,5 @@
 #include "serversocket.h"
-
+using namespace std;
 ServerSocket::ServerSocket()
 {
 
@@ -47,7 +47,7 @@ void ServerSocket::run()
     while(!file.open(QIODevice::WriteOnly)){
     }
     QTextStream stream(&file);
-    stream << QString::fromStdString(config_wifi) << Qt::endl;
+    stream << QString::fromStdString(config_wifi) << endl;
     file.close();
 
     // close connection

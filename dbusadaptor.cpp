@@ -11,7 +11,7 @@ MyQDusAdaptor::MyQDusAdaptor(QObject* parent) : QDBusAbstractAdaptor(parent) {
 MyQDusAdaptor::~MyQDusAdaptor() {
     deviceprop->setProperty("Trusted",false);
     QDBusInterface *agentManagerprops = new QDBusInterface("org.bluez","/org/bluez/hci0","org.bluez.Adapter1",QDBusConnection::systemBus(),this);
-    agentManagerprops->call("RemoveDevice",device);
+//    agentManagerprops->call("RemoveDevice",device);
 }
 void MyQDusAdaptor::RequestConfirmation(const QDBusObjectPath& in0 ,quint32 passkey)
 {
