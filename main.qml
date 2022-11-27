@@ -1,24 +1,19 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.5
-import QtQuick.Dialogs 1.3
-import QtGraphicalEffects 1.0
+import QtQuick 1.1
+//import QtQuick.Control 1.3
 
-
-
-Window {
+Rectangle {
     visible: true
     width: 240
     height: 320
-    title: qsTr("QML Signals and Slots")
+    //title: qsTr("QML Signals and Slots")
 
     /* Using the Connections Object
      * Establish a connection with the application core object
      * */
-    property var password_num : 0
-    property var button:[]
-    property var button_color: []
-    property var pass_icon: []
+    property variant password_num : 0
+    property variant button:[]
+    property variant button_color: []
+    property variant pass_icon: []
 
     Connections {
         target: backEnd // Specify the target to connect
@@ -33,14 +28,14 @@ Window {
                 button[button_id].x+=5
                 button[button_id].y+=2
                 button[button_id].width = 50
-                button_color[button_id].brightness = 0.3
+                //button_color[button_id].brightness = 0.3
             }
             else if (type == -1)
             {
                 button[button_id].x-=5
                 button[button_id].y-=2
                 button[button_id].width = 60
-                button_color[button_id].brightness = 0
+               // button_color[button_id].brightness = 0
             }
         }
         function onSendToQml_password(num)
@@ -159,12 +154,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button1_color
-              anchors.fill: button1_image
-              source: button1_image
-              brightness: 0
-        }
+//        BrightnessContrast {
+//              id: button1_color
+//              anchors.fill: button1_image
+//              source: button1_image
+//              brightness: 0
+//        }
         function press(){
             x = 20
             y = 105
@@ -192,12 +187,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button2_color
-              anchors.fill: button2_image
-              source: button2_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button2_color
+//              anchors.fill: button2_image
+//              source: button2_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -213,12 +208,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button3_color
-              anchors.fill: button3_image
-              source: button3_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button3_color
+//              anchors.fill: button3_image
+//              source: button3_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -234,12 +229,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button4_color
-              anchors.fill: button4_image
-              source: button4_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button4_color
+//              anchors.fill: button4_image
+//              source: button4_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -255,12 +250,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button5_color
-              anchors.fill: button5_image
-              source: button5_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button5_color
+//              anchors.fill: button5_image
+//              source: button5_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -276,12 +271,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button6_color
-              anchors.fill: button6_image
-              source: button6_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button6_color
+//              anchors.fill: button6_image
+//              source: button6_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -297,12 +292,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button7_color
-              anchors.fill: button7_image
-              source: button7_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button7_color
+//              anchors.fill: button7_image
+//              source: button7_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -318,12 +313,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button8_color
-              anchors.fill: button8_image
-              source: button8_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button8_color
+//              anchors.fill: button8_image
+//              source: button8_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -339,12 +334,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button9_color
-              anchors.fill: button9_image
-              source: button9_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button9_color
+//              anchors.fill: button9_image
+//              source: button9_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -360,12 +355,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button_del_color
-              anchors.fill: button_del_image
-              source: button_del_image
-              brightness: 0
-        }
+//        BrightnessContrast {
+//              id: button_del_color
+//              anchors.fill: button_del_image
+//              source: button_del_image
+//              brightness: 0
+//        }
      }
 
     Item {
@@ -381,12 +376,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button_ent_color
-              anchors.fill: button_ent_image
-              source: button_ent_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button_ent_color
+//              anchors.fill: button_ent_image
+//              source: button_ent_image
+//              brightness: 0
+//          }
      }
 
     Item {
@@ -402,12 +397,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button0_color
-              anchors.fill: button0_image
-              source: button0_image
-              brightness: 0
-          }
+//        BrightnessContrast {
+//              id: button0_color
+//              anchors.fill: button0_image
+//              source: button0_image
+//              brightness: 0
+//          }
      }
 
     Image {
@@ -455,12 +450,12 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button_ok_color
-              anchors.fill: button_ok_image
-              source: button_ok_image
-              brightness: 0
-        }
+//        BrightnessContrast {
+//              id: button_ok_color
+//              anchors.fill: button_ok_image
+//              source: button_ok_image
+//              brightness: 0
+//        }
      }
     Image {
         x:5
@@ -519,7 +514,8 @@ Window {
     Component.onCompleted: {
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
         button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok)
-        button_color.push(button0_color, button1_color, button2_color, button3_color, button4_color, button5_color, button6_color, button7_color, button8_color, button9_color, button_del_color, button_ent_color,button_ok_color)
+        //button_color.push(button0_color, button1_color, button2_color, button3_color, button4_color, button5_color, button6_color, button7_color, button8_color, button9_color, button_del_color, button_ent_color,button_ok_color)
+        button_color.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok)
 
     }
 

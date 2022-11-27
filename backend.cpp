@@ -7,7 +7,7 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
     wrong_left = 5;
     pressing_button_id = -1;
     // get right password from txt file
-    QFile file("../password.txt");
+    QFile file("/home/linaro/Rfid_rc522_i2c_linux/password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
