@@ -1,8 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQuick.Controls 2.5
-import QtQuick.Dialogs 1.3
-import QtGraphicalEffects 1.0
 
 Window {
     visible: true
@@ -14,7 +11,6 @@ Window {
      * Establish a connection with the application core object
      * */
     property var button:[]
-    property var button_color: []
     Connections {
         target: backEnd // Specify the target to connect
         /* Declare and implement the function as a parameter
@@ -22,7 +18,8 @@ Window {
          * The difference is that we add on at the beginning and then write
          * capitalized
          * */
-        function onSendToQml_button(type, button_id) {
+        onSendToQml_button:
+        {
             if (type == 1)
             {
                 if (button_id == 2)
@@ -30,16 +27,13 @@ Window {
                     button[button_id].x+=5
                     button[button_id].y+=2
                     button[button_id].width = 50
-                    button_color[button_id].brightness = 0.3
                 }
                 else
                 {
                     button[button_id].x+=10
                     button[button_id].y+=5
                     button[button_id].width = 190
-                    button_color[button_id].brightness = 0.3
                 }
-
 
             }
             else if (type == -1)
@@ -49,20 +43,19 @@ Window {
                     button[button_id].x-=5
                     button[button_id].y-=2
                     button[button_id].width = 60
-                    button_color[button_id].brightness = 0
                 }
                 else
                 {
                     button[button_id].x-=10
                     button[button_id].y-=5
                     button[button_id].width =210
-                    button_color[button_id].brightness = 0
                 }
 
             }
         }
 
-        function onSendChangeWindow(type, name_device) {
+        onSendChangeWindow:
+        {
             if (type == 0)
             {
                 inotify_text_window.visible=false
@@ -76,7 +69,7 @@ Window {
                 inotify_text_window.visible=true
                 notify_window.visible=true
                 inotify.x = 28
-                inotify.text = "Vui lòng kết nối\nvới thiết bị bluetooth \ncó tên '"+name_device+"'"
+                inotify.text = "Vui lòng kết nối\nvới thiết bị bluetooth \ncó tên '"+name_device_bluetooth+"'"
                 inotify.color= "steelblue"
                 button_ok.visible=false
                 loading_icon.visible = true
@@ -132,12 +125,6 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button_qrcode_color
-              anchors.fill: button_qrcode_image
-              source: button_qrcode_image
-              brightness: 0
-        }
      }
 
     Item {
@@ -153,12 +140,6 @@ Window {
             smooth: true
             visible: false
         }
-        BrightnessContrast {
-              id: button_bluetooth_color
-              anchors.fill: button_bluetooth_image
-              source: button_bluetooth_image
-              brightness: 0
-          }
      }
 
     Image {
@@ -218,16 +199,9 @@ Window {
             smooth: true
             visible: true
         }
-        BrightnessContrast {
-              id: button_ok_color
-              anchors.fill: button_ok_image
-              source: button_ok_image
-              brightness: 0
-        }
      }
     Component.onCompleted: {
         button.push(button_qrcode, button_bluetooth, button_ok)
-        button_color.push(button_qrcode_color, button_bluetooth_color, button_ok_color)
     }
 
 }
