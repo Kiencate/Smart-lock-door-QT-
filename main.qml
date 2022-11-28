@@ -22,7 +22,7 @@ Window {
          * The difference is that we add on at the beginning and then write
          * capitalized
          * */
-        function onSendToQml_button(type, button_id) {
+        onSendToQml_button:{
             if (type == 1)
             {
                 button[button_id].x+=5
@@ -36,7 +36,7 @@ Window {
                 button[button_id].width = 60
             }
         }
-        function onSendToQml_password(num)
+        onSendToQml_password:
         {
             password_num = num
             for (var i=0;i<6;i++)
@@ -48,7 +48,7 @@ Window {
                 pass_icon[i].visible = true
             }
         }
-        function onSendChangeWindow(type, wrong_left)
+        onSendChangeWindow:
         {
             if (type == 0)
             {
