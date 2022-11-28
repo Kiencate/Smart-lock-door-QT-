@@ -20,7 +20,7 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
 
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
-    qDebug()<<"x"<<x<<"y"<<y;
+//    qDebug()<<"x"<<x<<"y"<<y;
     if (window_type == 0) // password window
     {
         if (type == 1)
@@ -179,6 +179,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 }
 
             }
+            pressing_button_id = -1;
         }
     }
     else if (window_type == 2) // start main window
@@ -209,6 +210,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 window_type =0;
                 emit sendChangeWindow(0,wrong_left);
             }
+            pressing_button_id = -1;
         }
     }
 

@@ -438,6 +438,7 @@ Window {
 
     Camera {
            id: camera
+           deviceId: "/dev/video0"
 //           position: Camera.FrontFace
     }
 
