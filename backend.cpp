@@ -3,7 +3,7 @@
 BackEnd::BackEnd(QObject* parent) : QObject(parent)
 {
     is_right_password = false;
-    window_type = 0;
+    window_type =2 ;
     wrong_left = 5;
     pressing_button_id = -1;
     // get right password from txt file
@@ -20,7 +20,7 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
 
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
-//    qDebug()<<"x"<<x<<"y"<<y;
+    qDebug()<<"x"<<x<<"y"<<y;
     if (window_type == 0) // password window
     {
         if (type == 1)
@@ -181,6 +181,35 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             }
         }
     }
+    else if (window_type == 2) // start main window
+    {
+        if (type == 1) // press
+        {
+            if (x > 95 && x <150 && y > 190 && y < 210)
+            {
+                pressing_button_id =13;
+                emit sendToQml_button(1, pressing_button_id);
+            }
+            if (x > 95 && x <150 && y > 90 && y < 110)
+            {
+                pressing_button_id =14;
+                emit sendToQml_button(1, pressing_button_id);
+            }
+        }
+        else if(type == -1) //release
+        {
+            if (pressing_button_id != -1) emit sendToQml_button(-1, pressing_button_id);
+            if (pressing_button_id == 13) // ai mode
+            {
+                qDebug()<<"in ai mode";
 
+            }
+            else if (pressing_button_id == 14) //password mode
+            {
+                window_type =0;
+                emit sendChangeWindow(0,wrong_left);
+            }
+        }
+    }
 
 }

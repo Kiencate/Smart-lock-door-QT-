@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-
+import QtQuick.Controls 2.2
+import QtMultimedia 5.9
 Window {
     visible: true
     width: 240
@@ -56,6 +57,9 @@ Window {
                 notify_window.visible=false
                 inotify.text = ""
                 button_ok.visible=false
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                camera.stop()
             }
             else if (type == 1)
             {
@@ -66,6 +70,9 @@ Window {
                 inotify.color = "red"
                 inotify.text = "Mật khẩu quá ngắn"
                 button_ok.visible = true
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                camera.stop()
             }
             else if (type == 2)
             {
@@ -81,6 +88,9 @@ Window {
                     pass_icon[i].visible = false
                 }
                 button_ok.visible = true
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                camera.stop()
             }
             else if (type ==3)
             {
@@ -90,6 +100,9 @@ Window {
                 inotify.y = 110
                 inotify.color = "red"
                 inotify.text = "Bạn đã nhập sai\nquá 5 lần\nVui lòng liên hệ lễ\n tân để mở khóa"
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                camera.stop()
             }
             else if (type ==4)
             {
@@ -100,6 +113,9 @@ Window {
                 inotify.color = "green"
                 inotify.text = "Mật khẩu chính xác!\n Đang mở cửa"
                 button_ok.visible = true
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                camera.stop()
             }
         }
     }
@@ -419,10 +435,52 @@ Window {
         smooth: true
         visible: false
     }
+
+    Camera {
+           id: camera
+//           position: Camera.FrontFace
+    }
+
+   VideoOutput {
+       source: camera
+       anchors.fill: parent
+       fillMode: VideoOutput.Stretch
+       height: 200
+   }
+   Item {
+       x : 95
+       y : 80
+       id: button_password_mode
+       width: 60
+       height: 100
+       visible: true
+       Image {
+           id: button_password_mode_image
+           source: "qrc:/icon/button_del.png"
+           sourceSize: Qt.size(parent.width, parent.height)
+           smooth: true
+           //visible: false
+       }
+    }
+   Item {
+       x : 95
+       y : 180
+       id: button_ai_mode
+       width: 60
+       height: 100
+       visible: true
+       Image {
+           id: button_ai_mode_image
+           source: "qrc:/icon/button_ent.png"
+           sourceSize: Qt.size(parent.width, parent.height)
+           smooth: true
+           //visible: false
+       }
+    }
     Component.onCompleted: {
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
-        button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok)
-
+        button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok,button_ai_mode, button_password_mode)
+//        camera.stop()
     }
 
 }
