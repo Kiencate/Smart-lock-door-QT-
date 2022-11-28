@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 project(button VERSION 0.1 LANGUAGES CXX)
 
@@ -10,7 +10,15 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-fpermissive)
 
+find_package(OpenCV REQUIRED)
+
+set(INCLUDE_PATH "/home/linaro/ncnn/build/install")
+
+set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
+include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
+add_link_options(-fopenmp -s -ldl -lpthread)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick)
 
@@ -45,7 +53,7 @@ else()
 endif()
 
 target_link_libraries(button
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick ${EXTRA_LIBS} ${OpenCV_LIBS})
 
 set_target_properties(button PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -56,7 +64,7 @@ set_target_properties(button PROPERTIES
 )
 
 install(TARGETS button
-    BUNDLE DESTINATION .
+    DESTINATION /home/linaro/Rfid_rc522_i2c_linux/build
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
