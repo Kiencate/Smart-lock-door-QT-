@@ -7,7 +7,7 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent)
     wrong_left = 5;
     pressing_button_id = -1;
     // get right password from txt file
-    QFile file("/home/linaro/Rfid_rc522_i2c_linux/password.txt");
+    QFile file("../password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
@@ -155,14 +155,14 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         {
             if (x > 95 && x <140 && y > 155 && y < 200)
             {
-                pressing_button_id =12;
+                pressing_button_id =22;
                 emit sendToQml_button(1, pressing_button_id);
             }
         }
         else if(type == -1) //release
         {
             if (pressing_button_id != -1) emit sendToQml_button(-1, pressing_button_id);
-            if (pressing_button_id == 12)
+            if (pressing_button_id == 22)
             {
                 if (is_right_password)
                 {
