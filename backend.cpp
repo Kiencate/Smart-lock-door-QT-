@@ -3,7 +3,7 @@
 BackEnd::BackEnd(QObject* parent) : QObject(parent)
 {
     is_right_password = false;
-    window_type =2 ;
+    window_type = 2 ;
     wrong_left = 5;
     pressing_button_id = -1;
     // get right password from txt file
@@ -175,7 +175,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 else
                 {
                     window_type=0;
-                    emit sendChangeWindow(0,wrong_left);
+                    emit sendChangeWindow(0,wrong_left); // go to password window
                 }
 
             }
@@ -186,14 +186,14 @@ void BackEnd::handle_touch_event(int type, int x, int y)
     {
         if (type == 1) // press
         {
-            if (x > 95 && x <150 && y > 190 && y < 210)
-            {
-                pressing_button_id =13;
-                emit sendToQml_button(1, pressing_button_id);
-            }
-            if (x > 95 && x <150 && y > 90 && y < 110)
+            if (x > 40 && x <200 && y > 60 && y < 120)
             {
                 pressing_button_id =14;
+                emit sendToQml_button(1, pressing_button_id);
+            }
+            if (x > 40 && x <200 && y > 170 && y < 230)
+            {
+                pressing_button_id =13;
                 emit sendToQml_button(1, pressing_button_id);
             }
         }
@@ -202,7 +202,8 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id != -1) emit sendToQml_button(-1, pressing_button_id);
             if (pressing_button_id == 13) // ai mode
             {
-                qDebug()<<"in ai mode";
+                window_type =3; // in face recognition
+                emit sendChangeWindow(5,wrong_left); // switch to face recognition window
 
             }
             else if (pressing_button_id == 14) //password mode

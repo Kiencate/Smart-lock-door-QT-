@@ -17,5 +17,9 @@
         <file>icon/button8.png</file>
         <file>icon/button_ok.png</file>
         <file>icon/notify.png</file>
+        <file>icon/facelock.png</file>
+        <file>icon/passlock.png</file>
+        <file>icon/lock.png</file>
+        <file>icon/unlock.png</file>
     </qresource>
 </RCC>

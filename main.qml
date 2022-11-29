@@ -28,13 +28,13 @@ Window {
             {
                 button[button_id].x+=5
                 button[button_id].y+=2
-                button[button_id].width = 50
+                button[button_id].width -=10
             }
             else if (type == -1)
             {
                 button[button_id].x-=5
                 button[button_id].y-=2
-                button[button_id].width = 60
+                button[button_id].width += 10
             }
         }
         onSendToQml_password:
@@ -59,6 +59,8 @@ Window {
                 button_ok.visible=false
                 button_password_mode.visible=false
                 button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = false
                 camera.stop()
             }
             else if (type == 1)
@@ -72,6 +74,8 @@ Window {
                 button_ok.visible = true
                 button_password_mode.visible=false
                 button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = false
                 camera.stop()
             }
             else if (type == 2)
@@ -90,6 +94,8 @@ Window {
                 button_ok.visible = true
                 button_password_mode.visible=false
                 button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = false
                 camera.stop()
             }
             else if (type ==3)
@@ -102,6 +108,8 @@ Window {
                 inotify.text = "Bạn đã nhập sai\nquá 5 lần\nVui lòng liên hệ lễ\n tân để mở khóa"
                 button_password_mode.visible=false
                 button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = false
                 camera.stop()
             }
             else if (type ==4)
@@ -115,7 +123,18 @@ Window {
                 button_ok.visible = true
                 button_password_mode.visible=false
                 button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = false
                 camera.stop()
+            }
+            else if (type == 5)
+            {
+                camera.start()
+                button_password_mode.visible=false
+                button_ai_mode.visible=false
+                lock_icon.visible = false
+                unlock_icon.visible = true
+
             }
         }
     }
@@ -449,30 +468,62 @@ Window {
        height: 200
    }
    Item {
-       x : 95
+       x : 35
        y : 80
        id: button_password_mode
-       width: 60
-       height: 100
+       width: 160
+       height: 90
        visible: true
        Image {
            id: button_password_mode_image
-           source: "qrc:/icon/button_del.png"
+           source: "qrc:/icon/passlock.png"
            sourceSize: Qt.size(parent.width, parent.height)
            smooth: true
            //visible: false
        }
     }
    Item {
-       x : 95
+       x : 35
        y : 180
        id: button_ai_mode
-       width: 60
-       height: 100
+       width: 160
+       height: 90
        visible: true
        Image {
            id: button_ai_mode_image
-           source: "qrc:/icon/button_ent.png"
+           source: "qrc:/icon/facelock.png"
+           sourceSize: Qt.size(parent.width, parent.height)
+           smooth: true
+           //visible: false
+       }
+   }
+
+   Item {
+       x : 0
+       y : 0
+       id: unlock_icon
+       width: 50
+       height: 60
+       visible: false
+       Image {
+           id: unlock_icon_image
+           source: "qrc:/icon/unlock.png"
+           sourceSize: Qt.size(parent.width, parent.height)
+           smooth: true
+           //visible: false
+       }
+   }
+
+   Item {
+       x : 0
+       y : 0
+       id: lock_icon
+       width: 50
+       height: 60
+       visible: true
+       Image {
+           id: lock_icon_image
+           source: "qrc:/icon/lock.png"
            sourceSize: Qt.size(parent.width, parent.height)
            smooth: true
            //visible: false
@@ -481,7 +532,9 @@ Window {
     Component.onCompleted: {
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
         button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok,button_ai_mode, button_password_mode)
-//        camera.stop()
+        unlock_icon.visible = false
+        lock_icon.visible = true
+        //        camera.stop()
     }
 
 }

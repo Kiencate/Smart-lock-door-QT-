@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< HEAD
 <!-- Written by QtCreator 4.8.2, 2022-11-28T15:43:19. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
   <value type="QByteArray">{08f646a4-44a5-4cfb-a62e-7751ac6cb00a}</value>
+=======
+<!-- Written by QtCreator 4.11.0, 2022-11-29T00:00:01. -->
+<qtcreator>
+ <data>
+  <variable>EnvironmentId</variable>
+  <value type="QByteArray">{3fafcede-82b4-4b9f-aabb-c1e162b19f1b}</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -57,6 +65,7 @@
   <valuemap type="QVariantMap">
    <valuelist type="QVariantList" key="ClangCodeModel.CustomCommandLineKey"/>
    <value type="bool" key="ClangCodeModel.UseGlobalConfig">true</value>
+<<<<<<< HEAD
   </valuemap>
  </data>
  <data>
@@ -182,18 +191,27 @@
     <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/linaro/Rfid_rc522_i2c_linux/build</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
+=======
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
   </valuemap>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Target.1</variable>
   <valuemap type="QVariantMap">
+<<<<<<< HEAD
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">qt5</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">qt5</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{127c5040-808d-402c-8f01-244bd8b3ae1b}</value>
+=======
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Qt 5.15.2 (gcc_64)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Qt 5.15.2 (gcc_64)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{d567e6ea-7a12-4a47-a41c-d2e6bdf1c9d4}</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
+<<<<<<< HEAD
     <valuelist type="QVariantList" key="CMake.Configuration"/>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/linaro/build-Rfid_rc522_i2c_linux-qt5-Default</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
@@ -240,6 +258,16 @@
      <value type="QString">CMAKE_BUILD_TYPE:STRING=Debug</value>
     </valuelist>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/linaro/build-Rfid_rc522_i2c_linux-qt5-Debug</value>
+=======
+    <valuelist type="QVariantList" key="CMake.Configuration">
+     <value type="QString">CMAKE_BUILD_TYPE:STRING=Release</value>
+     <value type="QString">CMAKE_CXX_COMPILER:STRING=%{Compiler:Executable:Cxx}</value>
+     <value type="QString">CMAKE_C_COMPILER:STRING=%{Compiler:Executable:C}</value>
+     <value type="QString">CMAKE_PREFIX_PATH:STRING=%{Qt:QT_INSTALL_PREFIX}</value>
+     <value type="QString">QT_QMAKE_EXECUTABLE:STRING=%{Qt:qmakeExecutable}</value>
+    </valuelist>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/kiencate/Documents/benzenx_job/build-button-Desktop_Qt_5_15_2_GCC_64bit-Release</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="QString" key="CMakeProjectManager.MakeStep.AdditionalArguments"></value>
@@ -279,6 +307,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Debug</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeBuildConfiguration</value>
    </valuemap>
+<<<<<<< HEAD
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
     <valuelist type="QVariantList" key="CMake.Configuration">
      <value type="QString">CMAKE_BUILD_TYPE:STRING=Release</value>
@@ -412,6 +441,9 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeBuildConfiguration</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.BuildConfigurationCount">5</value>
+=======
+   <value type="int" key="ProjectExplorer.Target.BuildConfigurationCount">1</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.DeployConfiguration.0">
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">0</value>
@@ -420,13 +452,36 @@
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Deploy</value>
     </valuemap>
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">1</value>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Deploy Configuration</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+=======
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.DefaultDeployConfiguration</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.DeployConfigurationCount">1</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.PluginSettings"/>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.0">
+<<<<<<< HEAD
+=======
+    <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
+    <valuelist type="QVariantList" key="Analyzer.Perf.Events">
+     <value type="QString">cpu-cycles</value>
+    </valuelist>
+    <valuelist type="QVariantList" key="Analyzer.Perf.ExtraArguments"/>
+    <value type="int" key="Analyzer.Perf.Frequency">250</value>
+    <valuelist type="QVariantList" key="Analyzer.Perf.RecordArguments">
+     <value type="QString">-e</value>
+     <value type="QString">cpu-cycles</value>
+     <value type="QString">--call-graph</value>
+     <value type="QString">dwarf,4096</value>
+     <value type="QString">-F</value>
+     <value type="QString">250</value>
+    </valuelist>
+    <value type="QString" key="Analyzer.Perf.SampleMode">-F</value>
+    <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
+    <value type="int" key="Analyzer.Perf.StackSize">4096</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
     <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
     <value type="bool" key="Analyzer.QmlProfiler.FlushEnabled">false</value>
     <value type="uint" key="Analyzer.QmlProfiler.FlushInterval">1000</value>
@@ -441,6 +496,10 @@
     <value type="double" key="Analyzer.Valgrind.Callgrind.MinimumCostRatio">0.01</value>
     <value type="double" key="Analyzer.Valgrind.Callgrind.VisualisationMinimumCostRatio">10</value>
     <value type="bool" key="Analyzer.Valgrind.FilterExternalIssues">true</value>
+<<<<<<< HEAD
+=======
+    <value type="QString" key="Analyzer.Valgrind.KCachegrindExecutable">kcachegrind</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
     <value type="int" key="Analyzer.Valgrind.LeakCheckOnFinish">1</value>
     <value type="int" key="Analyzer.Valgrind.NumCallers">25</value>
     <valuelist type="QVariantList" key="Analyzer.Valgrind.RemovedSuppressionFiles"/>
@@ -468,6 +527,7 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+<<<<<<< HEAD
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Executable</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
@@ -476,18 +536,37 @@
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+=======
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">button</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">CMakeProjectManager.CMakeRunConfiguration.button</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">button</value>
+    <value type="QString" key="RunConfiguration.Arguments"></value>
+    <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
+    <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
+    <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
+    <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
     <value type="bool" key="RunConfiguration.UseMultiProcess">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
+<<<<<<< HEAD
     <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
+=======
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/kiencate/Documents/benzenx_job/build-button-Desktop_Qt_5_15_2_GCC_64bit-Release</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
  </data>
  <data>
   <variable>ProjectExplorer.Project.TargetCount</variable>
+<<<<<<< HEAD
   <value type="int">2</value>
+=======
+  <value type="int">1</value>
+>>>>>>> 10ec5fa10366a6f3b036eaae4d720ce8aba4d53e
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.FileVersion</variable>

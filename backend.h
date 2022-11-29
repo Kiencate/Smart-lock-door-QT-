@@ -30,8 +30,12 @@ signals:
     void sendChangeWindow(int type, int wrong_left);
     /* signal for send Notify to user in frontend
      * type:
+     *      0 -> in password window
      *      1 -> password short
      *      2 -> wrong password
+     *      3 -> wrong password over 5 times
+     *      4 -> right password, openning window
+     *      5 -> in face recognition window
      * wrong_left:
      *      so lan sai con lai(toi da 5)
      */
@@ -50,6 +54,8 @@ private:
     /* window_type
      * 0 : password
      * 1 : notify
+     * 2 : start main window
+     * 3 : in face recognition
      */
     int wrong_left; // so lan sai con lai (toi da 5 lan)
     int pressing_button_id;
