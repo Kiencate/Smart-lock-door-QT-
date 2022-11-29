@@ -13,7 +13,7 @@ Window {
      * */
     property var password_num : 0
     property var button:[]
-    property var button_color: []
+    property var button_img: []
     property var pass_icon: []
 
     Connections {
@@ -61,6 +61,11 @@ Window {
                 button_ai_mode.visible=false
                 lock_icon.visible = false
                 unlock_icon.visible = false
+                for (var i=0; i<12;i++)
+                {
+                    button_img[i].visible = true
+                }
+                password_bolder_image.visible = true
                 camera.stop()
             }
             else if (type == 1)
@@ -166,7 +171,7 @@ Window {
             source: "qrc:/icon/password_bolder.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
         function press(){
 
@@ -185,7 +190,7 @@ Window {
             source: "qrc:/icon/button1.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -200,7 +205,7 @@ Window {
             source: "qrc:/icon/button2.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -215,7 +220,7 @@ Window {
             source: "qrc:/icon/button3.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -230,7 +235,7 @@ Window {
             source: "qrc:/icon/button4.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -245,7 +250,7 @@ Window {
             source: "qrc:/icon/button5.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -260,7 +265,7 @@ Window {
             source: "qrc:/icon/button6.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -275,7 +280,7 @@ Window {
             source: "qrc:/icon/button7.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -290,7 +295,7 @@ Window {
             source: "qrc:/icon/button8.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -305,7 +310,7 @@ Window {
             source: "qrc:/icon/button9.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -320,7 +325,7 @@ Window {
             source: "qrc:/icon/button_del.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -335,7 +340,7 @@ Window {
             source: "qrc:/icon/button_ent.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -350,7 +355,7 @@ Window {
             source: "qrc:/icon/button0.png"
             sourceSize: Qt.size(parent.width, parent.height)
             smooth: true
-            visible: true
+            visible: false
         }
      }
 
@@ -457,7 +462,7 @@ Window {
 
     Camera {
            id: camera
-           deviceId: "/dev/video9"
+           deviceId: "/dev/video0"
 //           position: Camera.FrontFace
     }
 
@@ -532,6 +537,8 @@ Window {
     Component.onCompleted: {
         pass_icon.push(pass1, pass2, pass3, pass4, pass5, pass6)
         button.push(button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button_del, button_ent, button_ok,button_ai_mode, button_password_mode)
+        button_img.push(button0_image, button1_image, button2_image, button3_image, button4_image, button5_image, button6_image, button7_image, button8_image,
+                        button9_image, button_del_image, button_ent_image, button_ok_image, button_ai_mode_image, button_password_mode_image)
         unlock_icon.visible = false
         lock_icon.visible = true
         //        camera.stop()
