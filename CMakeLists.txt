@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 project(button VERSION 0.1 LANGUAGES CXX)
 
@@ -56,7 +56,7 @@ set_target_properties(button PROPERTIES
 )
 
 install(TARGETS button
-    BUNDLE DESTINATION .
+    DESTINATION /home/linaro/Rfid_rc522_i2c_linux/build
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)

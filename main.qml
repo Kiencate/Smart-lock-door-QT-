@@ -438,7 +438,7 @@ Window {
 
     Camera {
            id: camera
-           deviceId: "/dev/video0"
+           deviceId: "/dev/video9"
 //           position: Camera.FrontFace
     }
 
