@@ -1,13 +1,4 @@
-# Rfid_rc522_i2c_linux
-Driver for module rc522 using i2c
+# SendVideoToQmlWithQThread
+In this project, I am sending video to Qml side by decoding in another thread(QThread) not in the main thread like the previous project. Streaming and doing all opencv stuff in main(gui) thread is not safe.
 
-1.Setup: 
-
-    sudo nano /etc/systemd/system/dbus-org.bluez.service 
-   
-Sửa dòng ExecStart thành: 
-
-    ExecStart=/usr/lib/bluetooth/bluetoothd -C
-Thêm dòng sau vào sau dòng ExecStart:
-
-    ExecStartPost=/usr/bin/sdptool add SP
+# [YouTube Video Link](https://www.youtube.com/watch?v=r6sPzm0MNRI)
