@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
+import QtQuick 2.11
+import QtQuick.Window 2.11
 //import QtQuick.Controls 2.0
 
 Window {
@@ -12,29 +12,29 @@ Window {
         id: imageRect
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        width: 800
-        height: 600
+        width: 240
+        height: 320
 
         color: "transparent"
         border.color: "black"
         border.width: 3
 
         Image{
-            width:240
-            height:320
+
             id: opencvImage
             anchors.fill: parent
-            fillMode: Image.PreserveAspectFit
+            fillMode: Image.Stretch
             property bool counter: false
             visible: false
-            source: "image://live/image"
+            source: "image://live/"
             asynchronous: false
             cache: false
 
             function reload()
             {
+            
                 counter = !counter
-                source = "image://live/image?id=" + counter
+                source = "image://live/" + counter
             }
 
         }
@@ -56,7 +56,7 @@ Window {
     Connections{
         target: liveImageProvider
 
-        function onImageChanged()
+        onImageChanged:
         {
             opencvImage.reload()
         }
