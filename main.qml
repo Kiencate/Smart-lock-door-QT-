@@ -40,15 +40,7 @@ Window {
         }
     }
 
-   MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: {
-            VideoStreamer.openVideoCamera("")
-            opencvImage.visible = true
-        }
-    }
+  
 
 
   
@@ -61,5 +53,10 @@ Window {
             opencvImage.reload()
         }
 
+    }
+    Component.onCompleted:
+    {
+        VideoStreamer.openVideoCamera("")
+            opencvImage.visible = true
     }
 }
