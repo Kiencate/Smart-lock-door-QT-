@@ -1,6 +1,26 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>config_wifi.qml</file>
+        <file>enter_password.qml</file>
+        <file>icon/button0.png</file>
+        <file>icon/button1.png</file>
+        <file>icon/button2.png</file>
+        <file>icon/button3.png</file>
+        <file>icon/button4.png</file>
+        <file>icon/button5.png</file>
+        <file>icon/button6.png</file>
+        <file>icon/button7.png</file>
+        <file>icon/button9.png</file>
+        <file>icon/button_del.png</file>
+        <file>icon/button_ent.png</file>
+        <file>icon/password_bolder.png</file>
+        <file>icon/password.png</file>
+        <file>icon/button8.png</file>
+        <file>icon/notify.png</file>
+        <file>icon/facelock.png</file>
+        <file>icon/passlock.png</file>
+        <file>icon/lock.png</file>
+        <file>icon/unlock.png</file>
         <file>icon/Bluetooth.png</file>
         <file>icon/QRcode.png</file>
         <file>icon/notify.png</file>

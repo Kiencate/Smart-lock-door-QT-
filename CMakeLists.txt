@@ -14,7 +14,7 @@ add_compile_options(-fpermissive)
 
 find_package(OpenCV REQUIRED)
 
-set(INCLUDE_PATH "/home/kiencate/Documents/benzenx_job/ncnn/build/install")
+set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
 
 set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
         agent.cpp agent.h
         serversocket.cpp serversocket.h
         dbusadaptor.cpp dbusadaptor.h
+        opencvimageprovider.cpp opencvimageprovider.h
+        videostreamer.cpp videostreamer.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
