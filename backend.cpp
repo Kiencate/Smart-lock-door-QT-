@@ -139,7 +139,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id == 13) // ai mode
             {
                 window_type = 6; // in face recognition
-                emit switch_to_main_window();
+                emit switch_to_face_detect();
                 emit sendToQml_ChangeWindow(6,"",wrong_left); // switch to face recognition window
 
 
@@ -365,4 +365,10 @@ void BackEnd::onReceivedWifi()
 {
     emit sendToQml_ChangeWindow(4,"",wrong_left);
     window_type = 4;
+}
+
+void BackEnd::openWithFaceSuccess()
+{
+    emit sendToQml_ChangeWindow(12,"",wrong_left);
+    window_type = 12;
 }

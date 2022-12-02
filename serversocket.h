@@ -10,6 +10,8 @@
 #include <bluetooth/rfcomm.h>
 #include <QFile>
 
+
+
 class ServerSocket : public QThread
 {
     Q_OBJECT

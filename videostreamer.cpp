@@ -1,11 +1,31 @@
 #include "videostreamer.h"
 
+// code for comunication with face detect process
+int getpidface()
+{
+  char line_ui[30];
+  FILE *cmd_ui = popen("pidof Face", "r");
+  fgets(line_ui, 30, cmd_ui);
+  pid_t pid_face = strtoul(line_ui, NULL, 10);
+  pclose(cmd_ui);
+  return pid_face;
+}
+volatile int is_right_face;
+
+void usrui(int sig)
+{
+  is_right_face = 1;
+}
 VideoStreamer::VideoStreamer()
 {
-    mode_streamer = 0;
-    stream_timer = new QTimer();
-    connect(stream_timer,&QTimer::timeout,this,&VideoStreamer::stream);
-    stream_timer->start(50);
+  if (signal(SIGUSR2, usrui)==SIG_ERR){
+    perror("\nSIGUSR2");
+    exit(4);
+  }
+  mode_streamer = 0;
+  stream_timer = new QTimer();
+  connect(stream_timer,&QTimer::timeout,this,&VideoStreamer::stream);
+  stream_timer->start(50);
 }
 
 VideoStreamer::~VideoStreamer()
@@ -21,6 +41,7 @@ void VideoStreamer::onFaceDetect()
 {
   open_video();
   mode_streamer = 2;  
+  kill(getpidface(), SIGUSR1);
 }
 void VideoStreamer::onQRCodeScan()
 {
@@ -58,7 +79,13 @@ void VideoStreamer::stream()
     }
     case 2:
     {
-      qDebug()<<"on face detect";
+      cap>>Frame;
+      QImage img = QImage((uchar*)Frame.data,Frame.cols,Frame.rows,QImage::Format_RGB888).rgbSwapped();
+      emit newImage(img);
+      if (is_right_face == 1)
+      {
+        emit open_with_face_success();
+      }
       break;
     }
     case 3:
@@ -166,3 +193,6 @@ void VideoStreamer::display(Mat &im, vector<decodedObject>&decodedObjects)
   QImage img = QImage((uchar*)im.data,im.cols,im.rows,QImage::Format_RGB888).rgbSwapped();
   emit newImage(img);
 }
+
+
+

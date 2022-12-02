@@ -60,7 +60,8 @@ signals:
      * 8 -> password is short
      * 9 -> wrong password
      * 10 -> wrong password over 5 times
-     * 11 -> right password, openning window
+     * 11 -> right password, opening window
+     * 12 -> right face, opening window
      */
     
     void sendToQml_Password(int num);
@@ -98,6 +99,10 @@ public slots:
     void onReceivedWifi();
     /*
     * receive ssid and password success
+    */
+    void openWithFaceSuccess();
+    /*
+    * open door with detecting face success
     */
 private:
     

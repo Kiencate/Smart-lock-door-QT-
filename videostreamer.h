@@ -11,12 +11,16 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <unistd.h>
+#include <signal.h>
 #include <iostream>
 #include <zbar.h>
 
 using namespace cv;
 using namespace std;
 using namespace zbar;
+
+
 
 typedef struct
 {
@@ -54,11 +58,17 @@ private:
     */
     QTimer *stream_timer;
     void stream();
+    /*
+    * create video with fps
+    */
     void open_video();
-    
+    /*
+    * open device camera
+    */
 signals:
     void newImage(const QImage &);
     void config_wifi_success();
+    void open_with_face_success();
 };
 
-#endif // VIDEOSTREAMER_H
+#endif //VIDEOSTREAMER_H

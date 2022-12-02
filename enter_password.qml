@@ -91,7 +91,7 @@ Window {
             else if (type == 6)
             {
                 resetwindow()
-                unlock_icon_image.visible = true
+                lock_icon_image.visible = true
                 opencvImage.visible = true
             }
             else if (type == 7)
@@ -199,6 +199,12 @@ Window {
                 inotify.color = "green"
                 inotify.text = "Mật khẩu chính xác!\n Đang mở cửa"
                 button_ok_image.visible = true
+            }
+            else if (type == 12)
+            {
+                resetwindow()
+                unlock_icon_image.visible = true
+                opencvImage.visible = true
             }
         }
 

@@ -56,6 +56,7 @@ int main(int argc, char *argv[])
         QObject::connect(&backEnd,&BackEnd::switch_to_face_detect,videoStreamer,&VideoStreamer::onFaceDetect);
         QObject::connect(&backEnd,&BackEnd::stopCamera,videoStreamer,&VideoStreamer::onStopCamera);
         QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
+        QObject::connect(videoStreamer,&VideoStreamer::open_with_face_success,&backEnd,&BackEnd::openWithFaceSuccess);
         return app.exec();
     
 
@@ -80,6 +81,7 @@ int main(int argc, char *argv[])
         QObject::connect(&backEnd,&BackEnd::switch_to_face_detect,videoStreamer,&VideoStreamer::onFaceDetect);
         QObject::connect(&backEnd,&BackEnd::stopCamera,videoStreamer,&VideoStreamer::onStopCamera);
         QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
+        QObject::connect(videoStreamer,&VideoStreamer::open_with_face_success,&backEnd,&BackEnd::openWithFaceSuccess);
         return app.exec();
 
     }
