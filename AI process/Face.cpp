@@ -25,17 +25,13 @@ void usrface(int sig)
 
 void do_infer(){
 
-    // for(int i = 0; i<10000000; i++)
-    // {
-    //     if(i % 9000000 == 0)
-    //     {
-            
-    //     }
-    // }
-    std::cout<<"nhap so bat ki de mo khoa\n";
-    int i;
-    std::cin>>i;
-    kill(getpidui(), SIGUSR2);
+    for(int i = 0; i<10000000; i++)
+    {
+        if(i % 9000000 == 0)
+        {
+            kill(getpidui(), SIGUSR2);
+        }
+    }
     std::cout<<"face ok\n";
 }
 int main(int argc, char **argv)
