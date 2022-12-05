@@ -6,17 +6,17 @@ using namespace zbar;
 
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
+    is_wifi_configured = is_wifi_done;
     if(is_wifi_done) 
     {
-        qDebug()<<"wifi is setted";
+        qDebug()<<"backend: wifi is setted";
         window_type = 5;
     }
     else
     {
-        qDebug()<<"wifi is not setted";
+        qDebug()<<"backend: wifi is not setted";
         window_type = 0;
     }
-        
     wrong_left = 5;
     is_right_password = false;
     pressing_button_id = -1;
@@ -34,7 +34,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
-    qDebug()<<"x"<<x<<"y"<<y;
+    // qDebug()<<"backend:"<<"x"<<x<<"y"<<y;
     if (window_type == 0) // config_wifi
     {
         if (type == 1)
@@ -61,24 +61,22 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 15) //qrcode
             {
-                qDebug()<<"start qrcode process";
+                qDebug()<<"backend: start qrcode process";
                 emit switch_to_qrcode_scan();
                 emit sendToQml_ChangeWindow(1,"",wrong_left);
-//                window_type = 1;
-                qDebug()<<"start qrcode process";
             }
             else if (pressing_button_id ==16) //bluetooth
             {
                 configured_with_bluetooth = true;
-                qDebug()<<"start bluetooth process";
+                qDebug()<<"backend: start bluetooth process";
                 serversocket = new ServerSocket();
-                serversocket ->start();
+                serversocket -> start();
                 agent = new Agent();
                 myAdaptor = new MyQDusAdaptor(agent);
                 if(QDBusConnection::systemBus().registerObject("/pairing/agent",agent)){
-                    qDebug() << "registerObject was Succesfull!";
+                    qDebug() << "backend: registerObject was Succesfull!";
                 } else {
-                    qDebug() << "registerObject was not Succesfull!";
+                    qDebug() << "backend: registerObject was not Succesfull!";
                 }
                 connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
                 connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
@@ -347,7 +345,9 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
             {
-                exit(0);
+                emit switch_to_main_window();
+                sendToQml_ChangeWindow(12,"",wrong_left);
+                window_type = 12;
             }
             pressing_button_id = -1;
         }
@@ -367,8 +367,57 @@ void BackEnd::onReceivedWifi()
     window_type = 4;
 }
 
-void BackEnd::openWithFaceSuccess()
+void BackEnd::onOpenWithFaceSuccess()
 {
     emit sendToQml_ChangeWindow(12,"",wrong_left);
     window_type = 12;
+}
+
+void BackEnd::sleepQt()
+{
+    emit stopCamera();
+    sendToQml_ChangeWindow(13,"",wrong_left);
+}
+
+void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected)
+{
+    qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected;
+    is_person = _is_person;
+    is_wifi_configured =_is_wifi_configured;
+    is_door_closed = _is_door_closed;
+    is_face_detected = _is_face_detected;
+    if(is_person)
+    {
+        emit switch_to_main_window();
+        if(is_door_closed)
+        {
+            if(is_face_detected) 
+            {
+                sendToQml_ChangeWindow(12,"",wrong_left);
+                window_type = 12;
+            }
+            else
+            {
+                if(is_wifi_configured)
+                {
+                    sendToQml_ChangeWindow(5,"",wrong_left);
+                    window_type = 5;
+                }
+                else
+                {
+                    sendToQml_ChangeWindow(0,"",wrong_left);
+                    window_type = 0;
+                }
+            }
+
+        }
+        else 
+        {
+            sleepQt();
+        }
+    }
+    else
+    {
+        sleepQt();
+    }
 }

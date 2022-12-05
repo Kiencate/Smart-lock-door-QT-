@@ -40,6 +40,7 @@ Window {
         {
             if (type == 0) // on config wifi window
             {
+                
                 inotify_text_window.visible=false
                 notify_window.visible=false
                 inotify.text = ""
@@ -691,6 +692,7 @@ Window {
         button_password_mode_image.visible = true
         opencvImage.visible = true
         lock_icon_image.visible = true
+        root.close()
     }
 
 }

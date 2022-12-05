@@ -40,19 +40,21 @@ Window {
         {
             if (type == 0) // on config wifi window
             {
-                inotify_text_window.visible=false
-                notify_window.visible=false
-                inotify.text = ""
-                button_ok.visible=false
-                loading_icon.visible = false
+                root.show()
+                resetwindow()
+                button_qrcode_image.visible = true
+                button_bluetooth_image.visible = true
             }
             else if (type == 1) // on qrcode scanning
             {
+                root.show()
                 resetwindow()
                 opencvImage.visible = true
+                
             }
             else if (type == 2) //connecting bluetooh
             {
+                root.show()
                 resetwindow()
                 inotify_text_window.visible=true
                 notify_window.visible=true
@@ -63,6 +65,7 @@ Window {
             }
             else if (type == 3)
             {
+                root.show()
                 resetwindow()
                 inotify.x = 40
                 inotify_text_window.visible=true
@@ -72,6 +75,7 @@ Window {
             }
             else if (type == 4)
             {
+                root.show()
                 resetwindow()
                 inotify_text_window.visible=true
                 notify_window.visible=true
@@ -82,6 +86,7 @@ Window {
             }
             else if (type == 5)
             {
+                root.show()
                 resetwindow()
                 lock_icon_image.visible = true
                 button_ai_mode_image.visible = true
@@ -90,12 +95,14 @@ Window {
             }
             else if (type == 6)
             {
+                root.show()
                 resetwindow()
                 lock_icon_image.visible = true
                 opencvImage.visible = true
             }
             else if (type == 7)
             {
+                root.show()
                 resetwindow()
                 for (var i=0; i<12;i++)
                 {
@@ -113,6 +120,7 @@ Window {
             }
             else if (type == 8)
             {
+                root.show()
                 resetwindow()
                 for (var i=0; i<12;i++)
                 {
@@ -137,6 +145,7 @@ Window {
             }
             else if (type == 9)
             {
+                root.show()
                 resetwindow()
                 for (var i=0; i<12;i++)
                 {
@@ -158,6 +167,7 @@ Window {
             }
             else if (type == 10)
             {
+                root.show()
                 resetwindow()
                 for (var i=0; i<12;i++)
                 {
@@ -178,6 +188,7 @@ Window {
             }
             else if (type ==11)
             {
+                root.show()
                 resetwindow()
                 for (var i=0; i<12;i++)
                 {
@@ -198,13 +209,20 @@ Window {
                 inotify.y = 110
                 inotify.color = "green"
                 inotify.text = "Mật khẩu chính xác!\n Đang mở cửa"
+                console.log("button ok")
                 button_ok_image.visible = true
             }
             else if (type == 12)
             {
+                root.show()
                 resetwindow()
                 unlock_icon_image.visible = true
                 opencvImage.visible = true
+            }
+            else if (type == 13)
+            {
+                console.log("close")
+                root.close()
             }
         }
 
@@ -261,6 +279,8 @@ Window {
                 source = "image://live/" + counter
             }
     }
+
+   
     Item {
         x : 15
         y : 50
@@ -644,21 +664,20 @@ Window {
            visible: false
        }
     }
-
-   Item {
-       x : 95
-       y : 150
-       id: button_ok
-       width: 60
-       height: 100
-       Image {
-           id: button_ok_image
-           source: "qrc:/icon/button_ok.png"
-           sourceSize: Qt.size(parent.width, parent.height)
-           smooth: true
-           visible: false
-       }
-   }
+    Item {
+    x : 95
+    y : 150
+    id: button_ok
+    width: 60
+    height: 100
+    Image {
+        id: button_ok_image
+        source: "qrc:/icon/button_ok.png"
+        sourceSize: Qt.size(parent.width, parent.height)
+        smooth: true
+        visible: false
+    }
+    }
 
    function resetwindow()
    {
@@ -689,6 +708,7 @@ Window {
 
         button_qrcode_image.visible = true
         button_bluetooth_image.visible = true
+               
     }
 
 }

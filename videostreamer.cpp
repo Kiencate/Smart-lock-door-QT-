@@ -1,27 +1,7 @@
 #include "videostreamer.h"
-
-// code for comunication with face detect process
-int getpidface()
-{
-  char line_ui[30];
-  FILE *cmd_ui = popen("pidof Face", "r");
-  fgets(line_ui, 30, cmd_ui);
-  pid_t pid_face = strtoul(line_ui, NULL, 10);
-  pclose(cmd_ui);
-  return pid_face;
-}
-volatile int is_right_face;
-
-void usrui(int sig)
-{
-  is_right_face = 1;
-}
+const char *status_wifi_json_path = "/home/kiencate/Documents/benzenx_job/Rfid_rc522_i2c_linux/status.json";
 VideoStreamer::VideoStreamer()
 {
-  if (signal(SIGUSR2, usrui)==SIG_ERR){
-    perror("\nSIGUSR2");
-    exit(4);
-  }
   mode_streamer = 0;
   stream_timer = new QTimer();
   connect(stream_timer,&QTimer::timeout,this,&VideoStreamer::stream);
@@ -35,13 +15,13 @@ VideoStreamer::~VideoStreamer()
 void VideoStreamer::onMainWindow()
 {
   open_video();
+  qDebug()<<"videostreamer: on main window";
   mode_streamer = 1; 
 }
 void VideoStreamer::onFaceDetect()
 {
   open_video();
   mode_streamer = 2;  
-  kill(getpidface(), SIGUSR1);
 }
 void VideoStreamer::onQRCodeScan()
 {
@@ -50,11 +30,12 @@ void VideoStreamer::onQRCodeScan()
 }
 void VideoStreamer::onStopCamera()
 {
+  cap.release();
   mode_streamer = 0;  
 }
 void VideoStreamer::open_video()
 {
-  cap.open("/dev/video0");
+  cap.open("/dev/video0",cv::CAP_V4L2);
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
   if (!cap.isOpened()) {
@@ -66,8 +47,7 @@ void VideoStreamer::stream()
   switch (mode_streamer)
   {
     case 0:
-    {
-      cap.release();
+    { 
       break;
     }
     case 1:
@@ -82,10 +62,6 @@ void VideoStreamer::stream()
       cap>>Frame;
       QImage img = QImage((uchar*)Frame.data,Frame.cols,Frame.rows,QImage::Format_RGB888).rgbSwapped();
       emit newImage(img);
-      if (is_right_face == 1)
-      {
-        emit open_with_face_success();
-      }
       break;
     }
     case 3:
@@ -100,17 +76,29 @@ void VideoStreamer::stream()
       {
         QTextStream stream(&file);
         stream << QString::fromStdString(config_wifi) << endl;
-        mode_streamer = 1 ;
-        emit config_wifi_success();
+        mode_streamer = 1 ;     
         file.close();
-        QFile file_wifi("../wifi.txt");
-        while(!file_wifi.open(QIODevice::WriteOnly))
+        // open status wifi
+        std::ifstream file_status_read;
+        file_status_read.open(status_wifi_json_path);
+        while (!file_status_read) 
         {
-            qDebug()<<file.errorString();
+          qDebug()<<"videostreamer: open status file failed";
         }
-        QTextStream write(&file_wifi);
-        write<<"1"<<endl;
-        file_wifi.close();
+        nlohmann::json status = nlohmann::json::parse(file_status_read);
+        file_status_read.close();
+        std::ofstream file_status_write;
+        file_status_write.open(status_wifi_json_path);
+        while (!file_status_write) 
+        {
+          qDebug()<<"videostreamer: open status file failed";
+        }
+
+        // change status wifi
+        status["wifi_configured"] = 1;
+        file_status_write << status << std::endl;
+        file_status_write.close();
+        emit config_wifi_success();
       }
       break;
     }

@@ -15,6 +15,8 @@
 #include <signal.h>
 #include <iostream>
 #include <zbar.h>
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 using namespace cv;
 using namespace std;
@@ -68,7 +70,6 @@ private:
 signals:
     void newImage(const QImage &);
     void config_wifi_success();
-    void open_with_face_success();
 };
 
 #endif //VIDEOSTREAMER_H

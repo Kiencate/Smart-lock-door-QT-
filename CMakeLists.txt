@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-fpermissive)
-
+set(OPENCV_LOG_LEVEL ERROR)
 find_package(OpenCV REQUIRED)
 
 set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
@@ -31,6 +31,7 @@ set(PROJECT_SOURCES
         dbusadaptor.cpp dbusadaptor.h
         opencvimageprovider.cpp opencvimageprovider.h
         videostreamer.cpp videostreamer.h
+        checkstatus_ir.cpp checkstatus_ir.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
