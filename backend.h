@@ -14,7 +14,10 @@
 #include "serversocket.h"
 #include "agent.h"
 #include "dbusadaptor.h"
-
+#include <nlohmann/json.hpp>
+#include <fcntl.h>
+#include <sys/file.h>
+#include <fstream>
 
 class BackEnd : public QObject
 {
@@ -29,6 +32,13 @@ public:
     /*
     * sleep gui qt and camera to save power
     */
+   
+    /* variable in file status json */
+    bool is_wifi_configured; // true if wifi is configured
+    bool is_person; // true if ir sensor detected person
+    bool is_door_closed; //true if door is closed
+    bool is_face_detected; //true if face detection process deteted person's face
+    bool is_rfid_success; //true if rfid scan success
 signals:
     void sendToQml_Button(int type, int button_id);
     /*type:
@@ -108,7 +118,7 @@ public slots:
     /*
     * receive ssid and password success
     */
-    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected);
+    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success);
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:
@@ -116,20 +126,13 @@ public slots:
     *   -TH2: Có người, cửa đang đóng, wifi chưa config -> Giao diện config wifi
     *   -TH3: Có người, cửa đang đóng, wifi đã config -> Giao diện đang mở khóa (nhập mật khẩu và mở bằng khuôn mặt)
     *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công -> Giao diện đã mở khóa (hiện camera và icon mở khóa)
-    *   -TH5: Có người, cửa mở -> Giao diện đã mở khóa (hiện camera và icon mở khóa)
+    *   -TH5: Có người, cửa mở -> tắt giao diện, không quan tâm đến các tín hiệu khác
     */
 private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)
     int pressing_button_id; // id of pressed button (see sendToQml_button)
-
-    /* variable in file status json */
-    bool is_wifi_configured; // true if wifi is configured
-    bool is_person; // true if ir sensor detected person
-    bool is_door_closed; //true if door is closed
-    bool is_face_detected; //true if face detection process deteted person's face
-
-
+    void open_with_password_success(); // call when enter password success
     // socket, agent, adaptor dbus bluetooth
     bool configured_with_bluetooth; // check if staff config wifi with bluetooth
     ServerSocket *serversocket;

@@ -24,7 +24,7 @@ int main()
 
     // change status wifi
     status["is_person"] = 1;
-    status["wifi_configured"] = 0;
+    status["wifi_configured"] = 1;
     status["is_closed_door"] =1;
     status["is_face_detected"] = 0;
     file_status_write << status << std::endl;

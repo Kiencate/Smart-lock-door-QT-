@@ -17,6 +17,8 @@
 #include <zbar.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <fcntl.h>
+#include <sys/file.h>
 
 using namespace cv;
 using namespace std;

@@ -1,5 +1,5 @@
 #include "videostreamer.h"
-const char *status_wifi_json_path = "/home/kiencate/Documents/benzenx_job/Rfid_rc522_i2c_linux/status.json";
+const char *status_wifi_json_path = "../status.json";
 VideoStreamer::VideoStreamer()
 {
   mode_streamer = 0;
@@ -20,11 +20,41 @@ void VideoStreamer::onMainWindow()
 }
 void VideoStreamer::onFaceDetect()
 {
+  // lock file to write
+  int fd;
+  if((fd=open(status_wifi_json_path, O_RDWR)) == -1) { 
+    qDebug()<<"videostreamer: open status file failed";
+  }
+
+  if(flock(fd,LOCK_SH)==-1)
+  {
+    qDebug()<<"videostreamer: can't lock status file";
+  }
+  std::ifstream file_status_read;
+  file_status_read.open(status_wifi_json_path);
+  while (!file_status_read) 
+  {
+    qDebug()<<"videostreamer: open status file failed";
+  }
+  nlohmann::json status = nlohmann::json::parse(file_status_read);
+  file_status_read.close();
+  std::ofstream file_status_write;
+  file_status_write.open(status_wifi_json_path);
+  while (!file_status_write) 
+  {
+    qDebug()<<"videostreamer: open status file failed";
+  }
+  status["start_face_recognize_process"] = 1;
+  file_status_write << status << std::endl;
+  file_status_write.close();
+  close(fd);
+
   open_video();
   mode_streamer = 2;  
 }
 void VideoStreamer::onQRCodeScan()
 {
+
   open_video();
   mode_streamer = 3;  
 }
@@ -78,7 +108,16 @@ void VideoStreamer::stream()
         stream << QString::fromStdString(config_wifi) << endl;
         mode_streamer = 1 ;     
         file.close();
-        // open status wifi
+        // open status wifi, lock file
+        int fd;
+        if((fd=open(status_wifi_json_path, O_RDWR)) == -1) { 
+          qDebug()<<"videostreamer: open status file failed";
+        }
+
+        if(flock(fd,LOCK_SH)==-1)
+        {
+          qDebug()<<"videostreamer: can't lock status file";
+        }
         std::ifstream file_status_read;
         file_status_read.open(status_wifi_json_path);
         while (!file_status_read) 
@@ -98,6 +137,8 @@ void VideoStreamer::stream()
         status["wifi_configured"] = 1;
         file_status_write << status << std::endl;
         file_status_write.close();
+        close(fd);
+        
         emit config_wifi_success();
       }
       break;

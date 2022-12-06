@@ -61,6 +61,7 @@ Window {
                 inotify.x = 28
                 inotify.text = "Vui lòng kết nối\nvới thiết bị bluetooth \ncó tên '"+name_device_bluetooth+"'"
                 inotify.color= "steelblue"
+                inotify.font.pointSize= 11
                 loading_icon.visible = true
             }
             else if (type == 3)
@@ -71,6 +72,7 @@ Window {
                 inotify_text_window.visible=true
                 notify_window.visible=true
                 inotify.text = "Kết nối thành công\n đang nhận wifi"
+                inotify.font.pointSize= 11
                 loading_icon.visible = true
             }
             else if (type == 4)
@@ -81,6 +83,7 @@ Window {
                 notify_window.visible=true
                 inotify.x = 74
                 inotify.text = "Cài đặt Wifi \nthành công"
+                inotify.font.pointSize= 11
                 inotify.color= "Green"
                 button_ok_image.visible=true
             }
@@ -141,6 +144,7 @@ Window {
                 inotify.y = 115
                 inotify.color = "red"
                 inotify.text = "Mật khẩu quá ngắn"
+                inotify.font.pointSize= 11
                 button_ok_image.visible = true
             }
             else if (type == 9)
@@ -163,6 +167,7 @@ Window {
                 inotify.y = 110
                 inotify.color = "red"
                 inotify.text = "Mật khẩu sai\nCòn "+wrong_left +" lần thử"
+                inotify.font.pointSize= 11
                 button_ok_image.visible = true
             }
             else if (type == 10)
@@ -181,10 +186,12 @@ Window {
                 }
                 inotify_text_window.visible=true
                 notify_window.visible=true
-                inotify.x = 45
+                inotify.x = 40
                 inotify.y = 110
                 inotify.color = "red"
-                inotify.text = "Bạn đã nhập sai\nquá 5 lần\nVui lòng liên hệ lễ\n tân để mở khóa"
+                inotify.text = "Sai mật khẩu quá nhiều\nBạn hãy thử mở khóa\nbằng cách khác!"
+                inotify.font.pointSize= 9
+                button_ok_image.visible=true
             }
             else if (type ==11)
             {
@@ -209,7 +216,7 @@ Window {
                 inotify.y = 110
                 inotify.color = "green"
                 inotify.text = "Mật khẩu chính xác!\n Đang mở cửa"
-                console.log("button ok")
+                inotify.font.pointSize= 11
                 button_ok_image.visible = true
             }
             else if (type == 12)
@@ -706,8 +713,7 @@ Window {
         button_img.push(button0_image, button1_image, button2_image, button3_image, button4_image, button5_image, button6_image, button7_image, button8_image,
                         button9_image, button_del_image, button_ent_image, button_ok_image, button_ai_mode_image, button_password_mode_image, button_qrcode_image, button_bluetooth_image)
 
-        button_qrcode_image.visible = true
-        button_bluetooth_image.visible = true
+ 
                
     }
 
