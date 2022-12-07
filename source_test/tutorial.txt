@@ -1,13 +1,13 @@
 g++ -o Face Face.cpp
 g++ -o is_door_close is_door_close.cpp
 g++ -o is_person is_person.cpp
+g++ -o rfid rfid.cpp
 
 
 chạy ./Face từ đầu
+chạy ./is_door_close từ đầu
 
 các tình huống mô phỏng:
 khi có người                   -> chạy "./is_person 1"
 không có người(người rời đi)  -> chạy "./is_person 0"
-cửa mở                                     -> chạy "./is_door_close 0"
-cửa đóng                       -> chạy "./is_door_close 1"
 quẹt rfid thành công           -> chạy "./rfid"

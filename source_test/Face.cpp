@@ -18,25 +18,24 @@ const char *status_wifi_json_path = "../status.json";
 int main( )
 {
     int length, i = 0;
-    int fd;
+    int fd_file_json;
     int wd;
     char buffer[EVENT_BUF_LEN];
 
     /*creating the INOTIFY instance*/
-    fd = inotify_init();
+    fd_file_json = inotify_init();
 
     /*checking for error*/
-    if ( fd < 0 ) {
+    if ( fd_file_json < 0 ) {
         perror( "inotify_init" );
     }
 
     /*adding the “/tmp” directory into watch list. Here, the suggestion is to validate the existence of the directory before adding into monitoring list.*/
-    wd = inotify_add_watch( fd, status_wifi_json_path, IN_MODIFY );
-
+    wd = inotify_add_watch( fd_file_json, status_wifi_json_path, IN_MODIFY );
     /*read to determine the event change happens on “/tmp” directory. Actually this read blocks until the change event occurs*/ 
     loop:
     i=0;
-    length = read( fd, buffer, EVENT_BUF_LEN ); 
+    length = read( fd_file_json, buffer, EVENT_BUF_LEN ); 
 
     std::cout<<"signal";
     /*checking for error*/
@@ -86,9 +85,9 @@ int main( )
   
     goto loop;
     /*removing the “/tmp” directory from the watch list.*/
-    inotify_rm_watch( fd, wd );
+    inotify_rm_watch( fd_file_json, wd );
 
     /*closing the INOTIFY instance*/
-    close( fd );
+    close( fd_file_json );
     return 0;
 }
