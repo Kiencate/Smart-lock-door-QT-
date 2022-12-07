@@ -132,14 +132,13 @@ void VideoStreamer::stream()
         {
           qDebug()<<"videostreamer: open status file failed";
         }
-
+        emit config_wifi_success();
         // change status wifi
         status["wifi_configured"] = 1;
         file_status_write << status << std::endl;
         file_status_write.close();
-        close(fd);
+        close(fd);      
         
-        emit config_wifi_success();
       }
       break;
     }

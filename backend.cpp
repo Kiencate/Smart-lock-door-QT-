@@ -21,6 +21,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     is_right_password = false;
     pressing_button_id = -1;
     configured_with_bluetooth= false;
+    is_wifi_configured_before = is_wifi_configured;
     //read right password from txt file 
     QFile file("../password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
@@ -371,6 +372,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 wrong_left = 5;
                 _password="";
                 emit sendToQml_Password(_password.size());
+                emit switch_to_main_window(); 
                 open_and_close_door_after_3s();
             }
             pressing_button_id = -1;
@@ -387,8 +389,8 @@ void BackEnd::onConectedBluetooth()
 
 void BackEnd::onReceivedWifi()
 {
-    emit sendToQml_ChangeWindow(4,"",wrong_left);
-    window_type = 4;
+    // emit sendToQml_ChangeWindow(4,"",wrong_left);
+    // window_type = 4;
 }
 
 void BackEnd::sleepQt()
@@ -405,19 +407,29 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     is_door_closed = _is_door_closed;
     is_face_detected = _is_face_detected;
     is_rfid_success = _is_rfid_success;
-    if(is_person && is_door_closed )
+    if(is_person &&  is_door_closed)
     {
         emit switch_to_main_window(); // open camera
-        if(is_face_detected || is_rfid_success) 
+        if(is_face_detected || is_rfid_success ) 
         {
             open_and_close_door_after_3s();
         }
         else
         {
-            if(is_wifi_configured)
+            if(is_wifi_configured )
             {
-                sendToQml_ChangeWindow(5,"",wrong_left);
-                window_type = 5;
+                if(is_wifi_configured_before)
+                {
+                    sendToQml_ChangeWindow(5,"",wrong_left);
+                    window_type = 5;
+                }
+                else
+                {
+                    emit sendToQml_ChangeWindow(4,"",wrong_left);
+                    window_type = 4;
+                    is_wifi_configured_before = true;
+                }
+                               
             }
             else
             {
@@ -426,7 +438,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             }
         }       
     }
-    else if (!is_person)
+    else if(!is_person)
     {
         sleepQt();
     }
@@ -434,7 +446,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
 
 void BackEnd::open_and_close_door_after_3s()
 {
-    sleepQt();
+    sendToQml_ChangeWindow(12,"",wrong_left);
     int fd;
     if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
         std::cout<<"videostreamer: open status file failed"<<std::endl;
@@ -474,16 +486,24 @@ void BackEnd::open_and_close_door_after_3s()
     catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
     close(fd); 
 
-    usleep(3000000);
+    QTimer::singleShot(3000, this, SLOT(closeDoor()));
 
+ 
+    
+    
+}
+
+void BackEnd::closeDoor()
+{
+    int fd;
     if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
         std::cout<<"videostreamer: open status file failed"<<std::endl;
     }
-
     if(flock(fd,LOCK_EX)==-1)
     {
         std::cout<<"videostreamer: can't lock status file"<<std::endl;
     }
+    std::ifstream file_status_read;
     file_status_read.open(status_password_json_path);
     while (!file_status_read) 
     {
@@ -512,4 +532,5 @@ void BackEnd::open_and_close_door_after_3s()
     }
     catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
     close(fd); 
+    sendToQml_ChangeWindow(5,"",wrong_left);
 }

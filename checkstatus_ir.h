@@ -29,6 +29,10 @@ public:
     ~CheckStatus();
     bool is_person;
     bool is_door_closed;
+    bool wifi_config ;
+    bool face_detect ;
+    bool right_password ;
+    bool rfid_success ;
 signals:
     void JsonChangestatus(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool right_password, bool is_rfid_success);
 protected:

@@ -51,26 +51,17 @@ void CheckStatus::run()
         }
         try{
             nlohmann::json status = nlohmann::json::parse(file_status);
-            bool new_person = std::stoi(status["is_person"].dump()) == 1? true:false;
+            is_person = std::stoi(status["is_person"].dump()) == 1? true:false;
             is_door_closed = std::stoi(status["is_closed_door"].dump()) == 1? true:false;
             
-            bool wifi_config = std::stoi(status["wifi_configured"].dump()) == 1? true:false;
-            bool face_detect = std::stoi(status["is_face_detected"].dump()) == 1? true:false;
-            bool right_password = std::stoi(status["is_password_success"].dump()) == 1? true:false;
-            bool rfid_success = std::stoi(status["is_rfid_success"].dump()) == 1? true:false;
-            if(new_person) 
-            {
-                is_person = true;                
-            }
-            else 
-            {
-                is_person = false;
-            }
-
-            emit JsonChangestatus(new_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success); 
+            wifi_config = std::stoi(status["wifi_configured"].dump()) == 1? true:false;
+            face_detect = std::stoi(status["is_face_detected"].dump()) == 1? true:false;
+            right_password = std::stoi(status["is_password_success"].dump()) == 1? true:false;
+            rfid_success = std::stoi(status["is_rfid_success"].dump()) == 1? true:false;      
         }   
         catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;} 
         close(fd);
+        emit JsonChangestatus(is_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success); 
         file_status.close();
     }
     

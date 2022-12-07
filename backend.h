@@ -128,12 +128,14 @@ public slots:
     *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công -> Giao diện đã mở khóa (hiện camera và icon mở khóa)
     *   -TH5: Có người, cửa mở -> tắt giao diện, không quan tâm đến các tín hiệu khác
     */
+   void closeDoor(); // close the door after 3s
 private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)
     int pressing_button_id; // id of pressed button (see sendToQml_button)
     // socket, agent, adaptor dbus bluetooth
     bool configured_with_bluetooth; // check if staff config wifi with bluetooth
+    bool is_wifi_configured_before; // check if this is first time config wifi
     ServerSocket *serversocket;
     Agent *agent;
     MyQDusAdaptor* myAdaptor;

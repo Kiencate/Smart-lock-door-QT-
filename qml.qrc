@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>config_wifi.qml</file>
-        <file>enter_password.qml</file>
         <file>icon/button0.png</file>
         <file>icon/button1.png</file>
         <file>icon/button2.png</file>
