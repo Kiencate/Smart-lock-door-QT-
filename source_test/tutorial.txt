@@ -1,11 +1,10 @@
 g++ -o Face Face.cpp
-g++ -o is_door_close is_door_close.cpp
 g++ -o is_person is_person.cpp
 g++ -o rfid rfid.cpp
 
+sửa dòng 68 videostreamer.cpp thành device của board
 
 chạy ./Face từ đầu
-chạy ./is_door_close từ đầu
 
 các tình huống mô phỏng:
 khi có người                   -> chạy "./is_person 1"

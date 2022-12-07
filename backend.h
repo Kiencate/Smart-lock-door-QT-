@@ -24,15 +24,15 @@ class BackEnd : public QObject
     Q_OBJECT
 public:
     explicit BackEnd(bool is_wifi_done, QObject *parent = nullptr);
-    void onOpenWithFaceSuccess();
-    /*
-    * open door with detecting face success
-    */
+    // void onOpenWithFaceSuccess();
+    // /*
+    // * open door with detecting face success
+    // */
     void sleepQt();
     /*
     * sleep gui qt and camera to save power
     */
-   
+    void open_and_close_door_after_3s(); 
     /* variable in file status json */
     bool is_wifi_configured; // true if wifi is configured
     bool is_person; // true if ir sensor detected person
@@ -132,7 +132,6 @@ private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)
     int pressing_button_id; // id of pressed button (see sendToQml_button)
-    void open_with_password_success(); // call when enter password success
     // socket, agent, adaptor dbus bluetooth
     bool configured_with_bluetooth; // check if staff config wifi with bluetooth
     ServerSocket *serversocket;

@@ -177,11 +177,6 @@ string VideoStreamer::decode(Mat &im, vector<decodedObject>&decodedObjects)
     obj.type = symbol->get_type_name();
     obj.data = symbol->get_data();
     a = obj.data;
-    // Print type and data
-    //cout << "Type : " << obj.type << endl;
-    //cout << obj.data << endl;
-    //string a = string(obj.data);
-    // Obtain location
     for(int i = 0; i< symbol->get_location_size(); i++)
     {
       obj.location.push_back(Point(symbol->get_location_x(i),symbol->get_location_y(i)));

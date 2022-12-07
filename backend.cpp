@@ -369,14 +369,9 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id == 12)
             {
                 wrong_left = 5;
-                is_right_password = false;
                 _password="";
                 emit sendToQml_Password(_password.size());
-                emit switch_to_main_window();
-                open_with_password_success();
-                
-                // sendToQml_ChangeWindow(12,"",wrong_left);
-                // window_type = 12;
+                open_and_close_door_after_3s();
             }
             pressing_button_id = -1;
         }
@@ -396,12 +391,6 @@ void BackEnd::onReceivedWifi()
     window_type = 4;
 }
 
-void BackEnd::onOpenWithFaceSuccess()
-{
-    emit sendToQml_ChangeWindow(12,"",wrong_left);
-    window_type = 12;
-}
-
 void BackEnd::sleepQt()
 {
     emit stopCamera();
@@ -416,45 +405,36 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     is_door_closed = _is_door_closed;
     is_face_detected = _is_face_detected;
     is_rfid_success = _is_rfid_success;
-    if(is_person)
+    if(is_person && is_door_closed )
     {
         emit switch_to_main_window(); // open camera
-        if(is_door_closed)
+        if(is_face_detected || is_rfid_success) 
         {
-            if(is_face_detected || _is_password_right || is_rfid_success) 
+            open_and_close_door_after_3s();
+        }
+        else
+        {
+            if(is_wifi_configured)
             {
-                sendToQml_ChangeWindow(12,"",wrong_left);
-                window_type = 12;
+                sendToQml_ChangeWindow(5,"",wrong_left);
+                window_type = 5;
             }
             else
             {
-                if(is_wifi_configured)
-                {
-                    sendToQml_ChangeWindow(5,"",wrong_left);
-                    window_type = 5;
-                }
-                else
-                {
-                    sendToQml_ChangeWindow(0,"",wrong_left);
-                    window_type = 0;
-                }
+                sendToQml_ChangeWindow(0,"",wrong_left);
+                window_type = 0;
             }
-
-        }
-        else 
-        {
-            qDebug()<<"ok";
-            sleepQt();
-        }
+        }       
     }
-    else
+    else if (!is_person)
     {
         sleepQt();
     }
 }
 
-void BackEnd::open_with_password_success()
+void BackEnd::open_and_close_door_after_3s()
 {
+    sleepQt();
     int fd;
     if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
         std::cout<<"videostreamer: open status file failed"<<std::endl;
@@ -480,13 +460,56 @@ void BackEnd::open_with_password_success()
         {
             std::cout<<"videostreamer: open status file failed"<<std::endl;
         }
-
-        status["is_password_success"] = 1;
+        if (is_right_password)
+        {
+            status["is_password_success"] = 1;
+        }
+        status["is_closed_door"] = 0;
+        status["is_charged"] = 0;
             
         file_status_write << status << std::endl;
         file_status_write.close(); 
         
     }
     catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
-    close(fd);   
+    close(fd); 
+
+    usleep(3000000);
+
+    if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
+        std::cout<<"videostreamer: open status file failed"<<std::endl;
+    }
+
+    if(flock(fd,LOCK_EX)==-1)
+    {
+        std::cout<<"videostreamer: can't lock status file"<<std::endl;
+    }
+    file_status_read.open(status_password_json_path);
+    while (!file_status_read) 
+    {
+        std::cout<<"videostreamer: open status file failed"<<std::endl;
+    }
+    try
+    {
+        nlohmann::json status = nlohmann::json::parse(file_status_read);       
+        file_status_read.close();
+        std::ofstream file_status_write;
+        file_status_write.open(status_password_json_path);
+        while (!file_status_write) 
+        {
+            std::cout<<"videostreamer: open status file failed"<<std::endl;
+        }
+        if (is_right_password) is_right_password = false;
+        status["is_face_detected"] = 0;
+        status["is_password_success"] = 0;
+        status["is_rfid_success"]=0;
+        status["is_closed_door"] = 1;
+        status["is_charged"] = 1; 
+            
+        file_status_write << status << std::endl;
+        file_status_write.close(); 
+        
+    }
+    catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
+    close(fd); 
 }

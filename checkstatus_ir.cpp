@@ -67,7 +67,7 @@ void CheckStatus::run()
                 is_person = false;
             }
 
-            emit JsonChangestatus(new_person,wifi_config,is_door_closed,face_detect,right_password,rfid_success); 
+            emit JsonChangestatus(new_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success); 
         }   
         catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;} 
         close(fd);
