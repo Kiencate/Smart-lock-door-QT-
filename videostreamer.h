@@ -15,8 +15,6 @@
 #include <signal.h>
 #include <iostream>
 #include <zbar.h>
-#include <fstream>
-#include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
 #include <json.h>

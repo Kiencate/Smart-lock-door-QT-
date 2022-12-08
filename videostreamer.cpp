@@ -78,40 +78,31 @@ void VideoStreamer::stream()
       if(config_wifi != "" && file.open(QIODevice::WriteOnly))
       {
         QTextStream stream(&file);
-        stream << QString::fromStdString(config_wifi) << endl;
-        mode_streamer = 1 ;     
+        stream << QString::fromStdString(config_wifi) << endl;    
         file.close();
         // open status wifi, lock file
-        int fd;
-        if((fd=open(status_wifi_json_path, O_RDWR)) == -1) { 
-          qDebug()<<"videostreamer: open status file failed";
+        int fd_status_json;
+        if((fd_status_json=open(status_wifi_json_path, O_RDWR)) == -1) { 
+            std::cout<<"is_person: open status file failed";
         }
 
-        if(flock(fd,LOCK_SH)==-1)
+        if(flock(fd_status_json,LOCK_EX)==-1)
         {
-          qDebug()<<"videostreamer: can't lock status file";
+            std::cout<<"is_person: can't lock status file";
         }
-        std::ifstream file_status_read;
-        file_status_read.open(status_wifi_json_path);
-        while (!file_status_read) 
+        struct json_object *status_json_obj= json_object_from_fd(fd_status_json);
+
+        json_object *wifi_configured = json_object_object_get(status_json_obj,"wifi_configured");
+        json_object_set_int(wifi_configured, 1);
+        lseek(fd_status_json,0,SEEK_SET);
+        if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
         {
-          qDebug()<<"videostreamer: open status file failed";
-        }
-        nlohmann::json status = nlohmann::json::parse(file_status_read);
-        file_status_read.close();
-        std::ofstream file_status_write;
-        file_status_write.open(status_wifi_json_path);
-        while (!file_status_write) 
-        {
-          qDebug()<<"videostreamer: open status file failed";
-        }
-        emit config_wifi_success();
-        // change status wifi
-        status["wifi_configured"] = 1;
-        file_status_write << status << std::endl;
-        file_status_write.close();
-        close(fd);      
-        
+            std::cout<<"is_person: fail to open door";
+        } 
+        json_object_put(status_json_obj);   
+        close(fd_status_json); 
+        emit config_wifi_success();       
+        mode_streamer = 1 ;        
       }
       break;
     }

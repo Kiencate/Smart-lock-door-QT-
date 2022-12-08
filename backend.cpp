@@ -422,6 +422,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         {
             if(is_wifi_configured )
             {
+                emit switch_to_main_window();
                 if(is_wifi_configured_before)
                 {
                     sendToQml_ChangeWindow(5,"",wrong_left);
@@ -438,6 +439,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             }
             else
             {
+                
                 sendToQml_ChangeWindow(0,"",wrong_left);
                 window_type = 0;
             }
