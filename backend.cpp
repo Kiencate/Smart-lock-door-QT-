@@ -4,15 +4,7 @@ using namespace cv;
 using namespace std;
 using namespace zbar;
 const char *status_password_json_path = "../status.json";
-int getpidface()
-{
-  char line_ui[30];
-  FILE *cmd_ui = popen("pidof Face", "r");
-  fgets(line_ui, 30, cmd_ui);
-  pid_t pid_face = strtoul(line_ui, NULL, 10);
-  pclose(cmd_ui);
-  return pid_face;
-}
+
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
     is_wifi_configured = is_wifi_done;
