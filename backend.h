@@ -11,13 +11,14 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <zbar.h>
+#include <signal.h>
 #include "serversocket.h"
 #include "agent.h"
 #include "dbusadaptor.h"
-#include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
 #include <fstream>
+#include <json.h>
 
 class BackEnd : public QObject
 {
@@ -32,7 +33,8 @@ public:
     /*
     * sleep gui qt and camera to save power
     */
-    void open_and_close_door_after_3s(); 
+    void open_and_close_door_after_3s();  // opendoor and set timer to call slot close door after 3s
+    void start_face_detect(); //wake up process face detect
     /* variable in file status json */
     bool is_wifi_configured; // true if wifi is configured
     bool is_person; // true if ir sensor detected person
@@ -128,7 +130,7 @@ public slots:
     *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công -> Giao diện đã mở khóa (hiện camera và icon mở khóa)
     *   -TH5: Có người, cửa mở -> tắt giao diện, không quan tâm đến các tín hiệu khác
     */
-   void closeDoor(); // close the door after 3s
+    void closeDoor(); // close the door after 3s
 private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)
@@ -145,7 +147,8 @@ private:
     int wrong_left; // wrong times remain (max 5 times)
     bool is_right_password; // check if user entered right password
     QString _password; //password user entered
-    QString _right_password;
+    QString _right_password; //right password
+    struct json_object *status_json_obj; //json object for status json file
 
 
 };

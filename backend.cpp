@@ -4,6 +4,15 @@ using namespace cv;
 using namespace std;
 using namespace zbar;
 const char *status_password_json_path = "../status.json";
+int getpidface()
+{
+  char line_ui[30];
+  FILE *cmd_ui = popen("pidof Face", "r");
+  fgets(line_ui, 30, cmd_ui);
+  pid_t pid_face = strtoul(line_ui, NULL, 10);
+  pclose(cmd_ui);
+  return pid_face;
+}
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
     is_wifi_configured = is_wifi_done;
@@ -17,7 +26,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
         qDebug()<<"backend: wifi is not setted";
         window_type = 0;
     }
-    wrong_left = 1;
+    wrong_left = 5;
     is_right_password = false;
     pressing_button_id = -1;
     configured_with_bluetooth= false;
@@ -138,10 +147,11 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id == 13) // ai mode
             {
                 window_type = 6; // in face recognition
+                qDebug()<<"start face";
+                // kill(getpidface(), SIGUSR1);
+                start_face_detect();
                 emit switch_to_face_detect();
                 emit sendToQml_ChangeWindow(6,"",wrong_left); // switch to face recognition window
-
-
             }
             else if (pressing_button_id == 14) //password mode
             {
@@ -369,9 +379,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
             {
-                wrong_left = 5;
-                _password="";
-                emit sendToQml_Password(_password.size());
                 emit switch_to_main_window(); 
                 open_and_close_door_after_3s();
             }
@@ -409,10 +416,15 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     is_rfid_success = _is_rfid_success;
     if(is_person &&  is_door_closed)
     {
-        emit switch_to_main_window(); // open camera
-        if(is_face_detected || is_rfid_success ) 
+         // open camera
+        if(is_face_detected) 
         {
             open_and_close_door_after_3s();
+        }
+        else if(is_rfid_success)
+        {
+            open_and_close_door_after_3s();
+            emit switch_to_main_window();
         }
         else
         {
@@ -428,6 +440,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
                     emit sendToQml_ChangeWindow(4,"",wrong_left);
                     window_type = 4;
                     is_wifi_configured_before = true;
+                    qDebug()<<"backend: wificonfig";
                 }
                                
             }
@@ -447,90 +460,92 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
 void BackEnd::open_and_close_door_after_3s()
 {
     sendToQml_ChangeWindow(12,"",wrong_left);
-    int fd;
-    if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
-        std::cout<<"videostreamer: open status file failed"<<std::endl;
+    int fd_status_json;
+    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"backend: open status file failed";
     }
 
-    if(flock(fd,LOCK_EX)==-1)
+    if(flock(fd_status_json,LOCK_EX)==-1)
     {
-        std::cout<<"videostreamer: can't lock status file"<<std::endl;
+        qDebug()<<"backend: can't lock status file";
     }
-    std::ifstream file_status_read;
-    file_status_read.open(status_password_json_path);
-    while (!file_status_read) 
-    {
-        std::cout<<"videostreamer: open status file failed"<<std::endl;
-    }
-    try
-    {
-        nlohmann::json status = nlohmann::json::parse(file_status_read);       
-        file_status_read.close();
-        std::ofstream file_status_write;
-        file_status_write.open(status_password_json_path);
-        while (!file_status_write) 
-        {
-            std::cout<<"videostreamer: open status file failed"<<std::endl;
-        }
-        if (is_right_password)
-        {
-            status["is_password_success"] = 1;
-        }
-        status["is_closed_door"] = 0;
-        status["is_charged"] = 0;
-            
-        file_status_write << status << std::endl;
-        file_status_write.close(); 
-        
-    }
-    catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
-    close(fd); 
+    status_json_obj = json_object_from_fd(fd_status_json);
 
-    QTimer::singleShot(3000, this, SLOT(closeDoor()));
-
- 
-    
-    
+    json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
+    json_object_set_int(is_closed_door, 0);
+    json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
+    json_object_set_int(is_charged, 0);
+    if (is_right_password)
+    {
+        json_object *is_password_success = json_object_object_get(status_json_obj,"is_password_success");
+        json_object_set_int(is_password_success, 1);
+    } 
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"backend: fail to open door";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
+    QTimer::singleShot(3000, this, SLOT(closeDoor()));  
 }
 
 void BackEnd::closeDoor()
 {
-    int fd;
-    if((fd=open(status_password_json_path, O_RDWR)) == -1) { 
-        std::cout<<"videostreamer: open status file failed"<<std::endl;
+    int fd_status_json;
+    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"videostreamer: open status file failed";
     }
-    if(flock(fd,LOCK_EX)==-1)
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
     {
-        std::cout<<"videostreamer: can't lock status file"<<std::endl;
+        qDebug()<<"videostreamer: can't lock status file";
     }
-    std::ifstream file_status_read;
-    file_status_read.open(status_password_json_path);
-    while (!file_status_read) 
+    status_json_obj = json_object_from_fd(fd_status_json);
+    json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
+    json_object_set_int(is_closed_door, 1);
+    json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
+    json_object_set_int(is_charged, 1);
+    json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
+    json_object_set_int(is_face_detected, 0);
+    json_object *is_password_success = json_object_object_get(status_json_obj,"is_password_success");
+    json_object_set_int(is_password_success, 0);
+    json_object *is_rfid_success = json_object_object_get(status_json_obj,"is_rfid_success");
+    json_object_set_int(is_rfid_success, 0);  
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
     {
-        std::cout<<"videostreamer: open status file failed"<<std::endl;
-    }
-    try
-    {
-        nlohmann::json status = nlohmann::json::parse(file_status_read);       
-        file_status_read.close();
-        std::ofstream file_status_write;
-        file_status_write.open(status_password_json_path);
-        while (!file_status_write) 
-        {
-            std::cout<<"videostreamer: open status file failed"<<std::endl;
-        }
-        if (is_right_password) is_right_password = false;
-        status["is_face_detected"] = 0;
-        status["is_password_success"] = 0;
-        status["is_rfid_success"]=0;
-        status["is_closed_door"] = 1;
-        status["is_charged"] = 1; 
-            
-        file_status_write << status << std::endl;
-        file_status_write.close(); 
-        
-    }
-    catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;}       
-    close(fd); 
+        qDebug()<<"backend: fail to close door";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json);
+    /// reset password
+    wrong_left = 5;
+    _password="";
+    emit sendToQml_Password(_password.size());
     sendToQml_ChangeWindow(5,"",wrong_left);
+}
+
+void BackEnd::start_face_detect()
+{
+    int fd_status_json;
+    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"backend: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"backend: can't lock status file";
+    }
+    status_json_obj = json_object_from_fd(fd_status_json);
+
+    json_object *start_face_recognize_process = json_object_object_get(status_json_obj,"start_face_recognize_process");
+    json_object_set_int(start_face_recognize_process, 1);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"backend: fail to open door";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
 }

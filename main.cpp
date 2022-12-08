@@ -34,21 +34,19 @@ int main(int argc, char *argv[])
     context->setContextProperty("liveImageProvider",liveImageProvider);
     engine.addImageProvider("live",liveImageProvider);
  
-    //create ifstream to read status json file
-    std::ifstream file_status;
-    file_status.open(status_json_path);
-    while(!file_status)
-    {
-        qDebug("error while opening status json path");
+    //create file descriptor and json object to read status json file
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"videostreamer: open status file failed";
     }
-    bool wifi_configured;
-    try
+    if(flock(fd_status_json,LOCK_SH)==-1)
     {
-        nlohmann::json status = nlohmann::json::parse(file_status);
-        file_status.close();
-        wifi_configured = std::stoi(status["wifi_configured"].dump()) == 1?true:false;
+        qDebug()<<"videostreamer: can't lock status file";
     }
-    catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl; return 0;}
+    struct json_object *status_json_obj = json_object_from_fd(fd_status_json);
+    bool wifi_configured = json_object_get_int(json_object_object_get(status_json_obj,"wifi_configured")) == 1? true:false;
+    close(fd_status_json);
+    json_object_put(status_json_obj);
 
     BackEnd backEnd(wifi_configured);
     context->setContextProperty("backEnd", &backEnd);

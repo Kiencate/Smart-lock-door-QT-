@@ -15,6 +15,7 @@
 #include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
+#include <json.h>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
@@ -40,6 +41,7 @@ protected:
 private:
     int fd; //inotify instance
     int wd; //inotify watch
+    struct json_object *status_json_obj; //json object for status json file
     char buffer[EVENT_BUF_LEN]; // save event with file 
 };
 

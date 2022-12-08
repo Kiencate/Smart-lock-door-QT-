@@ -1,6 +1,6 @@
-g++ -o Face Face.cpp
-g++ -o is_person is_person.cpp
-g++ -o rfid rfid.cpp
+g++ -o Face Face.cpp -I/usr/include/json-c/ -ljson-c
+g++ -o is_person is_person.cpp -I/usr/include/json-c/ -ljson-c
+g++ -o rfid rfid.cpp -I/usr/include/json-c/ -ljson-c
 
 sửa dòng 68 videostreamer.cpp thành device của board
 

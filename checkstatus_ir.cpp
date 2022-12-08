@@ -17,13 +17,12 @@ CheckStatus::CheckStatus()
 
 void CheckStatus::run()
 {
-    char data_status_json_file[100];
-    char data_status_json_file1[100];
+    int fd_status_json;
     int length, i; // length is length of event read, i is th index of event in list event
     loop:
     i=0;
     length = read( fd, buffer, EVENT_BUF_LEN ); 
-    std::cout<<"check status: new change file: ";
+    qDebug()<<"check status: new change file: ";
     /*checking for error*/
     if ( length < 0 ) {
         perror( "read" );
@@ -31,40 +30,27 @@ void CheckStatus::run()
     while ( i < length ) {     
         struct inotify_event *event = ( struct inotify_event * ) &buffer[ i ];  
         i += EVENT_SIZE + event->len;
-        
         //lock and open file
-        int fd;
-        if((fd=open(status_json_check_path, O_RDWR)) == -1) { 
-            std::cout<<"videostreamer: open status file failed"<<std::endl;
-        }
-
-        if(flock(fd,LOCK_SH)==-1)
-        {
-            std::cout<<"videostreamer: can't lock status file"<<std::endl;
-        }  
-        
-        std::ifstream file_status;
-        file_status.open(status_json_check_path);
-        while(!file_status)
-        {
-            qDebug("error while opening status json path");
-        }
-        try{
-            nlohmann::json status = nlohmann::json::parse(file_status);
-            is_person = std::stoi(status["is_person"].dump()) == 1? true:false;
-            is_door_closed = std::stoi(status["is_closed_door"].dump()) == 1? true:false;
-            
-            wifi_config = std::stoi(status["wifi_configured"].dump()) == 1? true:false;
-            face_detect = std::stoi(status["is_face_detected"].dump()) == 1? true:false;
-            right_password = std::stoi(status["is_password_success"].dump()) == 1? true:false;
-            rfid_success = std::stoi(status["is_rfid_success"].dump()) == 1? true:false;      
-        }   
-        catch(nlohmann::json::parse_error& ex){ std::cerr << "parse error at byte " << ex.byte << std::endl;} 
-        close(fd);
-        emit JsonChangestatus(is_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success); 
-        file_status.close();
     }
     
+    if((fd_status_json=open(status_json_check_path, O_RDWR)) == -1) { 
+        qDebug()<<"videostreamer: open status file failed";
+    }
+
+    if(flock(fd,LOCK_SH)==-1)
+    {
+        qDebug()<<"videostreamer: can't lock status file";
+    }  
+    status_json_obj = json_object_from_fd(fd_status_json);
+    is_person = json_object_get_int(json_object_object_get(status_json_obj,"is_person")) == 1? true:false;
+    is_door_closed = json_object_get_int(json_object_object_get(status_json_obj,"is_closed_door")) == 1? true:false;
+    wifi_config = json_object_get_int(json_object_object_get(status_json_obj,"wifi_configured")) == 1? true:false;
+    face_detect = json_object_get_int(json_object_object_get(status_json_obj,"is_face_detected")) == 1? true:false;
+    right_password = json_object_get_int(json_object_object_get(status_json_obj,"is_password_success")) == 1? true:false;
+    rfid_success = json_object_get_int(json_object_object_get(status_json_obj,"is_rfid_success")) == 1? true:false;
+    close(fd_status_json);
+    emit JsonChangestatus(is_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success); 
+    json_object_put(status_json_obj); 
     goto loop;
 }
 CheckStatus::~CheckStatus()

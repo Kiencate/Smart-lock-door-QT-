@@ -19,6 +19,7 @@
 #include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
+#include <json.h>
 
 using namespace cv;
 using namespace std;

@@ -1,5 +1,7 @@
 #include "videostreamer.h"
 const char *status_wifi_json_path = "../status.json";
+
+
 VideoStreamer::VideoStreamer()
 {
   mode_streamer = 0;
@@ -10,56 +12,27 @@ VideoStreamer::VideoStreamer()
 
 VideoStreamer::~VideoStreamer()
 {
-    cap.release();
+  cap.release();
+  qDebug()<<"videostreamer: closevideo";
 }
 void VideoStreamer::onMainWindow()
 {
   open_video();
-  qDebug()<<"videostreamer: on main window";
+  qDebug()<<"videostreamer: openvideo";
   mode_streamer = 1; 
 }
 void VideoStreamer::onFaceDetect()
 {
-  // lock file to write
-  int fd;
-  if((fd=open(status_wifi_json_path, O_RDWR)) == -1) { 
-    qDebug()<<"videostreamer: open status file failed";
-  }
-
-  if(flock(fd,LOCK_SH)==-1)
-  {
-    qDebug()<<"videostreamer: can't lock status file";
-  }
-  std::ifstream file_status_read;
-  file_status_read.open(status_wifi_json_path);
-  while (!file_status_read) 
-  {
-    qDebug()<<"videostreamer: open status file failed";
-  }
-  nlohmann::json status = nlohmann::json::parse(file_status_read);
-  file_status_read.close();
-  std::ofstream file_status_write;
-  file_status_write.open(status_wifi_json_path);
-  while (!file_status_write) 
-  {
-    qDebug()<<"videostreamer: open status file failed";
-  }
-  status["start_face_recognize_process"] = 1;
-  file_status_write << status << std::endl;
-  file_status_write.close();
-  close(fd);
-
-  open_video();
   mode_streamer = 2;  
 }
 void VideoStreamer::onQRCodeScan()
 {
-
   open_video();
   mode_streamer = 3;  
 }
 void VideoStreamer::onStopCamera()
 {
+  qDebug()<<"videostreamer: closevideo";
   cap.release();
   mode_streamer = 0;  
 }
