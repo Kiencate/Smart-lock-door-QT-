@@ -3,16 +3,29 @@ const char *status_json_check_path = "../status.json";
 CheckStatus::CheckStatus()
 {
 /*creating the INOTIFY instance*/
-  fd = inotify_init();
+  fd_inotify = inotify_init();
 
   /*checking for error*/
-  if ( fd < 0 ) {
+  if ( fd_inotify < 0 ) {
     perror( "inotify_init" );
   }
 
   /*adding the “/tmp” directory into watch list. Here, the suggestion is to validate the existence of the directory before adding into monitoring list.*/
-  wd = inotify_add_watch( fd, status_json_check_path, IN_MODIFY );
-  is_person = false;
+  wd_inotify = inotify_add_watch( fd_inotify, status_json_check_path, IN_MODIFY );
+
+  int fd_status_json;
+    if((fd_status_json=open(status_json_check_path, O_RDWR)) == -1) { 
+        qDebug()<<"checkstatus: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_SH)==-1)
+    {
+        qDebug()<<"checkstatus: can't lock status file";
+    } 
+    status_json_obj = json_object_from_fd(fd_status_json);
+    is_person = json_object_get_int(json_object_object_get(status_json_obj,"is_person")) == 1? true:false;
+    close(fd_status_json);
+    json_object_put(status_json_obj); 
 }
 
 void CheckStatus::run()
@@ -21,7 +34,7 @@ void CheckStatus::run()
     int length, i; // length is length of event read, i is th index of event in list event
     loop:
     i=0;
-    length = read( fd, buffer, EVENT_BUF_LEN ); 
+    length = read( fd_inotify, buffer, EVENT_BUF_LEN ); 
     qDebug()<<"check status: new change file: ";
     /*checking for error*/
     if ( length < 0 ) {
@@ -34,12 +47,12 @@ void CheckStatus::run()
     }
     
     if((fd_status_json=open(status_json_check_path, O_RDWR)) == -1) { 
-        qDebug()<<"videostreamer: open status file failed";
+        qDebug()<<"checkstatus: open status file failed";
     }
 
-    if(flock(fd,LOCK_SH)==-1)
+    if(flock(fd_status_json,LOCK_SH)==-1)
     {
-        qDebug()<<"videostreamer: can't lock status file";
+        qDebug()<<"checkstatus: can't lock status file";
     }  
     status_json_obj = json_object_from_fd(fd_status_json);
     is_person = json_object_get_int(json_object_object_get(status_json_obj,"is_person")) == 1? true:false;
@@ -55,8 +68,8 @@ void CheckStatus::run()
 }
 CheckStatus::~CheckStatus()
 {
-    inotify_rm_watch( fd, wd );
+    inotify_rm_watch( fd_inotify, wd_inotify );
 
     /*closing the INOTIFY instance*/
-    close( fd );
+    close( fd_inotify );
 }

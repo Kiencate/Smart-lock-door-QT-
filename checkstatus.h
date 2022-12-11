@@ -41,8 +41,8 @@ signals:
 protected:
     void run();
 private:
-    int fd; //inotify instance
-    int wd; //inotify watch
+    int fd_inotify; //inotify instance
+    int wd_inotify; //inotify watch
     struct json_object *status_json_obj; //json object for status json file
     char buffer[EVENT_BUF_LEN]; // save event with file 
 };
