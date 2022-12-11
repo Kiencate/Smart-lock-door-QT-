@@ -24,6 +24,7 @@ CheckStatus::CheckStatus()
     } 
     status_json_obj = json_object_from_fd(fd_status_json);
     is_person = json_object_get_int(json_object_object_get(status_json_obj,"is_person")) == 1? true:false;
+    is_door_closed = json_object_get_int(json_object_object_get(status_json_obj,"is_closed_door")) == 1? true:false;
     close(fd_status_json);
     json_object_put(status_json_obj); 
 }

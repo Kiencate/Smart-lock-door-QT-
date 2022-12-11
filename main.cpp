@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
     restart_app:
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
+        qDebug()<<checkStatus->is_person;
         usleep(500000);
     }
     backEnd.switch_to_main_window();
