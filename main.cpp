@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
     QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     //loop at restart 
     restart_app:

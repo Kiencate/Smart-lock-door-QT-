@@ -1,1 +1,1 @@
-{ "is_charged": 1, "is_closed_door": 1, "is_face_detected": 0, "is_password_success": 0, "is_person": 1, "is_rfid_success": 0, "start_face_recognize_process": 0, "wifi_configured": 1 }
+{ "is_charged": 1, "is_closed_door": 1, "is_face_detected": 0, "is_password_success": 0, "is_person": 0, "is_rfid_success": 0, "start_face_recognize_process": 0, "wifi_configured": 1 }
