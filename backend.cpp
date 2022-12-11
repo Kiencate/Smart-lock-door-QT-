@@ -31,6 +31,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     QTextStream in(&file);
     _right_password = in.readLine();
     file.close();
+
 }
 
 
@@ -140,10 +141,9 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             {
                 window_type = 6; // in face recognition
                 qDebug()<<"start face";
-                // kill(getpidface(), SIGUSR1);
-                start_face_detect();
-                emit switch_to_face_detect();
                 emit sendToQml_ChangeWindow(6,"",wrong_left); // switch to face recognition window
+                start_face_detect();
+                emit switch_to_face_detect();              
             }
             else if (pressing_button_id == 14) //password mode
             {
@@ -422,7 +422,6 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         {
             if(is_wifi_configured )
             {
-                emit switch_to_main_window();
                 if(is_wifi_configured_before)
                 {
                     sendToQml_ChangeWindow(5,"",wrong_left);

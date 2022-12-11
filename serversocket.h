@@ -20,6 +20,9 @@ public:
     ServerSocket();
 signals:
     void Receive_wifi_success();
+    /*
+    * emit to backend if config wifi success
+    */
 protected:
     void run();
 };

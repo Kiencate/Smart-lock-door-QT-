@@ -32,7 +32,8 @@ set(PROJECT_SOURCES
         dbusadaptor.cpp dbusadaptor.h
         opencvimageprovider.cpp opencvimageprovider.h
         videostreamer.cpp videostreamer.h
-        checkstatus_ir.cpp checkstatus_ir.h
+        checkstatus.cpp checkstatus.h
+        touchevent.cpp touchevent.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

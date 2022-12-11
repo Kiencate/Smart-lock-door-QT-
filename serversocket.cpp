@@ -10,11 +10,11 @@ void ServerSocket::run()
 
     struct sockaddr_rc loc_addr = { 0 }, rem_addr = { 0 };
     char buf[1024] = { 0 };
-    int s, client, bytes_read;
+    int socket_bluetooth, client, bytes_read;
     socklen_t opt = sizeof(rem_addr);
 
     // allocate socket
-    s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+    socket_bluetooth = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 
 //     bind socket to port 1 of the first available
 //     local bluetooth adapter
@@ -22,16 +22,15 @@ void ServerSocket::run()
     bdaddr_t addr={ };
     loc_addr.rc_bdaddr = addr;
     loc_addr.rc_channel = (uint8_t) 1;
-    bind(s, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
-    qDebug()<<"server created";
+    bind(socket_bluetooth, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
+    qDebug()<<"bluetooth: server created";
 
     // put socket into listening mode
-    qDebug()<<"server is listening";
-    listen(s, 1);
+    qDebug()<<"bluetooth: server is listening";
+    listen(socket_bluetooth, 1);
 
 //    // accept one connection
-    client = accept(s, (struct sockaddr *)&rem_addr, &opt);
-    qDebug()<<"ok";
+    client = accept(socket_bluetooth, (struct sockaddr *)&rem_addr, &opt);
     ba2str( &rem_addr.rc_bdaddr, buf );
     fprintf(stderr, "accepted connection from %s\n", buf);
     memset(buf, 0, sizeof(buf));
@@ -39,7 +38,7 @@ void ServerSocket::run()
     // read data from the client
     bytes_read = read(client, buf, sizeof(buf));
     if( bytes_read > 0 ) {
-        printf("received [%s]\n", buf);
+        printf("bluetooth: received [%s]\n", buf);
     }
     std::string config_wifi = buf;
     QFile file("../wpa_supplicant");
@@ -52,6 +51,6 @@ void ServerSocket::run()
 
     // close connection
     close(client);
-    close(s);
+    close(socket_bluetooth);
     emit Receive_wifi_success();
 }

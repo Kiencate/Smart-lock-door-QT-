@@ -1,11 +1,7 @@
 #include "dbusadaptor.h"
 
 MyQDusAdaptor::MyQDusAdaptor(QObject* parent) : QDBusAbstractAdaptor(parent) {
-
     setAutoRelaySignals(true);
-//    check_connect_timer = new QTimer(this);
-//    connect(check_connect_timer, &QTimer::timeout,this, &MyQDusAdaptor::check_connect);
-//    check_connect_timer->start(1000);
 }
 
 MyQDusAdaptor::~MyQDusAdaptor() {

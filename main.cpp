@@ -8,7 +8,9 @@
 #include "backend.h"
 #include "opencvimageprovider.h"
 #include "videostreamer.h"
-#include "checkstatus_ir.h"
+#include "checkstatus.h"
+#include "touchevent.h"
+
 const char *status_json_path = "../status.json";
 int main(int argc, char *argv[])
 {
@@ -25,8 +27,14 @@ int main(int argc, char *argv[])
     QThread* threadStreamer = new QThread();
     VideoStreamer *videoStreamer = new VideoStreamer();
     videoStreamer->moveToThread(threadStreamer);
+
+    //create thread check file status.json
     CheckStatus *checkStatus = new CheckStatus();
     checkStatus->start();
+    
+    //create thread to send touch event
+    TouchEvent *touchEvent = new TouchEvent();
+    touchEvent->start();
 
     // create video thread show on qml
     OpencvImageProvider *liveImageProvider(new OpencvImageProvider);
@@ -48,6 +56,7 @@ int main(int argc, char *argv[])
     close(fd_status_json);
     json_object_put(status_json_obj);
 
+    //create backend and connect classes
     BackEnd backEnd(wifi_configured);
     context->setContextProperty("backEnd", &backEnd);
 
@@ -66,15 +75,16 @@ int main(int argc, char *argv[])
     QObject::connect(&backEnd,&BackEnd::stopCamera,videoStreamer,&VideoStreamer::onStopCamera);
     QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
-    backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame
-    loop:
+    QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);
+    backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
+    //loop at restart 
+    restart_app:
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
-        // qDebug()<<"check =0";
         usleep(500000);
     }
     backEnd.switch_to_main_window();
-    qDebug()<<"start app";
+    qDebug()<<"main: start app";
     if(backEnd.is_wifi_configured)
     {
         backEnd.sendToQml_ChangeWindow(5,"",0);
@@ -85,8 +95,7 @@ int main(int argc, char *argv[])
     }
     
     app.exec();
-    qDebug()<<"quit";
-    goto loop;
-
-    // }  
+    qDebug()<<"main: quit app";
+    goto restart_app;
+    return 0;
 }

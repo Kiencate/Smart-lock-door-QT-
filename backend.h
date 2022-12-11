@@ -25,10 +25,6 @@ class BackEnd : public QObject
     Q_OBJECT
 public:
     explicit BackEnd(bool is_wifi_done, QObject *parent = nullptr);
-    // void onOpenWithFaceSuccess();
-    // /*
-    // * open door with detecting face success
-    // */
     void sleepQt();
     /*
     * sleep gui qt and camera to save power
@@ -124,11 +120,10 @@ public slots:
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:
-    *   -TH1: Không có người -> tắt giao diện, không quan tâm đến các tín hiệu khác
+    *   -TH1: Không có người hoặc có người && mở cửa-> tắt giao diện, không quan tâm đến các tín hiệu khác
     *   -TH2: Có người, cửa đang đóng, wifi chưa config -> Giao diện config wifi
     *   -TH3: Có người, cửa đang đóng, wifi đã config -> Giao diện đang mở khóa (nhập mật khẩu và mở bằng khuôn mặt)
-    *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công -> Giao diện đã mở khóa (hiện camera và icon mở khóa)
-    *   -TH5: Có người, cửa mở -> tắt giao diện, không quan tâm đến các tín hiệu khác
+    *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công hoặc mở bằng mật khẩu thành công hoặc mở bằng thẻ rfid thành công-> Giao diện đã mở khóa (hiện camera và icon mở khóa)
     */
     void closeDoor(); // close the door after 3s
 private:

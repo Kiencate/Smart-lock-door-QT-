@@ -28,12 +28,24 @@ public:
         virtual ~MyQDusAdaptor();
 signals:
         void Connect_success();
+        /*
+        * emit to backend when bluetooth connect success
+        */
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
         void RequestConfirmation(const QDBusObjectPath &in0, quint32 passkey );
+        /*
+        * override the method of interface org.bluez.Agent1
+        */
 private:
         QDBusObjectPath device;
+        /*
+        * object for device android in bluetooth manager
+        */
         QDBusInterface *deviceprop;
+        /*
+        * property of device android in bluetooth manager
+        */
         QTimer *check_connect_timer;
 };
 

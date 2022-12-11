@@ -1,6 +1,7 @@
 g++ -o Face Face.cpp -I/usr/include/json-c/ -ljson-c
 g++ -o is_person is_person.cpp -I/usr/include/json-c/ -ljson-c
 g++ -o rfid rfid.cpp -I/usr/include/json-c/ -ljson-c
+g++ -o Touch Touch.cpp -I/usr/include/json-c/ -ljson-c
 
 sửa dòng 68 videostreamer.cpp thành device của board
 
@@ -10,3 +11,11 @@ các tình huống mô phỏng:
 khi có người                   -> chạy "./is_person 1"
 không có người(người rời đi)  -> chạy "./is_person 0"
 quẹt rfid thành công           -> chạy "./rfid"
+
+* touch:
+gửi các event: ./Touch type x y
+type: 1 là nhấn, -1 là nhả 
+x,y : tọa độ
+VD: 
+./Touch 1 200 300
+./Touch -1 200 320

@@ -44,10 +44,10 @@ public:
     void display(Mat &im, vector<decodedObject>&decodedObjects);
 
 public slots:
-    void onQRCodeScan();
-    void onMainWindow();
-    void onFaceDetect();
-    void onStopCamera();
+    void onQRCodeScan(); // switch to scan qrcode
+    void onMainWindow(); // show camera normal
+    void onFaceDetect(); // show camera normal
+    void onStopCamera(); // close camera
 
 private:
     cv::Mat Frame;
@@ -70,7 +70,13 @@ private:
     */
 signals:
     void newImage(const QImage &);
+    /*
+    * emit to imageprovider new image captured
+    */
     void config_wifi_success();
+    /*
+    * emit to backend when config wifi with qr success
+    */
 };
 
 #endif //VIDEOSTREAMER_H

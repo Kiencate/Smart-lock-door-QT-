@@ -28,6 +28,7 @@ class CheckStatus : public QThread
 public:
     CheckStatus();
     ~CheckStatus();
+    // variable for fields in status.json
     bool is_person;
     bool is_door_closed;
     bool wifi_config ;
@@ -36,6 +37,7 @@ public:
     bool rfid_success ;
 signals:
     void JsonChangestatus(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool right_password, bool is_rfid_success);
+    // emit when status.json is changed
 protected:
     void run();
 private:

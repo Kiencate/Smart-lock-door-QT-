@@ -1,4 +1,4 @@
-#include "checkstatus_ir.h"
+#include "checkstatus.h"
 const char *status_json_check_path = "../status.json";
 CheckStatus::CheckStatus()
 {
