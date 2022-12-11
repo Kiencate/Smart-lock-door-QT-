@@ -9,7 +9,34 @@
 #include "opencvimageprovider.h"
 #include "videostreamer.h"
 #include "checkstatus_ir.h"
+#include <linux/fb.h>
+#include <sys/ioctl.h>
 const char *status_json_path = "../status.json";
+static void fbclear()
+{
+   char dev[256] = "/dev/fb0";
+   struct fb_var_screeninfo var_info;
+   int fd = open(dev, O_RDWR);
+   int line_size;
+   int buffer_size;
+   void *buffer = NULL;
+   if (fd < 0) {
+       printf("failed to open %s display device\n", dev);
+       return;
+   }
+   //get display size
+   ioctl(fd, FBIOGET_VSCREENINFO, &var_info);
+   line_size = var_info.xres * var_info.bits_per_pixel / 8;
+   buffer_size = line_size * var_info.yres;
+   //malloc buffer and set to 0
+   buffer = malloc(buffer_size);
+   memset(buffer, 0, buffer_size);
+   //write zeros to display
+   write(fd, buffer, buffer_size);
+   free(buffer);
+   close(fd);
+   return;
+}
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -88,6 +115,7 @@ int main(int argc, char *argv[])
     
     app.exec();
     qDebug()<<"quit";
+    fbclear();
     goto loop;
 
     // }  
