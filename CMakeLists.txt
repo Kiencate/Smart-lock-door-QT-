@@ -7,7 +7,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-SET(CMAKE_CXX_FLAGS -I/usr/include/json-c)
+SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-fpermissive)
@@ -15,7 +15,7 @@ set(OPENCV_LOG_LEVEL ERROR)
 find_package(OpenCV REQUIRED)
 #find_package(json-c CONFIG)
 
-set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
+set(INCLUDE_PATH "/home/linaro/ncnn/build/install")
 
 set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
@@ -70,7 +70,7 @@ set_target_properties(button PROPERTIES
 )
 target_link_libraries(button PRIVATE json-c)
 install(TARGETS button
-    BUNDLE DESTINATION .
+    DESTINATION /home/linaro/Pictures/Rfid_rc522_i2c_linux/build
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)

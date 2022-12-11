@@ -34,6 +34,7 @@ static void fbclear()
    memset(buffer, 0, buffer_size);
    //write zeros to display
    write(fd, buffer, buffer_size);
+   //printf("haha dcm\n");
    free(buffer);
    close(fd);
    return;
@@ -103,14 +104,17 @@ int main(int argc, char *argv[])
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
-    backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
+    //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     //loop at restart 
     restart_app:
-    fbclear();
+    //app.exit(0);
+    //fbclear();
+    //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
-        usleep(500000);
+        usleep(10000);
     }
+    //engine.load(url);
     backEnd.switch_to_main_window();
     qDebug()<<"main: start app";
     if(backEnd.is_wifi_configured)
@@ -123,6 +127,7 @@ int main(int argc, char *argv[])
     }
     
     app.exec();
+    fbclear();
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;

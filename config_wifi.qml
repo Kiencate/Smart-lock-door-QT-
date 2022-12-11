@@ -229,7 +229,11 @@ Window {
             else if (type == 13)
             {
                 console.log("close")
-                root.close()
+                //root.close()
+                //root.hide()
+                Qt.quit()
+                //root.hide()
+                //root.hide()
             }
         }
 
