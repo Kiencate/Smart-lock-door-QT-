@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame
     loop:
+    fbclear();
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
         // qDebug()<<"check =0";
@@ -111,11 +112,10 @@ int main(int argc, char *argv[])
     else
     {
         backEnd.sendToQml_ChangeWindow(0,"",0);
-    }
-    
+    }  
     app.exec();
     qDebug()<<"quit";
-    fbclear();
+    
     goto loop;
 
     // }  
