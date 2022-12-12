@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     //loop at restart 
     restart_app:
     //app.exit(0);
-    //fbclear();
+    fbclear();
     //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
     }
     
     app.exec();
-    fbclear();
+    //fbclear();
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;

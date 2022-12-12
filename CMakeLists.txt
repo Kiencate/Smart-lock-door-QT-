@@ -18,8 +18,8 @@ set(OPENCV_LOG_LEVEL ERROR)
 find_package(OpenCV REQUIRED)
 #find_package(json-c CONFIG)
 
-set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
-#set(INCLUDE_PATH "/home/linaro/ncnn/build/install")
+#set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
+set(INCLUDE_PATH "/home/linaro/ncnn/build/install")
 
 set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
@@ -74,7 +74,7 @@ set_target_properties(button PROPERTIES
 )
 target_link_libraries(button PRIVATE json-c)
 install(TARGETS button
-    DESTINATION /home/linaro/Pictures/Rfid_rc522_i2c_linux/build
+    DESTINATION /home/linaro/Rfid_rc522_i2c_linux/build
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)

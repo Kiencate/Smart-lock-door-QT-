@@ -228,7 +228,7 @@ Window {
             }
             else if (type == 13)
             {
-                console.log("close")
+                //console.log("close")
                 //root.close()
                 //root.hide()
                 Qt.quit()
