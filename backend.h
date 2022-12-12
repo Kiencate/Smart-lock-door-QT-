@@ -37,6 +37,7 @@ public:
     bool is_door_closed; //true if door is closed
     bool is_face_detected; //true if face detection process deteted person's face
     bool is_rfid_success; //true if rfid scan success
+    bool is_start_face_detect; //true if started face detect
 signals:
     void sendToQml_Button(int type, int button_id);
     /*type:
@@ -116,7 +117,7 @@ public slots:
     /*
     * receive ssid and password success
     */
-    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success);
+    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect);
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:

@@ -398,7 +398,7 @@ void BackEnd::sleepQt()
     sendToQml_ChangeWindow(13,"",wrong_left);
 }
 
-void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success)
+void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect)
 {
     qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<" pass:"<<_is_password_right;
     is_person = _is_person;
@@ -418,31 +418,33 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             open_and_close_door_after_3s();
             emit switch_to_main_window();
         }
-        else
+        else if (is_start_face_detect)
         {
-            if(is_wifi_configured )
+            sendToQml_ChangeWindow(6,"",wrong_left);
+            window_type = 6;
+        }
+        else if(is_wifi_configured )
+        {
+            if(is_wifi_configured_before)
             {
-                if(is_wifi_configured_before)
-                {
-                    sendToQml_ChangeWindow(5,"",wrong_left);
-                    window_type = 5;
-                }
-                else
-                {
-                    emit sendToQml_ChangeWindow(4,"",wrong_left);
-                    window_type = 4;
-                    is_wifi_configured_before = true;
-                    qDebug()<<"backend: wificonfig";
-                }
-                               
+                sendToQml_ChangeWindow(5,"",wrong_left);
+                window_type = 5;
             }
             else
             {
-                
-                sendToQml_ChangeWindow(0,"",wrong_left);
-                window_type = 0;
+                emit sendToQml_ChangeWindow(4,"",wrong_left);
+                window_type = 4;
+                is_wifi_configured_before = true;
+                qDebug()<<"backend: wificonfig";
             }
-        }       
+                            
+        }
+        else
+        {
+            
+            sendToQml_ChangeWindow(0,"",wrong_left);
+            window_type = 0;
+        }      
     }
     else if(!is_person)
     {
