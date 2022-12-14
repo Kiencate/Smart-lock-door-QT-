@@ -1,5 +1,4 @@
 #include "videostreamer.h"
-const char *status_wifi_json_path = "../status.json";
 
 
 VideoStreamer::VideoStreamer()
@@ -38,12 +37,12 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  //cap.open("/dev/video0",cv::CAP_V4L2);
-  cap.open("/dev/video9");
+  cap.open("/dev/video0",cv::CAP_V4L2);
+  // cap.open("/dev/video9");
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
   if (!cap.isOpened()) {
-    std::cout << "ERROR: Unable to open the camera" << endl;
+    qDebug()<< "ERROR: Unable to open the camera";
   }
 }
 void VideoStreamer::stream()
@@ -83,13 +82,13 @@ void VideoStreamer::stream()
         file.close();
         // open status wifi, lock file
         int fd_status_json;
-        if((fd_status_json=open(status_wifi_json_path, O_RDWR)) == -1) { 
-            std::cout<<"is_person: open status file failed";
+        if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+          qDebug()<<"is_person: open status file failed";
         }
 
         if(flock(fd_status_json,LOCK_EX)==-1)
         {
-            std::cout<<"is_person: can't lock status file";
+          qDebug()<<"is_person: can't lock status file";
         }
         struct json_object *status_json_obj= json_object_from_fd(fd_status_json);
 
@@ -98,7 +97,7 @@ void VideoStreamer::stream()
         lseek(fd_status_json,0,SEEK_SET);
         if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
         {
-            std::cout<<"is_person: fail to open door";
+          qDebug()<<"is_person: fail to open door";
         } 
         json_object_put(status_json_obj);   
         close(fd_status_json); 

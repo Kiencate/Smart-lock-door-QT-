@@ -72,11 +72,11 @@ int main(int argc, char *argv[])
     //create file descriptor and json object to read status json file
     int fd_status_json;
     if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
-        qDebug()<<"videostreamer: open status file failed";
+        qDebug()<<"main: open status file failed";
     }
     if(flock(fd_status_json,LOCK_SH)==-1)
     {
-        qDebug()<<"videostreamer: can't lock status file";
+        qDebug()<<"main: can't lock status file";
     }
     struct json_object *status_json_obj = json_object_from_fd(fd_status_json);
     bool wifi_configured = json_object_get_int(json_object_object_get(status_json_obj,"wifi_configured")) == 1? true:false;
@@ -127,7 +127,6 @@ int main(int argc, char *argv[])
     }
     
     app.exec();
-    //fbclear();
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;

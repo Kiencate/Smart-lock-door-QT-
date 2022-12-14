@@ -9,18 +9,14 @@
 #include <sys/types.h>
 #include <sys/inotify.h>
 #include <unistd.h>
-#include <iostream>
 #include <string.h>
-#include <fstream>
-#include <nlohmann/json.hpp>
-#include <fcntl.h>
 #include <sys/file.h>
 #include <json.h>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
 
-
+extern const char *status_json_path;
 class CheckStatus : public QThread
 {
     Q_OBJECT

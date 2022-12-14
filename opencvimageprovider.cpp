@@ -24,7 +24,6 @@ void OpencvImageProvider::updateImage(const QImage &image)
 {
     if(!image.isNull() && this->image != image) {
         this->image = image;
-        // qDebug()<<image.bits();
         emit imageChanged();
     }
 }

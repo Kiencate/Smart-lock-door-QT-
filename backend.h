@@ -4,22 +4,13 @@
 #include <QObject>
 #include <QDebug>
 #include <QFile>
-#include <QImage>
-#include <opencv2/objdetect.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <iostream>
-#include <zbar.h>
-#include <signal.h>
 #include "serversocket.h"
 #include "agent.h"
 #include "dbusadaptor.h"
-#include <fcntl.h>
 #include <sys/file.h>
-#include <fstream>
 #include <json.h>
 
+extern const char *status_json_path;
 class BackEnd : public QObject
 {
     Q_OBJECT
@@ -131,8 +122,9 @@ private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)
     int pressing_button_id; // id of pressed button (see sendToQml_button)
+
     // socket, agent, adaptor dbus bluetooth
-    bool configured_with_bluetooth; // check if staff config wifi with bluetooth
+    bool configured_with_bluetooth; // check if staff configured wifi with bluetooth
     bool is_wifi_configured_before; // check if this is first time config wifi
     ServerSocket *serversocket;
     Agent *agent;
@@ -142,8 +134,8 @@ private:
     // using in entering password window
     int wrong_left; // wrong times remain (max 5 times)
     bool is_right_password; // check if user entered right password
-    QString _password; //password user entered
-    QString _right_password; //right password
+    QString password; //password user entered
+    QString right_password; //right password
     struct json_object *status_json_obj; //json object for status json file
 
 

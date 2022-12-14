@@ -1,10 +1,5 @@
 #include "backend.h"
 
-using namespace cv;
-using namespace std;
-using namespace zbar;
-const char *status_password_json_path = "../status.json";
-
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
     is_wifi_configured = is_wifi_done;
@@ -29,9 +24,8 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
         qDebug()<<file.errorString();
     }
     QTextStream in(&file);
-    _right_password = in.readLine();
+    right_password = in.readLine();
     file.close();
-
 }
 
 
@@ -233,38 +227,38 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         else if (type == -1)
         {
             if (pressing_button_id != -1) emit sendToQml_Button(-1, pressing_button_id);
-            if (pressing_button_id == 10 && _password.size() > 0)
+            if (pressing_button_id == 10 && password.size() > 0)
             {
-               _password = _password.left(_password.size() - 1);
-               qDebug()<<_password;
-               emit sendToQml_Password(_password.size());
+               password = password.left(password.size() - 1);
+               qDebug()<<password;
+               emit sendToQml_Password(password.size());
             }
             else if (pressing_button_id == 11)
             {
-                if (_password.size() < 6)
+                if (password.size() < 6)
                 {
                     emit sendToQml_ChangeWindow(8,"",wrong_left);
                     window_type=8;
                 }
-                else if (_password != _right_password)
+                else if (password != right_password)
                 {
 
                     if (--wrong_left == 0)
                     {
-                        _password="";
+                        password="";
                         emit sendToQml_ChangeWindow(10,"",wrong_left);
                         window_type=10;
                     }
                     else
                     {
-                        _password="";
+                        password="";
                         emit sendToQml_ChangeWindow(9,"",wrong_left);
                         window_type=9;
                     }
 
 
                 }
-                else if (_password == _right_password)
+                else if (password == right_password)
                 {
                     emit sendToQml_ChangeWindow(11,"",wrong_left);
                     is_right_password = true;
@@ -274,11 +268,11 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             }
             else if (pressing_button_id > -1 && pressing_button_id <10)
             {
-                if (_password.size() < 6)
+                if (password.size() < 6)
                 {
-                    _password+=QString::number(pressing_button_id);
-                     qDebug()<<_password;
-                     emit sendToQml_Password(_password.size());
+                    password+=QString::number(pressing_button_id);
+                     qDebug()<<password;
+                     emit sendToQml_Password(password.size());
                 }
             }
             pressing_button_id = -1;
@@ -345,8 +339,8 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id == 12)
             {
                 wrong_left = 5;
-                _password="";
-                emit sendToQml_Password(_password.size());
+                password="";
+                emit sendToQml_Password(password.size());
                 emit switch_to_main_window();
                 
                 sendToQml_ChangeWindow(5,"",wrong_left);
@@ -456,7 +450,7 @@ void BackEnd::open_and_close_door_after_3s()
 {
     sendToQml_ChangeWindow(12,"",wrong_left);
     int fd_status_json;
-    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"backend: open status file failed";
     }
 
@@ -488,7 +482,7 @@ void BackEnd::open_and_close_door_after_3s()
 void BackEnd::closeDoor()
 {
     int fd_status_json;
-    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"videostreamer: open status file failed";
     }
 
@@ -516,15 +510,15 @@ void BackEnd::closeDoor()
     close(fd_status_json);
     /// reset password
     wrong_left = 5;
-    _password="";
-    emit sendToQml_Password(_password.size());
+    password="";
+    emit sendToQml_Password(password.size());
     sendToQml_ChangeWindow(5,"",wrong_left);
 }
 
 void BackEnd::start_face_detect()
 {
     int fd_status_json;
-    if((fd_status_json=open(status_password_json_path, O_RDWR)) == -1) { 
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"backend: open status file failed";
     }
 

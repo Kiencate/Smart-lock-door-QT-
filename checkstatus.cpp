@@ -1,7 +1,7 @@
 #include "checkstatus.h"
-const char *status_json_check_path = "../status.json";
 CheckStatus::CheckStatus()
 {
+    qDebug()<<"check stt"<<status_json_path;
 /*creating the INOTIFY instance*/
   fd_inotify = inotify_init();
 
@@ -11,10 +11,10 @@ CheckStatus::CheckStatus()
   }
 
   /*adding the “/tmp” directory into watch list. Here, the suggestion is to validate the existence of the directory before adding into monitoring list.*/
-  wd_inotify = inotify_add_watch( fd_inotify, status_json_check_path, IN_MODIFY );
+  wd_inotify = inotify_add_watch( fd_inotify, status_json_path, IN_MODIFY );
 
   int fd_status_json;
-    if((fd_status_json=open(status_json_check_path, O_RDWR)) == -1) { 
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"checkstatus: open status file failed";
     }
 
@@ -47,7 +47,7 @@ void CheckStatus::run()
         //lock and open file
     }
     
-    if((fd_status_json=open(status_json_check_path, O_RDWR)) == -1) { 
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"checkstatus: open status file failed";
     }
 

@@ -12,10 +12,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <unistd.h>
-#include <signal.h>
 #include <iostream>
 #include <zbar.h>
-#include <fcntl.h>
 #include <sys/file.h>
 #include <json.h>
 
@@ -23,7 +21,7 @@ using namespace cv;
 using namespace std;
 using namespace zbar;
 
-
+extern const char *status_json_path;
 
 typedef struct
 {
