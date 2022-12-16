@@ -23,6 +23,7 @@ public:
     /*
     * sleep gui qt and camera to save power
     */
+    //static error_code_e InitGPIOS();
     void open_and_close_door_after_3s();  // opendoor and set timer to call slot close door after 3s
     void start_face_detect(); //wake up process face detect
     /* variable in file status json */

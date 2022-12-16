@@ -10,7 +10,7 @@ set(CMAKE_AUTORCC ON)
 
 #SET(CMAKE_CXX_FLAGS -I/usr/include/json-c)
 SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
-
+#SET(CMAKE_CXX_FLAGS -I/usr/include)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-fpermissive)
@@ -64,7 +64,7 @@ else()
 endif()
 
 target_link_libraries(button
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS}  -lzbar -lbluetooth)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS} -lrk3566io -lzbar -lbluetooth)
 set_target_properties(button PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
