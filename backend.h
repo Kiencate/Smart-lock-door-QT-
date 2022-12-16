@@ -9,6 +9,9 @@
 #include "dbusadaptor.h"
 #include <sys/file.h>
 #include <json.h>
+#include "rk_gpio.h"
+
+#define GPIO1_3    (35)
 
 extern const char *status_json_path;
 class BackEnd : public QObject

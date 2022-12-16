@@ -106,10 +106,7 @@ int main(int argc, char *argv[])
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     //loop at restart 
-    restart_app:
-    //app.exit(0);
-    fbclear();
-    //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
+    restart_app: 
     while(!checkStatus->is_person || (checkStatus->is_person && !checkStatus->is_door_closed))
     {
         usleep(10000);
@@ -127,6 +124,7 @@ int main(int argc, char *argv[])
     }
     
     app.exec();
+    fbclear();
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;

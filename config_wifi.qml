@@ -1,7 +1,7 @@
 import QtQuick 2.11
-import QtQuick.Window 2.11
+import QtQuick.Controls 1.4
 
-Window {
+ApplicationWindow {
     id: root
     visible: true
     width: 240
