@@ -4,12 +4,14 @@
 #include <QDebug>
 #include <QThread>
 #include <time.h>
-#include "json.h"
 #include <fcntl.h>
 #include <sys/file.h>
-#include "signal.h"
-#include "unistd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <linux/input.h>
 
+#define MOUSEFILE "/dev/input/event0"
 class TouchEvent : public QThread
 {
     Q_OBJECT
@@ -25,9 +27,11 @@ signals:
      */
 protected:
     void run();
-private:
-    struct  json_object *touch_json_obj; 
+private:    
+    int fd_dev_event;
+    struct input_event event_dev;
     int type,x,y;
+    bool is_new_event_touch, is_new_event_release;
 };
 
 #endif // TOUCH_EVENT_H

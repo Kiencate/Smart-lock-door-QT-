@@ -1,50 +1,61 @@
 #include "touchevent.h"
 
-volatile int is_new_touch;
-const char *touch_json_path = "../touch.json";
-void usrui(int sig)
-{
-  is_new_touch = 1;
-}
 
 TouchEvent::TouchEvent()
 {
-    if (signal(SIGUSR1, usrui)==SIG_ERR)
+    if((fd_dev_event = open(MOUSEFILE, O_RDONLY)) == -1) 
     {
-        perror("\nSIGUSR2");
+        perror("opening device");
+        exit(0);
     }
 }
 TouchEvent::~TouchEvent()
 {
-
+    close(fd_dev_event);
 }
 
 void TouchEvent::run()
 {
-    int fd_touch_json;
-    loop:
-    while(is_new_touch == 0)
+    while(read(fd_dev_event, &event_dev, sizeof(struct input_event))) 
     {
-        usleep(100000);
+        // printf("Event: time %ld.%06ld, ", ie.input_event_sec, ie.input_event_usec);
+        // if (event_dev.type==1 && event_dev)
+        qDebug()<<"type:"<<event_dev.type<<"  code:"<<event_dev.code<<"  value:"<<event_dev.value;
+        if (event_dev.type == 0) //sync event
+        {
+            qDebug()<<"new touch event";
+            if(is_new_event_touch) 
+            {
+                emit new_touch_event(1,x,y);
+                is_new_event_touch = false;
+            }
+            else if(is_new_event_release) 
+            {
+                emit new_touch_event(-1,x,y);
+                is_new_event_release = false;
+            }
+        } 
+        else if (event_dev.type == 1) //touch or release event
+        {
+            if(event_dev.code == 330 && event_dev.value == 1)
+            {
+                is_new_event_touch = true;
+            }
+            else if(event_dev.code == 330 && event_dev.value == 0)
+            {
+                is_new_event_release = true;
+            }
+        }
+        else if (event_dev.type == 3) //touch or release point event
+        {
+            if(event_dev.code == 0) //point x
+            {
+                x = event_dev.value * 240 / 4095;
+            }
+            if(event_dev.code == 1) //point y
+            {
+                x = event_dev.value * 320 / 4095;
+            }
+        }
     }
- 
-    if((fd_touch_json=open(touch_json_path, O_RDONLY)) == -1) { 
-        qDebug()<<"touch event: open touch file failed";
-    }
-    
-    if(flock(fd_touch_json,LOCK_SH)==-1)
-    {
-        qDebug()<<"touch event: can't lock touch file";
-    }  
-    touch_json_obj = json_object_from_fd(fd_touch_json);
-    type = json_object_get_int(json_object_object_get(touch_json_obj,"type"));
-    x = json_object_get_int(json_object_object_get(touch_json_obj,"x"));
-    y = json_object_get_int(json_object_object_get(touch_json_obj,"y"));
-    close(fd_touch_json);
-    json_object_put(touch_json_obj); 
-    emit new_touch_event(type,x,y);
-    qDebug()<<"new touch"<<type<<x<<y;
-    is_new_touch = 0;
-    goto loop;
-
 }
