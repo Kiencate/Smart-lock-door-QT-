@@ -100,6 +100,7 @@ int main(int argc, char *argv[])
     QObject::connect(&backEnd,&BackEnd::switch_to_main_window,videoStreamer,&VideoStreamer::onMainWindow);
     QObject::connect(&backEnd,&BackEnd::switch_to_face_detect,videoStreamer,&VideoStreamer::onFaceDetect);
     QObject::connect(&backEnd,&BackEnd::stopCamera,videoStreamer,&VideoStreamer::onStopCamera);
+    QObject::connect(&backEnd,&BackEnd::captureFrame,videoStreamer,&VideoStreamer::onCaptureFrame);
     QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);

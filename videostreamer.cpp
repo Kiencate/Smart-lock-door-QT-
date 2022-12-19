@@ -4,7 +4,7 @@
 VideoStreamer::VideoStreamer()
 {
   mode_streamer = 0;
-  stream_timer = new QTimer();
+  stream_timer = new QTimer(this);
   connect(stream_timer,&QTimer::timeout,this,&VideoStreamer::stream);
   stream_timer->start(50);
 }
@@ -37,13 +37,18 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  //cap.open("/dev/video0",cv::CAP_V4L2);
-  cap.open("/dev/video11");
+  cap.open("/dev/video0",cv::CAP_V4L2);
+  // cap.open("/dev/video11");
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
   if (!cap.isOpened()) {
     qDebug()<< "ERROR: Unable to open the camera";
   }
+}
+void VideoStreamer::onCaptureFrame()
+{
+  qDebug()<<"videostreamer: capture";
+  mode_streamer = 4; 
 }
 void VideoStreamer::stream()
 {
@@ -83,12 +88,12 @@ void VideoStreamer::stream()
         // open status wifi, lock file
         int fd_status_json;
         if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
-          qDebug()<<"is_person: open status file failed";
+          qDebug()<<"video_streamer: open status file failed";
         }
 
         if(flock(fd_status_json,LOCK_EX)==-1)
         {
-          qDebug()<<"is_person: can't lock status file";
+          qDebug()<<"video_streamer: can't lock status file";
         }
         struct json_object *status_json_obj= json_object_from_fd(fd_status_json);
 
@@ -97,13 +102,29 @@ void VideoStreamer::stream()
         lseek(fd_status_json,0,SEEK_SET);
         if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
         {
-          qDebug()<<"is_person: fail to open door";
+          qDebug()<<"video_streamer: fail config wifi";
         } 
         json_object_put(status_json_obj);   
         close(fd_status_json); 
         emit config_wifi_success();       
         mode_streamer = 1 ;        
       }
+      break;
+    }
+    case 4:
+    {
+      cap>>Frame;
+      bool check = imwrite("../person.jpg", Frame);  
+      // if the image is not saved
+      if (check == false) {
+        qDebug()<<"video_streamer: error save image";
+      }
+      else
+      {
+        mode_streamer = 1 ;
+      }
+      QImage img = QImage((uchar*)Frame.data,Frame.cols,Frame.rows,QImage::Format_RGB888).rgbSwapped();
+      emit newImage(img);
       break;
     }
     default:

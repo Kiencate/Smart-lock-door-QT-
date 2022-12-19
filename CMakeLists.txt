@@ -8,8 +8,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-#SET(CMAKE_CXX_FLAGS -I/usr/include/json-c)
-SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
+SET(CMAKE_CXX_FLAGS -I/usr/include/json-c)
+#SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
 #SET(CMAKE_CXX_FLAGS -I/usr/include)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -18,10 +18,10 @@ set(OPENCV_LOG_LEVEL ERROR)
 find_package(OpenCV REQUIRED)
 #find_package(json-c CONFIG)
 
-#set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
+set(INCLUDE_PATH "/home/kiencate/ncnn/build/install")
 set(INCLUDE_PATH "/usr/local")
 
-set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/ncnn/libncnn.a)
+#set(EXTRA_LIBS ${OpenCV_LIBS} ${INCLUDE_PATH}/lib/ncnn/libncnn.a)
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${INCLUDE_PATH}/include/ncnn)
 add_link_options(-fopenmp -s -ldl -lpthread)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick DBus)
@@ -64,7 +64,8 @@ else()
 endif()
 
 target_link_libraries(button
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS} -lrk3566io -lzbar -lbluetooth)
+  #PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS} -lrk3566io -lzbar -lbluetooth)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::DBus ${EXTRA_LIBS} ${OpenCV_LIBS} -lzbar -lbluetooth)
 set_target_properties(button PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

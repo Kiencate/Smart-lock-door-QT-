@@ -2,9 +2,9 @@
 
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
-    GPIOExport(GPIO1_3);
-    GPIODirection(GPIO1_3, OUT);
-    GPIOWrite(GPIO1_3, LOW);
+    // GPIOExport(GPIO1_3);
+    // GPIODirection(GPIO1_3, OUT);
+    // GPIOWrite(GPIO1_3, LOW);
 
     is_wifi_configured = is_wifi_done;
     if(is_wifi_done) 
@@ -397,7 +397,7 @@ void BackEnd::sleepQt()
 
 void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect)
 {
-    qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<" pass:"<<_is_password_right;
+    qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<"  start_face:"<<is_start_face_detect<<" pass:"<<_is_password_right<<"  rfid"<<_is_rfid_success;
     is_person = _is_person;
     is_wifi_configured =_is_wifi_configured;
     is_door_closed = _is_door_closed;
@@ -408,6 +408,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
          // open camera
         if(is_face_detected) 
         {
+            emit captureFrame();
             open_and_close_door_after_3s();
         }
         else if(is_rfid_success)
@@ -497,13 +498,13 @@ void BackEnd::closeDoor()
     json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
     json_object_set_int(is_closed_door, 1);
     json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
-    json_object_set_int(is_charged, 1);
+    json_object_set_int(is_charged, 1); 
     json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
     json_object_set_int(is_face_detected, 0);
     json_object *is_password_success = json_object_object_get(status_json_obj,"is_password_success");
     json_object_set_int(is_password_success, 0);
     json_object *is_rfid_success = json_object_object_get(status_json_obj,"is_rfid_success");
-    json_object_set_int(is_rfid_success, 0);  
+    json_object_set_int(is_rfid_success, 0); 
     lseek(fd_status_json,0,SEEK_SET);
     if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
     {
@@ -536,8 +537,8 @@ void BackEnd::start_face_detect()
     lseek(fd_status_json,0,SEEK_SET);
     if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
     {
-        qDebug()<<"backend: fail to open door";
-    } 
-    json_object_put(status_json_obj);   
+        qDebug()<<"backend: fail to start face detect";
+    }   
     close(fd_status_json); 
+    json_object_put(status_json_obj);  
 }

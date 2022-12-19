@@ -9,7 +9,7 @@
 #include "dbusadaptor.h"
 #include <sys/file.h>
 #include <json.h>
-#include "rk_gpio.h"
+// #include "rk_gpio.h"
 
 #define GPIO1_3    (35)
 
@@ -97,6 +97,7 @@ signals:
     /*
      * stop using camera (power saved)
      */
+    void captureFrame();
 
 public slots:
     void handle_touch_event(int type, int x, int y);

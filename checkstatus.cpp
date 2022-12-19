@@ -36,17 +36,15 @@ void CheckStatus::run()
     loop:
     i=0;
     length = read( fd_inotify, buffer, EVENT_BUF_LEN ); 
-    qDebug()<<"check status: new change file: ";
     /*checking for error*/
     if ( length < 0 ) {
         perror( "read" );
     }
     while ( i < length ) {     
         struct inotify_event *event = ( struct inotify_event * ) &buffer[ i ];  
-        i += EVENT_SIZE + event->len;
-        //lock and open file
+        i += EVENT_SIZE + event->len;       
     }
-    
+    //lock and open file
     if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"checkstatus: open status file failed";
     }

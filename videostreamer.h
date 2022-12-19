@@ -46,6 +46,7 @@ public slots:
     void onMainWindow(); // show camera normal
     void onFaceDetect(); // show camera normal
     void onStopCamera(); // close camera
+    void onCaptureFrame(); //capture frame and save image
 
 private:
     cv::Mat Frame;
