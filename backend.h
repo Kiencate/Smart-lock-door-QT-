@@ -9,7 +9,7 @@
 #include "dbusadaptor.h"
 #include <sys/file.h>
 #include <json.h>
-// #include "rk_gpio.h"
+#include "rk_gpio.h"
 
 #define GPIO1_3    (35)
 

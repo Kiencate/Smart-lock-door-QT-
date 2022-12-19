@@ -9,6 +9,7 @@ TouchEvent::TouchEvent()
         exit(0);
     }
 }
+
 TouchEvent::~TouchEvent()
 {
     close(fd_dev_event);
@@ -20,7 +21,9 @@ void TouchEvent::run()
     {
         // printf("Event: time %ld.%06ld, ", ie.input_event_sec, ie.input_event_usec);
         // if (event_dev.type==1 && event_dev)
-        qDebug()<<"type:"<<event_dev.type<<"  code:"<<event_dev.code<<"  value:"<<event_dev.value;
+        // qDebug()<<"type:"<<event_dev.type<<"  code:"<<event_dev.code<<"  value:"<<event_dev.value;
+        //qDebug()<<"type:"<<event_dev.type<<"  code:"<<event_dev.code;
+
         if (event_dev.type == 0) //sync event
         {
             qDebug()<<"new touch event";
@@ -34,27 +37,34 @@ void TouchEvent::run()
                 emit new_touch_event(-1,x,y);
                 is_new_event_release = false;
             }
-        } 
+        }
+ 
         else if (event_dev.type == 1) //touch or release event
         {
             if(event_dev.code == 330 && event_dev.value == 1)
             {
                 is_new_event_touch = true;
             }
+
             else if(event_dev.code == 330 && event_dev.value == 0)
             {
                 is_new_event_release = true;
             }
         }
+
         else if (event_dev.type == 3) //touch or release point event
         {
             if(event_dev.code == 0) //point x
             {
-                x = event_dev.value * 240 / 4095;
+                x_pre = 3800 - event_dev.value;
+                x = x_pre * 240 / 3800;
+                qDebug()<<"x: "<< x;
             }
+
             if(event_dev.code == 1) //point y
             {
-                x = event_dev.value * 320 / 4095;
+                y = event_dev.value * 320 / 3800;
+                qDebug()<<"y: "<< y;
             }
         }
     }

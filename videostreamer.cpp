@@ -37,8 +37,8 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  cap.open("/dev/video0",cv::CAP_V4L2);
-  // cap.open("/dev/video11");
+  //cap.open("/dev/video0",cv::CAP_V4L2);
+  cap.open("/dev/video11");
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
   if (!cap.isOpened()) {
