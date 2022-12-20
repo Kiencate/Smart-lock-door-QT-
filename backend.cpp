@@ -2,9 +2,9 @@
 
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
-    GPIOExport(GPIO1_3);
-    GPIODirection(GPIO1_3, OUT);
-    GPIOWrite(GPIO1_3, LOW);
+    // GPIOExport(GPIO1_3);
+    // GPIODirection(GPIO1_3, OUT);
+    // GPIOWrite(GPIO1_3, LOW);
 
     is_wifi_configured = is_wifi_done;
     if(is_wifi_done) 
@@ -546,6 +546,7 @@ void BackEnd::start_face_detect()
 void BackEnd::onPasswordFolderChange()
 {
     sleepQt();
+    //reset backend
     QFile file("../password/password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
@@ -553,4 +554,18 @@ void BackEnd::onPasswordFolderChange()
     QTextStream in(&file);
     right_password = in.readLine();
     file.close();
+    if(is_wifi_configured) 
+    {
+        window_type = 5;
+    }
+    else
+    {
+        window_type = 0;
+    }
+    wrong_left = 5;
+    is_right_password = false;
+    pressing_button_id = -1;
+    wrong_left = 5;
+    password="";
+    emit sendToQml_Password(password.size());
 }
