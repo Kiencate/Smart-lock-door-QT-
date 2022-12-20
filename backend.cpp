@@ -446,29 +446,9 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     }
     else if(!is_person)
     {
-        int fd_status_json;
-        if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
-            qDebug()<<"backend: open status file failed";
-        }
-
-        if(flock(fd_status_json,LOCK_EX)==-1)
-        {
-            qDebug()<<"backend: can't lock status file";
-        }
-        status_json_obj = json_object_from_fd(fd_status_json);
-
-        json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
-        json_object_set_int(is_closed_door, 1);
-        json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
-        json_object_set_int(is_charged, 1);
-        lseek(fd_status_json,0,SEEK_SET);
-        if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
-        {
-            qDebug()<<"backend: fail to open door";
-        } 
-        json_object_put(status_json_obj);   
-        close(fd_status_json); 
+        
         sleepQt();
+        reset_backend();
     }
 }
 
@@ -596,4 +576,26 @@ void BackEnd::reset_backend()
     wrong_left = 5;
     password="";
     emit sendToQml_Password(password.size());
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"backend: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"backend: can't lock status file";
+    }
+    status_json_obj = json_object_from_fd(fd_status_json);
+
+    json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
+    json_object_set_int(is_closed_door, 1);
+    json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
+    json_object_set_int(is_charged, 1);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"backend: fail to open door";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
 }
