@@ -13,6 +13,7 @@
 #include "sys/ioctl.h"
 #include "linux/fb.h"
 #include "check_password_folder.h"
+#include "cpu_set_freq.h"
 
 const char *status_json_path = "../status.json";
 static void fbclear()
@@ -61,11 +62,15 @@ int main(int argc, char *argv[])
     CheckStatus *checkStatus = new CheckStatus();
     checkStatus->start();
     
+     //create thread to track password folder (password and uuid rfid)
+    //CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
+    //checkstatuspass->start();
+
     //create thread to send touch event
     TouchEvent *touchEvent = new TouchEvent();
-    // touchEvent->start();
+    touchEvent->start();
 
-    //create thread to track password folder (password and uuid rfid)
+    // //create thread to track password folder (password and uuid rfid)
     CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
     checkstatuspass->start();
 
@@ -119,6 +124,11 @@ int main(int argc, char *argv[])
     {
         usleep(10000);
     }
+
+    if(!SetFreqMax())
+    {
+         printf("Currently cpu freq: 1.8GHz\n");
+    }
     //engine.load(url);
     backEnd.switch_to_main_window();
     qDebug()<<"main: start app";
@@ -133,6 +143,10 @@ int main(int argc, char *argv[])
     
     app.exec();
     fbclear();
+    if(!SetFreqMin())
+    {
+         printf("Currently cpu freq: 408MHz\n");
+    }
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;

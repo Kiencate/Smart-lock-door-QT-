@@ -30,7 +30,7 @@ protected:
 private:    
     int fd_dev_event;
     struct input_event event_dev;
-    int type, x, y, x_pre, y_pre;
+    int type, x, y, x_pre;
     bool is_new_event_touch, is_new_event_release;
 };
 

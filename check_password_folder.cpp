@@ -1,5 +1,5 @@
 #include "check_password_folder.h"
-const char *password_folder_path = "../password";
+const char *password_folder_path = "../password.txt";
 CheckStatusPasswordFolder::CheckStatusPasswordFolder()
 {
     qDebug()<<"check stt folder"<<password_folder_path;

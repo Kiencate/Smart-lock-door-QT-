@@ -37,8 +37,8 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  // cap.open("/dev/video0",cv::CAP_V4L2);
-  cap.open("/dev/video11");
+  cap.open("/dev/video11",cv::CAP_V4L2);
+  //cap.open("v4l2:///dev/rgbcam");
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
   if (!cap.isOpened()) {
@@ -76,7 +76,7 @@ void VideoStreamer::stream()
     {
       cap>>Frame;
       string config_wifi ="";
-      QFile file("../wpa_supplicant");
+      QFile file("../wpa_supplicant.txt");
       vector<decodedObject> decodedObjects;
       config_wifi = decode(Frame, decodedObjects);
       display(Frame, decodedObjects);

@@ -5,6 +5,8 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     GPIOExport(GPIO1_3);
     GPIODirection(GPIO1_3, OUT);
     GPIOWrite(GPIO1_3, LOW);
+    GPIOExport(GPIO1_4);
+    GPIODirection(GPIO1_4, OUT);
 
     is_wifi_configured = is_wifi_done;
     if(is_wifi_done) 
@@ -23,7 +25,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     configured_with_bluetooth= false;
     is_wifi_configured_before = is_wifi_configured;
     //read right password from txt file 
-    QFile file("../password/password.txt");
+    QFile file("../password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
@@ -478,13 +480,15 @@ void BackEnd::open_and_close_door_after_3s()
     {
         qDebug()<<"backend: fail to open door";
     } 
-    json_object_put(status_json_obj);   
-    close(fd_status_json); 
+    json_object_put(status_json_obj);
+    close(fd_status_json);
+    GPIOWrite(GPIO1_4, HIGH); 
     QTimer::singleShot(3000, this, SLOT(closeDoor()));  
 }
 
 void BackEnd::closeDoor()
 {
+    GPIOWrite(GPIO1_4, LOW);
     int fd_status_json;
     if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"videostreamer: open status file failed";
@@ -546,8 +550,9 @@ void BackEnd::start_face_detect()
 void BackEnd::onPasswordFolderChange()
 {
     sleepQt();
-    QFile file("../password/password.txt");
-    while(!file.open(QIODevice::ReadOnly)) {
+    QFile file("../password.txt");
+    while(!file.open(QIODevice::ReadOnly)) 
+    {
         qDebug()<<file.errorString();
     }
     QTextStream in(&file);
