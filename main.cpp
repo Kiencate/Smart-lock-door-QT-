@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     
     //create thread to send touch event
     TouchEvent *touchEvent = new TouchEvent();
-    // touchEvent->start();
+    touchEvent->start();
 
     //create thread to track password folder (password and uuid rfid)
     CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     {
         backEnd.sendToQml_ChangeWindow(0,"",0);
     }
-    
+    backEnd.reset_backend();
     app.exec();
     fbclear();
     qDebug()<<"main: quit app";

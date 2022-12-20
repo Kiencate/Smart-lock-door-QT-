@@ -33,6 +33,7 @@ public:
     bool is_face_detected; //true if face detection process deteted person's face
     bool is_rfid_success; //true if rfid scan success
     bool is_start_face_detect; //true if started face detect
+    void reset_backend(); //reset backend after restart
 signals:
     void sendToQml_Button(int type, int button_id);
     /*type:
