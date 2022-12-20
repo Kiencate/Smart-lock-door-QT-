@@ -123,6 +123,7 @@ public slots:
     *   -TH4: Có người, cửa đang đóng, phát hiện khuôn mặt thành công hoặc mở bằng mật khẩu thành công hoặc mở bằng thẻ rfid thành công-> Giao diện đã mở khóa (hiện camera và icon mở khóa)
     */
     void closeDoor(); // close the door after 3s
+    void onPasswordFolderChange(); // restart app when password folder change
 private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)

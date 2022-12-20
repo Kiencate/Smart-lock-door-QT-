@@ -12,6 +12,8 @@
 #include "touchevent.h"
 #include "sys/ioctl.h"
 #include "linux/fb.h"
+#include "check_password_folder.h"
+
 const char *status_json_path = "../status.json";
 static void fbclear()
 {
@@ -61,7 +63,11 @@ int main(int argc, char *argv[])
     
     //create thread to send touch event
     TouchEvent *touchEvent = new TouchEvent();
-    touchEvent->start();
+    // touchEvent->start();
+
+    //create thread to track password folder (password and uuid rfid)
+    CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
+    checkstatuspass->start();
 
     // create video thread show on qml
     OpencvImageProvider *liveImageProvider(new OpencvImageProvider);
@@ -104,6 +110,7 @@ int main(int argc, char *argv[])
     QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);
+    QObject::connect(checkstatuspass, &CheckStatusPasswordFolder::PasswordFolderChange, &backEnd, &BackEnd::onPasswordFolderChange);
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     //backEnd.sendToQml_ChangeWindow(13,"",0); // turn off frame 
     //loop at restart 

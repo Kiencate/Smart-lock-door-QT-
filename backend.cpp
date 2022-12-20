@@ -23,7 +23,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     configured_with_bluetooth= false;
     is_wifi_configured_before = is_wifi_configured;
     //read right password from txt file 
-    QFile file("../password.txt");
+    QFile file("../password/password.txt");
     while(!file.open(QIODevice::ReadOnly)) {
         qDebug()<<file.errorString();
     }
@@ -541,4 +541,16 @@ void BackEnd::start_face_detect()
     }   
     close(fd_status_json); 
     json_object_put(status_json_obj);  
+}
+
+void BackEnd::onPasswordFolderChange()
+{
+    sleepQt();
+    QFile file("../password/password.txt");
+    while(!file.open(QIODevice::ReadOnly)) {
+        qDebug()<<file.errorString();
+    }
+    QTextStream in(&file);
+    right_password = in.readLine();
+    file.close();
 }
