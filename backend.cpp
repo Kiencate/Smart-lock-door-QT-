@@ -2,9 +2,9 @@
 
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
-    // GPIOExport(GPIO1_3);
-    // GPIODirection(GPIO1_3, OUT);
-    // GPIOWrite(GPIO1_3, LOW);
+    GPIOExport(GPIO1_3);
+    GPIODirection(GPIO1_3, OUT);
+    GPIOWrite(GPIO1_3, LOW);
 
     is_wifi_configured = is_wifi_done;
     if(is_wifi_done) 
