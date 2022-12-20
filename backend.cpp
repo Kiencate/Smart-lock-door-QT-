@@ -37,18 +37,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
     // qDebug()<<"backend:"<<"x"<<x<<"y"<<y;
     if (window_type == 0) // config_wifi
     {
-        if (type == 1)
+        if (type == 1) //press
         {
             if (x > 20 && x <220)
             {
-                if (y > 55 && y<140)
+                if (y > 55 && y<140) //button qrcode
                 {
                     pressing_button_id = 15;
                     emit sendToQml_Button(1, 15);
 
                 }
 
-                if (y > 162 && y<256)
+                if (y > 162 && y<256) //button bluetooth
                 {
                     pressing_button_id = 16;
                     emit sendToQml_Button(1, 16);
@@ -56,7 +56,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             }
 
         }
-        else if (type == -1)
+        else if (type == -1) //release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 15) //qrcode
@@ -88,18 +88,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
 
         }
     }
-    else if (window_type == 4)
+    else if (window_type == 4) //config wifi success
     {
-        if (type == 1)
+        if (type == 1) //press
         {
-            if (x > 95 && x <140 && y > 155 && y<200)
+            if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
                     pressing_button_id = 12;
                     emit sendToQml_Button(1, 12);
             }
 
         }
-        else if (type == -1)
+        else if (type == -1)//release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
@@ -116,16 +116,16 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         }
     }
 
-    else if (window_type == 5)
+    else if (window_type == 5) // main window unlock door
     {
         if (type == 1) // press
         {
-            if (x > 40 && x <190 && y > 90 && y < 150)
+            if (x > 40 && x <190 && y > 90 && y < 150) // password mode
             {
                 pressing_button_id =14;
                 emit sendToQml_Button(1, pressing_button_id);
             }
-            if (x > 40 && x <200 && y > 190 && y < 250)
+            if (x > 40 && x <200 && y > 190 && y < 250) // ai mode
             {
                 pressing_button_id =13;
                 emit sendToQml_Button(1, pressing_button_id);
@@ -152,51 +152,51 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             pressing_button_id = -1;
         }
     }
-    else if (window_type == 7)
+    else if (window_type == 7) //enter password
     {
-        if (type == 1)
+        if (type == 1) //press
                 {
                     if (x > 17 && x <74)
                     {
-                        if (y > 110 && y<140)
+                        if (y > 110 && y<140) //button1
                         {
                             pressing_button_id = 1;
                             emit sendToQml_Button(1, 1);
                         }
-                        if (y > 160 && y<190)
+                        if (y > 160 && y<190) //button4
                         {
                             pressing_button_id = 4;
                             emit sendToQml_Button(1, 4);
                         }
-                        if (y > 210 && y<240)
+                        if (y > 210 && y<240) //button7
                         {
                             pressing_button_id = 7;
                             emit sendToQml_Button(1, 7);
                         }
-                        else if (y > 260 && y < 290)
+                        else if (y > 260 && y < 290) //button del
                         {
                             pressing_button_id = 10;
                             emit sendToQml_Button(1, 10);
                         }
                     }
-                    else if(x > 92 && x < 149)
+                    else if(x > 92 && x < 149) 
                     {
-                        if (y > 110 && y<140)
+                        if (y > 110 && y<140) //button 2
                         {
-                            pressing_button_id = 2;
+                            pressing_button_id = 2; 
                             emit sendToQml_Button(1, 2);
                         }
-                        if (y > 160 && y<190)
+                        if (y > 160 && y<190) //button 5
                         {
                             pressing_button_id = 5;
                             emit sendToQml_Button(1, 5);
                         }
-                        if (y > 210 && y<240)
+                        if (y > 210 && y<240) //button 8
                         {
                             pressing_button_id = 8;
                             emit sendToQml_Button(1, 8);
                         }
-                        else if (y > 260 && y < 290)
+                        else if (y > 260 && y < 290) //button 0
                         {
                             pressing_button_id = 0;
                             emit sendToQml_Button(1, 0);
@@ -204,22 +204,22 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                     }
                     else if(x > 167 && x < 224)
                     {
-                        if (y > 110 && y<140)
+                        if (y > 110 && y<140) //button 3
                         {
                             pressing_button_id = 3;
                             emit sendToQml_Button(1, 3);
                         }
-                        if (y > 160 && y<190)
+                        if (y > 160 && y<190) //button 6
                         {
                             pressing_button_id = 6;
                             emit sendToQml_Button(1, 6);
                         }
-                        if (y > 210 && y<240)
+                        if (y > 210 && y<240) //button 9
                         {
                             pressing_button_id = 9;
                             emit sendToQml_Button(1, 9);
                         }
-                        else if (y > 260 && y < 290)
+                        else if (y > 260 && y < 290) //button enter
                         {
                             pressing_button_id = 11;
                             emit sendToQml_Button(1, 11);
@@ -227,7 +227,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                     }
 
                 }
-        else if (type == -1)
+        else if (type == -1) //release
         {
             if (pressing_button_id != -1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 10 && password.size() > 0)
@@ -281,18 +281,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             pressing_button_id = -1;
         }
     }
-    else if (window_type == 8)
+    else if (window_type == 8) //password is short 
     {
-        if (type == 1)
+        if (type == 1) //press
         {
-            if (x > 95 && x <140 && y > 155 && y<200)
+            if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
                     pressing_button_id = 12;
                     emit sendToQml_Button(1, 12);
             }
 
         }
-        else if (type == -1)
+        else if (type == -1) // release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
@@ -303,18 +303,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             pressing_button_id = -1;
         }
     }
-    else if (window_type == 9)
+    else if (window_type == 9) //wrong password
     {
-        if (type == 1)
+        if (type == 1) //press
         {
-            if (x > 95 && x <140 && y > 155 && y<200)
+            if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
                     pressing_button_id = 12;
                     emit sendToQml_Button(1, 12);
             }
 
         }
-        else if (type == -1)
+        else if (type == -1) //release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
@@ -325,18 +325,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             pressing_button_id = -1;
         }
     }
-    else if (window_type == 10)
+    else if (window_type == 10) //wrong password over 5 times
     {
-        if (type == 1)
+        if (type == 1) //press 
         {
-            if (x > 95 && x <140 && y > 155 && y<200)
+            if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
                     pressing_button_id = 12;
                     emit sendToQml_Button(1, 12);
             }
 
         }
-        else if (type == -1)
+        else if (type == -1) //release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
@@ -352,18 +352,18 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             pressing_button_id = -1;
         }
     }
-    else if (window_type == 11)
+    else if (window_type == 11) //right password 
     {
-        if (type == 1)
+        if (type == 1) //press
         {
-            if (x > 95 && x <140 && y > 155 && y<200)
+            if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
                     pressing_button_id = 12;
                     emit sendToQml_Button(1, 12);
             }
 
         }
-        else if (type == -1)
+        else if (type == -1) //release
         {
             if (pressing_button_id!=-1) emit sendToQml_Button(-1, pressing_button_id);
             if (pressing_button_id == 12)
