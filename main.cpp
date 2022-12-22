@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     
     //create thread to send touch event
     TouchEvent *touchEvent = new TouchEvent();
-    touchEvent->start();
+    // touchEvent->start();
 
     //create thread to track password folder (password and uuid rfid)
     CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     QObject::connect(&backEnd,&BackEnd::switch_to_face_detect,videoStreamer,&VideoStreamer::onFaceDetect);
     QObject::connect(&backEnd,&BackEnd::stopCamera,videoStreamer,&VideoStreamer::onStopCamera);
     QObject::connect(&backEnd,&BackEnd::captureFrame,videoStreamer,&VideoStreamer::onCaptureFrame);
-    QObject::connect(videoStreamer,&VideoStreamer::config_wifi_success,&backEnd,&BackEnd::onReceivedWifi);
+    QObject::connect(videoStreamer,&VideoStreamer::received_password_wifi,&backEnd,&BackEnd::onReceivedWifi);
     QObject::connect(checkStatus, &CheckStatus::JsonChangestatus, &backEnd, &BackEnd::onJsonStatusChange);
     QObject::connect(touchEvent, &TouchEvent::new_touch_event, &backEnd, &BackEnd::handle_touch_event);
     QObject::connect(checkstatuspass, &CheckStatusPasswordFolder::PasswordFolderChange, &backEnd, &BackEnd::onPasswordFolderChange);

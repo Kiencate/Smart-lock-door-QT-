@@ -37,7 +37,7 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  cap = VideoCapture("/dev/video0",cv::CAP_V4L2);
+  cap.open("/dev/video0",cv::CAP_V4L2);
   // cap.open("/dev/video11");
   cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
@@ -85,28 +85,7 @@ void VideoStreamer::stream()
         QTextStream stream(&file);
         stream << QString::fromStdString(config_wifi) << endl;    
         file.close();
-        // open status wifi, lock file
-        int fd_status_json;
-        if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
-          qDebug()<<"video_streamer: open status file failed";
-        }
-
-        if(flock(fd_status_json,LOCK_EX)==-1)
-        {
-          qDebug()<<"video_streamer: can't lock status file";
-        }
-        struct json_object *status_json_obj= json_object_from_fd(fd_status_json);
-
-        json_object *wifi_configured = json_object_object_get(status_json_obj,"wifi_configured");
-        json_object_set_int(wifi_configured, 1);
-        lseek(fd_status_json,0,SEEK_SET);
-        if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
-        {
-          qDebug()<<"video_streamer: fail config wifi";
-        } 
-        json_object_put(status_json_obj);   
-        close(fd_status_json); 
-        emit config_wifi_success();       
+        emit received_password_wifi();       
         mode_streamer = 1 ;        
       }
       break;

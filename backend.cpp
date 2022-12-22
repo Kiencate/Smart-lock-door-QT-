@@ -385,10 +385,34 @@ void BackEnd::onConectedBluetooth()
 
 void BackEnd::onReceivedWifi()
 {
-    // emit sendToQml_ChangeWindow(4,"",wrong_left);
-    // window_type = 4;
+    emit sendToQml_ChangeWindow(3,"",wrong_left);
+    window_type = 3;
+    QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
+    // open status wifi, lock file
+    
 }
+void BackEnd::onConfigWifiSuccess()
+{
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"video_streamer: open status file failed";
+    }
 
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"video_streamer: can't lock status file";
+    }
+    status_json_obj= json_object_from_fd(fd_status_json);
+    json_object *wifi_configured = json_object_object_get(status_json_obj,"wifi_configured");
+    json_object_set_int(wifi_configured, 1);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"video_streamer: fail config wifi";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
+}
 void BackEnd::sleepQt()
 {
     emit stopCamera();

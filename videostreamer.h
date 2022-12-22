@@ -72,7 +72,7 @@ signals:
     /*
     * emit to imageprovider new image captured
     */
-    void config_wifi_success();
+    void received_password_wifi();
     /*
     * emit to backend when config wifi with qr success
     */

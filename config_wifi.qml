@@ -71,7 +71,7 @@ ApplicationWindow {
                 inotify.x = 40
                 inotify_text_window.visible=true
                 notify_window.visible=true
-                inotify.text = "Kết nối thành công\n đang nhận wifi"
+                inotify.text = "Đang cấu hình wifi"
                 inotify.font.pointSize= 11
                 loading_icon.visible = true
             }

@@ -64,7 +64,7 @@ signals:
      * 0 -> config wifi
      * 1 -> scaning qr code
      * 2 -> connecting bluetooth
-     * 3 -> connected bluetooh
+     * 3 -> connected bluetooh or scan qr success -> configuring wifi
      * 4 -> config wifi success
      * 5 -> main window unlock door
      * 6 -> detecting face
@@ -113,6 +113,10 @@ public slots:
     void onReceivedWifi();
     /*
     * receive ssid and password success
+    */
+    void onConfigWifiSuccess();
+    /*
+    * config wifi success after receive ssid and password
     */
     void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect);
     /*
