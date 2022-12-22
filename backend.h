@@ -33,6 +33,7 @@ public:
     bool is_face_detected; //true if face detection process deteted person's face
     bool is_rfid_success; //true if rfid scan success
     bool is_start_face_detect; //true if started face detect
+    bool is_wifi_connected; // true if connected wifi
     void reset_backend(); //reset backend after restart
 signals:
     void sendToQml_Button(int type, int button_id);
@@ -118,7 +119,7 @@ public slots:
     /*
     * config wifi success after receive ssid and password
     */
-    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect);
+    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect, bool _is_wifi_connected);
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:

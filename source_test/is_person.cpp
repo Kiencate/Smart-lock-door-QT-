@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string.h>
 #include <time.h>
-#include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
 #include <fstream>
@@ -34,7 +33,7 @@ int main( int argc, char *argv[])
     }
     struct json_object *status_json_obj= json_object_from_fd(fd_status_json);
 
-    json_object *is_person = json_object_object_get(status_json_obj,"is_person");
+    json_object *is_person = json_object_object_get(status_json_obj,"wifi_connected");
     json_object_set_int(is_person, mode);
     lseek(fd_status_json,0,SEEK_SET);
     if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)

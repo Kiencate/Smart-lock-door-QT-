@@ -236,6 +236,12 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                qDebug()<<password;
                emit sendToQml_Password(password.size());
             }
+            else if(pressing_button_id == 10 && password.size() == 0)
+            {
+                emit sendToQml_ChangeWindow(5,"",wrong_left);
+                emit switch_to_main_window();
+                window_type=5;
+            }
             else if (pressing_button_id == 11)
             {
                 if (password.size() < 6)
@@ -436,7 +442,7 @@ void BackEnd::sleepQt()
     sendToQml_ChangeWindow(13,"",wrong_left);
 }
 
-void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect)
+void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect, bool _is_wifi_connected)
 {
     qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<"  start_face:"<<is_start_face_detect<<" pass:"<<_is_password_right<<"  rfid"<<_is_rfid_success;
     is_person = _is_person;
@@ -444,6 +450,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     is_door_closed = _is_door_closed;
     is_face_detected = _is_face_detected;
     is_rfid_success = _is_rfid_success;
+    is_wifi_connected = _is_wifi_connected;
     if(is_person &&  is_door_closed)
     {
          // open camera
@@ -466,8 +473,16 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         {
             if(is_wifi_configured_before)
             {
-                sendToQml_ChangeWindow(5,"",wrong_left);
-                window_type = 5;
+                if(is_wifi_connected)
+                {
+                    sendToQml_ChangeWindow(5,"",wrong_left);
+                    window_type = 5;  
+                }
+                else
+                {
+                    sendToQml_ChangeWindow(3,"",wrong_left);
+                    window_type = 3;  
+                }                            
             }
             else
             {
