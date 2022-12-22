@@ -1,5 +1,5 @@
 #include "backend.h"
-
+const char *wifi_json_path = "../wifi.json";
 BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 {
     // GPIOExport(GPIO1_3);
@@ -385,8 +385,25 @@ void BackEnd::onConectedBluetooth()
 
 void BackEnd::onReceivedWifi()
 {
+    //switch to loading window
     emit sendToQml_ChangeWindow(3,"",wrong_left);
     window_type = 3;
+    //read ssid and password
+    int fd_wifi_json;
+    if((fd_wifi_json=open(wifi_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"video_streamer: open status file failed";
+    }
+
+    if(flock(fd_wifi_json,LOCK_SH)==-1)
+    {
+        qDebug()<<"video_streamer: can't lock status file";
+    }
+    json_object *wifi_json_obj= json_object_from_fd(fd_wifi_json);
+    QString ssid(json_object_get_string(json_object_object_get(wifi_json_obj,"SSID")));
+    QString pass(json_object_get_string(json_object_object_get(wifi_json_obj,"Password")));
+    qDebug()<<"ssid: "<<ssid<<"   password: "<<pass;
+    json_object_put(wifi_json_obj);   
+    close(fd_wifi_json); 
     QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
     // open status wifi, lock file
     

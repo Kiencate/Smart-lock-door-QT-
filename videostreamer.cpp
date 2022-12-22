@@ -76,7 +76,7 @@ void VideoStreamer::stream()
     {
       cap>>Frame;
       string config_wifi ="";
-      QFile file("../wpa_supplicant");
+      QFile file("../wifi.json");
       vector<decodedObject> decodedObjects;
       config_wifi = decode(Frame, decodedObjects);
       display(Frame, decodedObjects);
