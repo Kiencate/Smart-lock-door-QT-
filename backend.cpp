@@ -64,6 +64,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 qDebug()<<"backend: start qrcode process";
                 emit switch_to_qrcode_scan();
                 emit sendToQml_ChangeWindow(1,"",wrong_left);
+                QTimer::singleShot(10000, this, SLOT(onConfigWifiSuccess())); 
             }
             else if (pressing_button_id ==16) //bluetooth
             {
@@ -410,12 +411,7 @@ void BackEnd::onReceivedWifi()
     qDebug()<<"ssid: "<<ssid<<"   password: "<<pass;
     json_object_put(wifi_json_obj);   
     close(fd_wifi_json); 
-    QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
-    // open status wifi, lock file
     
-}
-void BackEnd::onConfigWifiSuccess()
-{
     int fd_status_json;
     if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"video_streamer: open status file failed";
@@ -435,6 +431,33 @@ void BackEnd::onConfigWifiSuccess()
     } 
     json_object_put(status_json_obj);   
     close(fd_status_json); 
+    // open status wifi, lock file
+    
+}
+void BackEnd::onConfigWifiSuccess()
+{
+    if(!is_wifi_connected)
+    {
+        int fd_status_json;
+        if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+            qDebug()<<"video_streamer: open status file failed";
+        }
+
+        if(flock(fd_status_json,LOCK_EX)==-1)
+        {
+            qDebug()<<"video_streamer: can't lock status file";
+        }
+        status_json_obj= json_object_from_fd(fd_status_json);
+        json_object *wifi_configured = json_object_object_get(status_json_obj,"wifi_configured");
+        json_object_set_int(wifi_configured, 0);
+        lseek(fd_status_json,0,SEEK_SET);
+        if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+        {
+            qDebug()<<"video_streamer: fail config wifi";
+        } 
+        json_object_put(status_json_obj);   
+        close(fd_status_json); 
+    }
 }
 void BackEnd::sleepQt()
 {
@@ -471,31 +494,28 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         }
         else if(is_wifi_configured )
         {
-            if(is_wifi_configured_before)
+            if(is_wifi_connected)
             {
-                if(is_wifi_connected)
+                
+                if(is_wifi_configured_before)
                 {
                     sendToQml_ChangeWindow(5,"",wrong_left);
-                    window_type = 5;  
+                    window_type = 5; 
                 }
                 else
                 {
-                    sendToQml_ChangeWindow(3,"",wrong_left);
-                    window_type = 3;  
-                }                            
-            }
-            else
-            {
-                if(is_wifi_connected)
-                {
-                    
                     emit sendToQml_ChangeWindow(4,"",wrong_left);
                     window_type = 4;
                     is_wifi_configured_before = true;
                     qDebug()<<"backend: wificonfig";
-                }             
+                }
             }
-                            
+            else
+            {
+                sendToQml_ChangeWindow(3,"",wrong_left);
+                window_type = 3;  
+                QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
+            }                          
         }
         else
         {
