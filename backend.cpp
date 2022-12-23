@@ -486,10 +486,21 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             }
             else
             {
-                emit sendToQml_ChangeWindow(4,"",wrong_left);
-                window_type = 4;
-                is_wifi_configured_before = true;
-                qDebug()<<"backend: wificonfig";
+                if(is_wifi_connected)
+                {
+                    // sendToQml_ChangeWindow(5,"",wrong_left);
+                    // window_type = 5;  
+                    emit sendToQml_ChangeWindow(4,"",wrong_left);
+                    window_type = 4;
+                    is_wifi_configured_before = true;
+                    qDebug()<<"backend: wificonfig";
+                }
+                // else
+                // {
+                //     sendToQml_ChangeWindow(3,"",wrong_left);
+                //     window_type = 3;  
+                // } 
+                
             }
                             
         }

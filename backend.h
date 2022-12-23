@@ -149,8 +149,6 @@ private:
     QString password; //password user entered
     QString right_password; //right password
     struct json_object *status_json_obj; //json object for status json file
-
-
 };
 
 // variable and function for qr code
