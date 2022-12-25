@@ -520,8 +520,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         else if(!is_wifi_connected)
         {
             if(is_wifi_configured)
-            {
- 
+            { 
                 if(is_start_config_qr)
                 {
                     sendToQml_ChangeWindow(3,"",wrong_left);

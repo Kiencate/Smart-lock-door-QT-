@@ -18,15 +18,33 @@ CheckStatus::CheckStatus()
         qDebug()<<"checkstatus: open status file failed";
     }
 
-    if(flock(fd_status_json,LOCK_SH)==-1)
+    if(flock(fd_status_json,LOCK_EX)==-1)
     {
         qDebug()<<"checkstatus: can't lock status file";
     } 
     status_json_obj = json_object_from_fd(fd_status_json);
     is_person = json_object_get_int(json_object_object_get(status_json_obj,"is_person")) == 1? true:false;
     is_door_closed = json_object_get_int(json_object_object_get(status_json_obj,"is_closed_door")) == 1? true:false;
+    // reset flag json
+    json_object *is_closed_door = json_object_object_get(status_json_obj,"is_closed_door");
+    json_object_set_int(is_closed_door, 1);
+    json_object *is_charged = json_object_object_get(status_json_obj,"is_charged");
+    json_object_set_int(is_charged, 1); 
+    json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
+    json_object_set_int(is_face_detected, 0);
+    json_object *is_password_success = json_object_object_get(status_json_obj,"is_password_success");
+    json_object_set_int(is_password_success, 0);
+    json_object *is_rfid_success = json_object_object_get(status_json_obj,"is_rfid_success");
+    json_object_set_int(is_rfid_success, 0); 
+    json_object *start_face_recognize_process = json_object_object_get(status_json_obj,"start_face_recognize_process");
+    json_object_set_int(start_face_recognize_process, 0);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"backend: fail to close door";
+    } 
+    json_object_put(status_json_obj);   
     close(fd_status_json);
-    json_object_put(status_json_obj); 
 }
 
 void CheckStatus::run()
