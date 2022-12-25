@@ -493,14 +493,16 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             open_and_close_door_after_3s();
             emit switch_to_main_window();
         }
+        else if(is_start_face_detect)
+        {
+            emit switch_to_main_window();
+            sendToQml_ChangeWindow(6,"",wrong_left);
+            window_type = 6;
+        }
         else if(is_wifi_connected)
         {
-            if(is_start_face_detect)
-            {
-                sendToQml_ChangeWindow(6,"",wrong_left);
-                window_type = 6;
-            }
-            else if(is_wifi_configured)
+
+            if(is_wifi_configured)
             {
                 emit stopCamera();
                 if(is_wifi_configured_before)
