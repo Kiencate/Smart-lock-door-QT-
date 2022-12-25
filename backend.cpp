@@ -45,7 +45,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 {
                     pressing_button_id = 15;
                     emit sendToQml_Button(1, 15);
-
                 }
 
                 if (y > 162 && y<256) //button bluetooth
@@ -62,8 +61,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             if (pressing_button_id == 15) //qrcode
             {
                 qDebug()<<"backend: start qrcode process";
-                emit switch_to_qrcode_scan();
-                emit sendToQml_ChangeWindow(1,"",wrong_left);
+                start_config_qr_code();
             }
             else if (pressing_button_id ==16) //bluetooth
             {
@@ -94,8 +92,8 @@ void BackEnd::handle_touch_event(int type, int x, int y)
         {
             if (x > 95 && x <140 && y > 155 && y<200) //button ok
             {
-                    pressing_button_id = 12;
-                    emit sendToQml_Button(1, 12);
+                pressing_button_id = 12;
+                emit sendToQml_Button(1, 12);
             }
 
         }
@@ -109,8 +107,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                     delete myAdaptor;
                     delete agent;
                 }
-                emit sendToQml_ChangeWindow(5,"",wrong_left);
-                window_type = 5;
+                stop_config_qr_code();
             }
             pressing_button_id = -1;
         }
@@ -410,7 +407,8 @@ void BackEnd::onReceivedWifi()
     qDebug()<<"ssid: "<<ssid<<"   password: "<<pass;
     json_object_put(wifi_json_obj);   
     close(fd_wifi_json); 
-    
+
+    // change flag wifi_configured to 1
     int fd_status_json;
     if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
         qDebug()<<"video_streamer: open status file failed";
@@ -435,10 +433,11 @@ void BackEnd::onReceivedWifi()
     //
     
 }
-void BackEnd::onConfigWifiSuccess()
+void BackEnd::check_timeout_connect_wifi()
 {
     if(!is_wifi_connected)
     {
+        //change flag start_config_wifi_qr to 0 and configured to 0
         int fd_status_json;
         if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
             qDebug()<<"video_streamer: open status file failed";
@@ -449,6 +448,8 @@ void BackEnd::onConfigWifiSuccess()
             qDebug()<<"video_streamer: can't lock status file";
         }
         status_json_obj= json_object_from_fd(fd_status_json);
+        json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi_qr");
+        json_object_set_int(start_config_wifi_qr, 0);
         json_object *wifi_configured = json_object_object_get(status_json_obj,"wifi_configured");
         json_object_set_int(wifi_configured, 0);
         lseek(fd_status_json,0,SEEK_SET);
@@ -458,7 +459,10 @@ void BackEnd::onConfigWifiSuccess()
         } 
         json_object_put(status_json_obj);   
         close(fd_status_json); 
+        emit sendToQml_ChangeWindow(0,"",wrong_left);
+        window_type = 0;
     }
+
 }
 void BackEnd::sleepQt()
 {
@@ -466,15 +470,16 @@ void BackEnd::sleepQt()
     sendToQml_ChangeWindow(13,"",wrong_left);
 }
 
-void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect, bool _is_wifi_connected)
+void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr)
 {
-    qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi:"<<_is_wifi_configured<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<"  start_face:"<<is_start_face_detect<<" pass:"<<_is_password_right<<"  rfid"<<_is_rfid_success;
+    qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi configured:"<<_is_wifi_configured<<"  wifi_start_config:"<<_is_start_config_qr<<"  wifi connect:"<<_is_wifi_connected<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<"  start_face:"<<is_start_face_detect<<" pass:"<<_is_password_right<<"  rfid"<<_is_rfid_success;
     is_person = _is_person;
     is_wifi_configured =_is_wifi_configured;
     is_door_closed = _is_door_closed;
     is_face_detected = _is_face_detected;
     is_rfid_success = _is_rfid_success;
     is_wifi_connected = _is_wifi_connected;
+    is_start_config_qr = _is_start_config_qr;
     if(is_person &&  is_door_closed)
     {
          // open camera
@@ -488,43 +493,51 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             open_and_close_door_after_3s();
             emit switch_to_main_window();
         }
-        else if (is_start_face_detect)
+        else if(is_wifi_connected)
         {
-            sendToQml_ChangeWindow(6,"",wrong_left);
-            window_type = 6;
-        }
-        else if(is_wifi_configured )
-        {
-            emit stopCamera();
-            if(is_wifi_connected)
+            if(is_start_face_detect)
             {
-                
+                sendToQml_ChangeWindow(6,"",wrong_left);
+                window_type = 6;
+            }
+            else if(is_wifi_configured)
+            {
+                emit stopCamera();
                 if(is_wifi_configured_before)
                 {
                     sendToQml_ChangeWindow(5,"",wrong_left);
                     window_type = 5; 
                 }
                 else
-                {
+                {                   
                     emit sendToQml_ChangeWindow(4,"",wrong_left);
                     window_type = 4;
                     is_wifi_configured_before = true;
                     qDebug()<<"backend: wificonfig";
                 }
-            }
-            else
+            }    
+        }
+        else if(!is_wifi_connected)
+        {
+            if(is_wifi_configured)
             {
                 sendToQml_ChangeWindow(3,"",wrong_left);
                 window_type = 3;  
-                QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
-            }                          
-        }     
-        else if(is_wifi_connected)
-        {
-            emit stopCamera();
-            sendToQml_ChangeWindow(5,"",wrong_left);
-            window_type = 5;
-        }
+                if(is_start_config_qr)
+                {
+                    QTimer::singleShot(5000, this, SLOT(check_timeout_connect_wifi())); 
+                }               
+            }
+            else
+            {
+                if(!is_start_config_qr)
+                {
+                    sendToQml_ChangeWindow(0,"",wrong_left);
+                    window_type = 0;                  
+                }
+
+            }
+        }        
         else
         {
             emit stopCamera();
@@ -538,6 +551,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         sleepQt();
         reset_backend();
     }
+    
 }
 
 void BackEnd::open_and_close_door_after_3s()
@@ -687,4 +701,64 @@ void BackEnd::reset_backend()
     } 
     json_object_put(status_json_obj);   
     close(fd_status_json); 
+}
+
+void BackEnd::start_config_qr_code()
+{ 
+    // change flag start_config_wifi_qr 
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"back_end: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"back_end: can't lock status file";
+    }
+    status_json_obj= json_object_from_fd(fd_status_json);
+    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi_qr");
+    json_object_set_int(start_config_wifi_qr, 1);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"back_end: fail config wifi";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
+
+    // switch to qrcode mode in video streamer
+    emit switch_to_qrcode_scan();
+
+    // switch to qrcode window
+    emit sendToQml_ChangeWindow(1,"",wrong_left);
+}
+
+void BackEnd::stop_config_qr_code()
+{ 
+    // change flag start_config_wifi_qr 
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"back_end: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"back_end: can't lock status file";
+    }
+    status_json_obj= json_object_from_fd(fd_status_json);
+    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi_qr");
+    json_object_set_int(start_config_wifi_qr, 0);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"back_end: fail config wifi";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
+
+    // switch to qrcode mode in video streamer
+    emit switch_to_qrcode_scan();
+
+    // switch to qrcode window
+    emit sendToQml_ChangeWindow(1,"",wrong_left);
 }

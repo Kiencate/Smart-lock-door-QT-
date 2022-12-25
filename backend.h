@@ -34,7 +34,10 @@ public:
     bool is_rfid_success; //true if rfid scan success
     bool is_start_face_detect; //true if started face detect
     bool is_wifi_connected; // true if connected wifi
+    bool is_start_config_qr; // true if start config wifi with qr code
     void reset_backend(); //reset backend after restart
+    void start_config_qr_code(); // call when press button qr_code
+    void stop_config_qr_code();
 signals:
     void sendToQml_Button(int type, int button_id);
     /*type:
@@ -115,11 +118,11 @@ public slots:
     /*
     * receive ssid and password success
     */
-    void onConfigWifiSuccess();
+    void check_timeout_connect_wifi();
     /*
     * config wifi success after receive ssid and password
     */
-    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect, bool _is_wifi_connected);
+    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr);
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:

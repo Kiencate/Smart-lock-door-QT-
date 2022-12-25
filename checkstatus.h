@@ -33,8 +33,9 @@ public:
     bool rfid_success ;
     bool is_start_face_detect; //true if started face detect
     bool is_wifi_connected;
+    bool is_start_config_wifi;
 signals:
-    void JsonChangestatus(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool right_password, bool is_rfid_success,bool is_start_face_detect, bool is_wifi_connected);
+    void JsonChangestatus(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool right_password, bool is_rfid_success,bool is_start_face_detect, bool is_wifi_connected, bool is_start_config_wifi);
     // emit when status.json is changed
 protected:
     void run();

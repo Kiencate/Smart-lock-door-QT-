@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string.h>
 #include <time.h>
-#include <nlohmann/json.hpp>
 #include <fcntl.h>
 #include <sys/file.h>
 #include <fstream>
@@ -69,8 +68,8 @@ int main( )
             std::cout<<"face: can't lock status file"<<std::endl;
         }
         status_json_obj = json_object_from_fd(fd_status_json);   
-        json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
-        json_object_set_int(is_face_detected, 1);
+        // json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
+        // json_object_set_int(is_face_detected, 1);
         json_object *start_face_recognize_process = json_object_object_get(status_json_obj,"start_face_recognize_process");
         json_object_set_int(start_face_recognize_process, 0);
         lseek(fd_status_json,0,SEEK_SET);
