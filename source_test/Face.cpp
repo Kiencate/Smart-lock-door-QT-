@@ -11,6 +11,7 @@
 #include <sys/file.h>
 #include <fstream>
 #include <json.h>
+#include <time.h>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define EVENT_BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
@@ -59,6 +60,7 @@ int main( )
     close(fd_status_json);
     if (json_object_get_int(json_object_object_get(status_json_obj,"start_face_recognize_process")) == 1)
     {
+        usleep(3000000);
         if((fd_status_json=open(status_wifi_json_path, O_RDWR)) == -1) { 
         std::cout<<"face: open status file failed"<<std::endl;
         }
@@ -68,8 +70,8 @@ int main( )
             std::cout<<"face: can't lock status file"<<std::endl;
         }
         status_json_obj = json_object_from_fd(fd_status_json);   
-        // json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
-        // json_object_set_int(is_face_detected, 1);
+        json_object *is_face_detected = json_object_object_get(status_json_obj,"is_face_detected");
+        json_object_set_int(is_face_detected, 1);
         json_object *start_face_recognize_process = json_object_object_get(status_json_obj,"start_face_recognize_process");
         json_object_set_int(start_face_recognize_process, 0);
         lseek(fd_status_json,0,SEEK_SET);

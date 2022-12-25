@@ -521,10 +521,11 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         {
             if(is_wifi_configured)
             {
-                sendToQml_ChangeWindow(3,"",wrong_left);
-                window_type = 3;  
+ 
                 if(is_start_config_qr)
                 {
+                    sendToQml_ChangeWindow(3,"",wrong_left);
+                    window_type = 3; 
                     QTimer::singleShot(5000, this, SLOT(check_timeout_connect_wifi())); 
                 }               
             }

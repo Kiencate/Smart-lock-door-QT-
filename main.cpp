@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
     }
     backEnd.reset_backend();
     app.exec();
-    fbclear();
+    // fbclear();
     qDebug()<<"main: quit app";
     goto restart_app;
     return 0;
