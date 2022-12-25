@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         usleep(10000);
     }
     //engine.load(url);
-    backEnd.switch_to_main_window();
+    // backEnd.switch_to_main_window();
     qDebug()<<"main: start app";
     if(backEnd.is_wifi_configured)
     {

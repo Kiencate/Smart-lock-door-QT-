@@ -64,7 +64,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 qDebug()<<"backend: start qrcode process";
                 emit switch_to_qrcode_scan();
                 emit sendToQml_ChangeWindow(1,"",wrong_left);
-                QTimer::singleShot(10000, this, SLOT(onConfigWifiSuccess())); 
             }
             else if (pressing_button_id ==16) //bluetooth
             {
@@ -141,6 +140,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 qDebug()<<"start face";
                 emit sendToQml_ChangeWindow(6,"",wrong_left); // switch to face recognition window
                 start_face_detect();
+                emit switch_to_main_window();
                 emit switch_to_face_detect();              
             }
             else if (pressing_button_id == 14) //password mode
@@ -240,7 +240,6 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             else if(pressing_button_id == 10 && password.size() == 0)
             {
                 emit sendToQml_ChangeWindow(5,"",wrong_left);
-                emit switch_to_main_window();
                 window_type=5;
             }
             else if (pressing_button_id == 11)
@@ -431,7 +430,9 @@ void BackEnd::onReceivedWifi()
     } 
     json_object_put(status_json_obj);   
     close(fd_status_json); 
-    // open status wifi, lock file
+    // code for config wifi
+
+    //
     
 }
 void BackEnd::onConfigWifiSuccess()
@@ -494,6 +495,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         }
         else if(is_wifi_configured )
         {
+            emit stopCamera();
             if(is_wifi_connected)
             {
                 
@@ -516,10 +518,16 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
                 window_type = 3;  
                 QTimer::singleShot(5000, this, SLOT(onConfigWifiSuccess())); 
             }                          
+        }     
+        else if(is_wifi_connected)
+        {
+            emit stopCamera();
+            sendToQml_ChangeWindow(5,"",wrong_left);
+            window_type = 5;
         }
         else
         {
-            
+            emit stopCamera();
             sendToQml_ChangeWindow(0,"",wrong_left);
             window_type = 0;
         }      
@@ -598,6 +606,7 @@ void BackEnd::closeDoor()
     wrong_left = 5;
     password="";
     emit sendToQml_Password(password.size());
+    emit stopCamera();
     sendToQml_ChangeWindow(5,"",wrong_left);
 }
 
