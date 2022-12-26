@@ -7,7 +7,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     // GPIOWrite(GPIO1_3, LOW);
 
     is_wifi_configured = is_wifi_done;
-    timeout_touch = false;
+    timeout_touch = true;
     if(is_wifi_done) 
     {
         qDebug()<<"backend: wifi is setted";
@@ -34,7 +34,8 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
 }
 void BackEnd::check_timeout_touch()
 {
-    
+    if(QDateTime :: currentDateTime().toMSecsSinceEpoch() - lastest_time_touch.toMSecsSinceEpoch() > 4000)
+    {
         timeout_touch = true;
         int fd_status_json;
         if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
@@ -46,15 +47,8 @@ void BackEnd::check_timeout_touch()
             qDebug()<<"backend: can't lock status file";
         }
         status_json_obj = json_object_from_fd(fd_status_json);
-        json_object *timeout_touch = json_object_object_get(status_json_obj,"timeout_touch");
-        if(QDateTime :: currentDateTime().toMSecsSinceEpoch() - lastest_time_touch.toMSecsSinceEpoch() > 4000)
-        {
-            json_object_set_int(timeout_touch, 1);
-        }
-        else
-        {
-            json_object_set_int(timeout_touch, 0);
-        }
+        json_object *timeout_touch_obj = json_object_object_get(status_json_obj,"timeout_touch");
+        json_object_set_int(timeout_touch_obj, 0);
         lseek(fd_status_json,0,SEEK_SET);
         if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
         {
@@ -62,14 +56,11 @@ void BackEnd::check_timeout_touch()
         } 
         json_object_put(status_json_obj);   
         close(fd_status_json); 
-    // }
-    // else
-    // {
-    //     timeout_touch = false;
-    // }
+    }     
 }
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
+    timeout_touch = false;
     lastest_time_touch = QDateTime :: currentDateTime();
     QTimer::singleShot(5000, this, SLOT(check_timeout_touch())); 
     // qDebug()<<"backend:"<<"x"<<x<<"y"<<y;
@@ -541,7 +532,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         }
         else if(is_wifi_connected)
         {
-
+            emit switch_to_main_window();
             if(is_wifi_configured)
             {
                 // emit stopCamera();
@@ -568,7 +559,11 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
                     sendToQml_ChangeWindow(3,"",wrong_left);
                     window_type = 3; 
                     QTimer::singleShot(5000, this, SLOT(check_timeout_connect_wifi())); 
-                }               
+                }  
+                else
+                {
+                    emit switch_to_main_window();
+                }            
             }
             else
             {
@@ -587,7 +582,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             window_type = 0;
         }      
     }
-    else if(!is_person && !is_start_face_detect && _is_timeout_touch)
+    else if(!is_person && !is_start_face_detect && timeout_touch)
     {
         sleepQt();
         reset_backend();
