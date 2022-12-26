@@ -81,8 +81,9 @@ void CheckStatus::run()
     is_start_face_detect = json_object_get_int(json_object_object_get(status_json_obj,"start_face_recognize_process")) == 1? true:false;
     is_wifi_connected = json_object_get_int(json_object_object_get(status_json_obj,"wifi_connected")) == 1? true:false;
     is_start_config_wifi = json_object_get_int(json_object_object_get(status_json_obj,"start_config_wifi_qr")) == 1? true:false;
+    is_timeout_touch=json_object_get_int(json_object_object_get(status_json_obj,"timeout_touch")) == 1? true:false;
     close(fd_status_json);
-    emit JsonChangestatus(is_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success,is_start_face_detect,is_wifi_connected, is_start_config_wifi); 
+    emit JsonChangestatus(is_person, wifi_config, is_door_closed, face_detect, right_password, rfid_success,is_start_face_detect,is_wifi_connected, is_start_config_wifi,is_timeout_touch); 
     json_object_put(status_json_obj); 
     goto loop;
 }

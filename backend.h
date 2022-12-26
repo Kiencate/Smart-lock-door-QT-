@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QFile>
+#include <QDateTime>
 #include "serversocket.h"
 #include "agent.h"
 #include "dbusadaptor.h"
@@ -26,6 +27,9 @@ public:
     //static error_code_e InitGPIOS();
     void open_and_close_door_after_3s();  // opendoor and set timer to call slot close door after 3s
     void start_face_detect(); //wake up process face detect
+    //variable for check timeout touch
+    bool timeout_touch;
+    QDateTime lastest_time_touch;
     /* variable in file status json */
     bool is_wifi_configured; // true if wifi is configured
     bool is_person; // true if ir sensor detected person
@@ -122,7 +126,7 @@ public slots:
     /*
     * config wifi success after receive ssid and password
     */
-    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr);
+    void onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success,bool is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr, bool _is_timeout_touch);
     /*
     * when file status json changed detected person
     * Có 4 trường hợp:
@@ -133,6 +137,8 @@ public slots:
     */
     void closeDoor(); // close the door after 3s
     void onPasswordFolderChange(); // restart app when password folder change
+    void check_timeout_touch();
+    
 private:
     
     int window_type; // type of window (see signal sendToQml_ChangeWindow)

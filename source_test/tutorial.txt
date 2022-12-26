@@ -1,5 +1,5 @@
 g++ -o Face Face.cpp -I/usr/include/json-c/ -ljson-c
-g++ -o is_person is_person.cpp -I/usr/local/include/json-c/ -ljson-c
+g++ -o is_person is_person.cpp -I/usr/include/json-c/ -ljson-c
 g++ -o rfid rfid.cpp -I/usr/local/include/json-c/ -ljson-c
 g++ -o Touch Touch.cpp -I/usr/local/include/json-c/ -ljson-c
 

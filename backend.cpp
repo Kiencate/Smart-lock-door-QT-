@@ -7,6 +7,7 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     // GPIOWrite(GPIO1_3, LOW);
 
     is_wifi_configured = is_wifi_done;
+    timeout_touch = false;
     if(is_wifi_done) 
     {
         qDebug()<<"backend: wifi is setted";
@@ -31,9 +32,46 @@ BackEnd::BackEnd(bool is_wifi_done, QObject* parent) : QObject(parent)
     right_password = in.readLine();
     file.close();
 }
+void BackEnd::check_timeout_touch()
+{
+    
+        timeout_touch = true;
+        int fd_status_json;
+        if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+            qDebug()<<"backend: open status file failed";
+        }
 
+        if(flock(fd_status_json,LOCK_EX)==-1)
+        {
+            qDebug()<<"backend: can't lock status file";
+        }
+        status_json_obj = json_object_from_fd(fd_status_json);
+        json_object *timeout_touch = json_object_object_get(status_json_obj,"timeout_touch");
+        if(QDateTime :: currentDateTime().toMSecsSinceEpoch() - lastest_time_touch.toMSecsSinceEpoch() > 4000)
+        {
+            json_object_set_int(timeout_touch, 1);
+        }
+        else
+        {
+            json_object_set_int(timeout_touch, 0);
+        }
+        lseek(fd_status_json,0,SEEK_SET);
+        if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+        {
+            qDebug()<<"backend: fail to open door";
+        } 
+        json_object_put(status_json_obj);   
+        close(fd_status_json); 
+    // }
+    // else
+    // {
+    //     timeout_touch = false;
+    // }
+}
 void BackEnd::handle_touch_event(int type, int x, int y)
 {
+    lastest_time_touch = QDateTime :: currentDateTime();
+    QTimer::singleShot(5000, this, SLOT(check_timeout_touch())); 
     // qDebug()<<"backend:"<<"x"<<x<<"y"<<y;
     if (window_type == 0) // config_wifi
     {
@@ -238,6 +276,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             {
                 emit sendToQml_ChangeWindow(5,"",wrong_left);
                 window_type=5;
+                emit switch_to_main_window();
             }
             else if (pressing_button_id == 11)
             {
@@ -470,7 +509,7 @@ void BackEnd::sleepQt()
     sendToQml_ChangeWindow(13,"",wrong_left);
 }
 
-void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr)
+void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool _is_door_closed, bool _is_face_detected, bool _is_password_right, bool _is_rfid_success, bool _is_start_face_detect, bool _is_wifi_connected, bool _is_start_config_qr, bool _is_timeout_touch)
 {
     qDebug()<<"backend: status change: pesron:"<<_is_person<<"  wifi configured:"<<_is_wifi_configured<<"  wifi_start_config:"<<_is_start_config_qr<<"  wifi connect:"<<_is_wifi_connected<<"  door close:"<<_is_door_closed<<"  face detected:"<<_is_face_detected<<"  start_face:"<<is_start_face_detect<<" pass:"<<_is_password_right<<"  rfid"<<_is_rfid_success;
     is_person = _is_person;
@@ -480,6 +519,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
     is_rfid_success = _is_rfid_success;
     is_wifi_connected = _is_wifi_connected;
     is_start_config_qr = _is_start_config_qr;
+    is_start_face_detect = _is_start_face_detect;
     if(is_person &&  is_door_closed)
     {
          // open camera
@@ -504,7 +544,7 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
 
             if(is_wifi_configured)
             {
-                emit stopCamera();
+                // emit stopCamera();
                 if(is_wifi_configured_before)
                 {
                     sendToQml_ChangeWindow(5,"",wrong_left);
@@ -547,9 +587,8 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
             window_type = 0;
         }      
     }
-    else if(!is_person)
+    else if(!is_person && !is_start_face_detect && _is_timeout_touch)
     {
-        
         sleepQt();
         reset_backend();
     }
