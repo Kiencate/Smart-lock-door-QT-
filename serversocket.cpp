@@ -41,7 +41,7 @@ void ServerSocket::run()
         printf("bluetooth: received [%s]\n", buf);
     }
     std::string config_wifi = buf;
-    QFile file("../wpa_supplicant");
+    QFile file("../wifi.json");
 
     while(!file.open(QIODevice::WriteOnly)){
     }

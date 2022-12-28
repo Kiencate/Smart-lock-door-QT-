@@ -94,6 +94,7 @@ ApplicationWindow {
                 lock_icon_image.visible = true
                 button_ai_mode_image.visible = true
                 button_password_mode_image.visible = true
+                opencvImage.visible = true
             }
             else if (type == 6)
             {

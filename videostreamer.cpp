@@ -37,12 +37,16 @@ void VideoStreamer::onStopCamera()
 }
 void VideoStreamer::open_video()
 {
-  cap.open("/dev/video0",cv::CAP_V4L2);
-  // cap.open("/dev/video11");
-  cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
-  cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
-  if (!cap.isOpened()) {
-    qDebug()<< "ERROR: Unable to open the camera";
+  if(!cap.isOpened())
+  {
+    qDebug()<<"videostreamer: openvideo";
+    cap.open("/dev/video0",cv::CAP_V4L2);
+    // cap.open("/dev/video11");
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, 240);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
+    if (!cap.isOpened()) {
+      qDebug()<< "ERROR: Unable to open the camera";
+    }
   }
 }
 void VideoStreamer::onCaptureFrame()

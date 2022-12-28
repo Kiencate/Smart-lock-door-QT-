@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 SET(CMAKE_CXX_FLAGS -I/usr/include/json-c)
-#SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
+# SET(CMAKE_CXX_FLAGS -I/usr/local/include/json-c)
 #SET(CMAKE_CXX_FLAGS -I/usr/include)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

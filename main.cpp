@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     
     //create thread to send touch event
     TouchEvent *touchEvent = new TouchEvent();
-    // touchEvent->start();
+    touchEvent->start();
 
     //create thread to track password folder (password and uuid rfid)
     CheckStatusPasswordFolder *checkstatuspass = new CheckStatusPasswordFolder();
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
                         }, Qt::QueuedConnection);
             engine.load(url);
         //
-    QObject::connect(threadStreamer,&QThread::started,videoStreamer,&VideoStreamer::onStopCamera);
+    QObject::connect(threadStreamer,&QThread::started,videoStreamer,&VideoStreamer::onMainWindow);
     threadStreamer->start();
     QObject::connect(videoStreamer,&VideoStreamer::newImage,liveImageProvider,&OpencvImageProvider::updateImage);
     QObject::connect(&backEnd,&BackEnd::switch_to_qrcode_scan,videoStreamer,&VideoStreamer::onQRCodeScan);

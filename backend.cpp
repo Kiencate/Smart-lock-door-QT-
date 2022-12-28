@@ -65,21 +65,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             }
             else if (pressing_button_id ==16) //bluetooth
             {
-                configured_with_bluetooth = true;
-                qDebug()<<"backend: start bluetooth process";
-                serversocket = new ServerSocket();
-                serversocket -> start();
-                agent = new Agent();
-                myAdaptor = new MyQDusAdaptor(agent);
-                if(QDBusConnection::systemBus().registerObject("/pairing/agent",agent)){
-                    qDebug() << "backend: registerObject was Succesfull!";
-                } else {
-                    qDebug() << "backend: registerObject was not Succesfull!";
-                }
-                connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
-                connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
-                emit sendToQml_ChangeWindow(2,agent->getDeviceName(),wrong_left);
-                window_type = 2;
+                start_config_bluetooth();
                 //exit(0);
             }
             pressing_button_id = -1;
@@ -104,10 +90,11 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             {
                 if(configured_with_bluetooth)
                 {
-                    delete myAdaptor;
-                    delete agent;
+                    // delete myAdaptor;
+                    // delete agent;
+                    agent->turnOffBluetooth();
                 }
-                stop_config_qr_code();
+                stop_config_wifi();
             }
             pressing_button_id = -1;
         }
@@ -236,6 +223,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
             }
             else if(pressing_button_id == 10 && password.size() == 0)
             {
+                emit switch_to_main_window();
                 emit sendToQml_ChangeWindow(5,"",wrong_left);
                 window_type=5;
             }
@@ -349,7 +337,7 @@ void BackEnd::handle_touch_event(int type, int x, int y)
                 emit sendToQml_Password(password.size());
                 emit switch_to_main_window();
                 
-                sendToQml_ChangeWindow(5,"",wrong_left);
+                emit sendToQml_ChangeWindow(5,"",wrong_left);
                 window_type = 5;
             }
             pressing_button_id = -1;
@@ -427,11 +415,7 @@ void BackEnd::onReceivedWifi()
         qDebug()<<"video_streamer: fail config wifi";
     } 
     json_object_put(status_json_obj);   
-    close(fd_status_json); 
-    // code for config wifi
-
-    //
-    
+    close(fd_status_json);
 }
 void BackEnd::check_timeout_connect_wifi()
 {
@@ -461,6 +445,11 @@ void BackEnd::check_timeout_connect_wifi()
         close(fd_status_json); 
         emit sendToQml_ChangeWindow(0,"",wrong_left);
         window_type = 0;
+        if(configured_with_bluetooth)
+        {
+            serversocket->terminate();
+            serversocket->start();
+        }
     }
 
 }
@@ -501,13 +490,12 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
         }
         else if(is_wifi_connected)
         {
-
             if(is_wifi_configured)
             {
-                emit stopCamera();
                 if(is_wifi_configured_before)
                 {
-                    sendToQml_ChangeWindow(5,"",wrong_left);
+                    emit switch_to_main_window();
+                    emit sendToQml_ChangeWindow(5,"",wrong_left);
                     window_type = 5; 
                 }
                 else
@@ -528,6 +516,9 @@ void BackEnd::onJsonStatusChange(bool _is_person, bool _is_wifi_configured, bool
                     sendToQml_ChangeWindow(3,"",wrong_left);
                     window_type = 3; 
                     QTimer::singleShot(5000, this, SLOT(check_timeout_connect_wifi())); 
+                    /*
+                    * code for config wifi
+                    */
                 }               
             }
             else
@@ -622,8 +613,7 @@ void BackEnd::closeDoor()
     wrong_left = 5;
     password="";
     emit sendToQml_Password(password.size());
-    emit stopCamera();
-    sendToQml_ChangeWindow(5,"",wrong_left);
+    emit sendToQml_ChangeWindow(5,"",wrong_left);
 }
 
 void BackEnd::start_face_detect()
@@ -718,7 +708,7 @@ void BackEnd::start_config_qr_code()
         qDebug()<<"back_end: can't lock status file";
     }
     status_json_obj= json_object_from_fd(fd_status_json);
-    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi_qr");
+    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi");
     json_object_set_int(start_config_wifi_qr, 1);
     lseek(fd_status_json,0,SEEK_SET);
     if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
@@ -735,7 +725,7 @@ void BackEnd::start_config_qr_code()
     emit sendToQml_ChangeWindow(1,"",wrong_left);
 }
 
-void BackEnd::stop_config_qr_code()
+void BackEnd::start_config_bluetooth()
 { 
     // change flag start_config_wifi_qr 
     int fd_status_json;
@@ -748,7 +738,48 @@ void BackEnd::stop_config_qr_code()
         qDebug()<<"back_end: can't lock status file";
     }
     status_json_obj= json_object_from_fd(fd_status_json);
-    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi_qr");
+    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi");
+    json_object_set_int(start_config_wifi_qr, 1);
+    lseek(fd_status_json,0,SEEK_SET);
+    if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
+    {
+        qDebug()<<"back_end: fail config wifi";
+    } 
+    json_object_put(status_json_obj);   
+    close(fd_status_json); 
+    qDebug()<<"backend: start bluetooth process";
+    if(!configured_with_bluetooth)
+    {
+        serversocket = new ServerSocket();
+        serversocket -> start();
+        agent = new Agent();
+        myAdaptor = new MyQDusAdaptor(agent);
+        if(QDBusConnection::systemBus().registerObject("/pairing/agent",agent)){
+            qDebug() << "backend: registerObject was Succesfull!";
+        } else {
+            qDebug() << "backend: registerObject was not Succesfull!";
+        }
+        connect(myAdaptor, &MyQDusAdaptor::Connect_success, this, &BackEnd::onConectedBluetooth);
+        connect(serversocket, &ServerSocket::Receive_wifi_success, this, &BackEnd::onReceivedWifi);
+        configured_with_bluetooth = true;
+    }
+    emit sendToQml_ChangeWindow(2,agent->getDeviceName(),wrong_left);
+    window_type = 2;
+}
+void BackEnd::stop_config_wifi()
+{ 
+    // change flag start_config_wifi_qr 
+    int fd_status_json;
+    if((fd_status_json=open(status_json_path, O_RDWR)) == -1) { 
+        qDebug()<<"back_end: open status file failed";
+    }
+
+    if(flock(fd_status_json,LOCK_EX)==-1)
+    {
+        qDebug()<<"back_end: can't lock status file";
+    }
+    status_json_obj= json_object_from_fd(fd_status_json);
+    json_object *start_config_wifi_qr = json_object_object_get(status_json_obj,"start_config_wifi");
     json_object_set_int(start_config_wifi_qr, 0);
     lseek(fd_status_json,0,SEEK_SET);
     if(write(fd_status_json,json_object_get_string(status_json_obj),strlen(json_object_get_string(status_json_obj)))<0)
@@ -757,10 +788,5 @@ void BackEnd::stop_config_qr_code()
     } 
     json_object_put(status_json_obj);   
     close(fd_status_json); 
-
-    // switch to qrcode mode in video streamer
-    emit switch_to_qrcode_scan();
-
-    // switch to qrcode window
-    emit sendToQml_ChangeWindow(1,"",wrong_left);
+    configured_with_bluetooth = false;
 }

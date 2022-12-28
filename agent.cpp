@@ -41,3 +41,13 @@ Agent::~Agent()
         qDebug() << reply.error().message() << reply.error().name();
     }
 }
+void Agent::turnOffBluetooth()
+{
+    agentManagerprops = new QDBusInterface("org.bluez","/org/bluez/hci0","org.bluez.Adapter1",QDBusConnection::systemBus(),this);
+    agentManagerprops->setProperty("Powered",false);
+    QDBusReply<void> reply;
+    reply = agentManager->call("UnregisterAgent", QVariant::fromValue(QDBusObjectPath("/pairing/agent")));
+    if (!reply.isValid()) {
+        qDebug() << reply.error().message() << reply.error().name();
+    }
+}

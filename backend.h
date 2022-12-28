@@ -37,7 +37,8 @@ public:
     bool is_start_config_qr; // true if start config wifi with qr code
     void reset_backend(); //reset backend after restart
     void start_config_qr_code(); // call when press button qr_code
-    void stop_config_qr_code();
+    void stop_config_wifi();
+    void start_config_bluetooth();
 signals:
     void sendToQml_Button(int type, int button_id);
     /*type:

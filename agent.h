@@ -17,6 +17,7 @@ public:
     Agent();
     ~Agent();
     QString getDeviceName();
+    void turnOffBluetooth();
 private:
     QDBusInterface *agentManager;
     QDBusInterface *agent;
