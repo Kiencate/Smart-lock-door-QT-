@@ -1,0 +1,1 @@
+cmd_/home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.o := ld  -m elf_x86_64 -z noexecstack     -r -o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/rc522.o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/rc522_api.o
