@@ -1,1 +1,0 @@
-cmd_/home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.ko /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.mod.o;  true

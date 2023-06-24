@@ -1,1 +1,0 @@
-cmd_/home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/modules.order := {   echo /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/RFID-RC522.ko; :; } | awk '!x[$$0]++' - > /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/modules.order

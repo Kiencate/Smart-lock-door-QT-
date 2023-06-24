@@ -1,1 +1,0 @@
-cmd_/home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/Module.symvers := sed 's/\.ko$$/\.o/' /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/modules.order | scripts/mod/modpost -m -a  -o /home/kiencate/Documents/benzenx_job/Smart-lock-door-QT-/Module.symvers -e -i Module.symvers   -T -
